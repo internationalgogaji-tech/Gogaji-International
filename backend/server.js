@@ -30,8 +30,8 @@ connectDB();
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
-  "https://royalsmd.com",
-  "https://www.royalsmd.com",
+  "gogajiinternational.com",
+  "gogajiinternational.com",
   "http://localhost:3000",
   "http://127.0.0.1:3000",
 ].filter(Boolean);
