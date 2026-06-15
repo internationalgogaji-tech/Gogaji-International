@@ -30,14 +30,16 @@ connectDB();
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
-  "gogajiinternational.com",
-  "gogajiinternational.com",
+  "https://gogajiinternational.com",
+  "https://www.gogajiinternational.com",
   "http://localhost:3000",
   "http://127.0.0.1:3000",
 ].filter(Boolean);
 
 const corsOptions = {
   origin(origin, callback) {
+    console.log("Incoming Origin:", origin);
+
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
@@ -45,6 +47,7 @@ const corsOptions = {
     }
 
     console.log("CORS Blocked:", origin);
+
     return callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
@@ -61,6 +64,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(
   helmet({
