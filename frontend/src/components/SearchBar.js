@@ -195,9 +195,8 @@ export default function SearchBar({ mobile = false, onSearchDone }) {
       >
         <button
           type="submit"
-          className={`absolute top-1/2 -translate-y-1/2 text-[#5f7d95] transition hover:text-[#0f6cbd] ${
-            mobile ? "left-4" : "left-5"
-          }`}
+          className={`absolute top-1/2 -translate-y-1/2 text-[#16A34A] transition hover:text-[#25D366] ${mobile ? "left-4" : "left-5"
+            }`}
           aria-label="Search products"
         >
           <Search size={mobile ? 18 : 20} />
@@ -218,8 +217,8 @@ export default function SearchBar({ mobile = false, onSearchDone }) {
           }
           className={
             mobile
-             ? "h-[50px] w-full rounded-full border border-[#D8C7E8] bg-[#F3ECF8] py-3 pl-12 pr-20 text-sm text-[#4A3656] outline-none placeholder:text-[#8F7AA3] focus:border-[#C7AEDF]"
-              : "h-[58px] w-full rounded-full border border-[#D8C7E8] bg-[#F3ECF8] py-3 pl-14 pr-24 text-[16px] text-[#4A3656] outline-none transition placeholder:text-[#8F7AA3] focus:border-[#C7AEDF] focus:bg-[#F1E9F7] focus:shadow-[0_0_0_4px_rgba(216,199,232,0.35)]"
+              ? "h-[50px] w-full rounded-full border border-[#BBF7D0] bg-white py-3 pl-12 pr-20 text-sm text-[#166534] outline-none placeholder:text-[#6B7280] focus:border-[#25D366]"
+              : "h-[58px] w-full rounded-full border border-[#BBF7D0] bg-white py-3 pl-14 pr-24 text-[16px] text-[#166534] outline-none transition placeholder:text-[#6B7280] focus:border-[#25D366] focus:bg-white focus:shadow-[0_0_0_4px_rgba(37,211,102,0.15)]"
           }
         />
         <ImageSearchCamera mobile={mobile} onSearchDone={onSearchDone} />
@@ -240,7 +239,7 @@ export default function SearchBar({ mobile = false, onSearchDone }) {
       </form>
 
       {hasDropdown ? (
-        <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-[100] overflow-hidden rounded-[22px] border border-[#d7e7f4] bg-[#F8F4FC] shadow-[0_24px_60px_rgba(15,23,42,0.16)]">
+        <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-[100] overflow-hidden rounded-[22px] border border-[#BBF7D0] bg-white shadow-[0_24px_60px_rgba(15,23,42,0.12)]">
           {filteredCategories.length > 0 ? (
             <div className="border-b border-[#e8f1f8] bg-[#f8fcff] px-5 py-4">
               <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.18em] text-[#0f6cbd]">
@@ -254,8 +253,7 @@ export default function SearchBar({ mobile = false, onSearchDone }) {
                     type="button"
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => goToCategory(cat)}
-                    className="inline-flex items-center gap-2 rounded-full border border-[#cfe5f5] bg-[#F8F4FC] px-3 py-1.5 text-xs font-semibold text-[#23435b] transition hover:border-[#38bdf8] hover:bg-[#eaf7ff] hover:text-[#0f6cbd]"
-                  >
+                    className="inline-flex items-center gap-2 rounded-full border border-[#BBF7D0] bg-[#F0FDF4] px-3 py-1.5 text-xs font-semibold text-[#166534] transition hover:border-[#25D366] hover:bg-[#DCFCE7]"                  >
                     <Layers3 size={13} />
                     {cat.name}
                   </button>

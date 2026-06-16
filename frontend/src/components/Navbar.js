@@ -39,7 +39,6 @@ const fallbackCategories = [
   { name: "Decor Accents", slug: "decor-accents" },
 ];
 
-
 const accountMenuItems = [
   { label: "My Orders", href: "/checkout/order", icon: Package },
   {
@@ -229,10 +228,8 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-[#E5E5E5] bg-[#FCFAFE] shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
-        <div
-          className="bg-[#D8C7E8] text-[#4A3656] px-4 py-3 text-center text-sm font-semibold"
-        >
+      <header className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
+        <div className="bg-[#DCFCE7] text-[#166534] px-4 py-3 text-center text-sm font-semibold">
           🚚 Free Shipping on Bulk Orders Above ₹10,000
         </div>
 
@@ -247,11 +244,10 @@ export default function Navbar() {
                 <Menu size={24} />
               </button>
 
-
               <Link href="/" className="flex min-w-0 items-center">
                 <div className="relative flex h-[70px] w-[300px] items-center pt-5">
                   <Image
-                    src="/GOGAJILOGO.png"
+                    src="/GOGAJILOGO1.png"
                     alt="Gogaji International"
                     width={300}
                     height={70}
@@ -262,18 +258,36 @@ export default function Navbar() {
               </Link>
             </div>
 
-            <div className="hidden max-w-3xl flex-1 px-4 lg:flex">
-              <div className="w-full rounded-full bg-[#F8F4FC] p-1">
+            <div className="hidden max-w-4xl flex-1 px-6 lg:flex">
+              <div
+                className="
+    relative
+    w-full
+    rounded-[32px]
+    border
+    border-[#D1FAE5]
+    bg-white
+    p-1
+    shadow-[0_12px_35px_rgba(22,163,74,0.08)]
+    transition-all
+    duration-300
+    hover:border-[#22C55E]
+    hover:shadow-[0_16px_40px_rgba(22,163,74,0.12)]
+    focus-within:border-[#22C55E]
+    focus-within:ring-4
+    focus-within:ring-[#DCFCE7]
+    "
+              >
                 <SearchBar />
               </div>
             </div>
 
             <div className="flex shrink-0 items-center gap-2 text-[#0f172a] sm:gap-3">
-             {!user?.token ? (
-  <button
-    type="button"
-    onClick={() => setIsLoginOpen(true)}
-    className="
+              {!user?.token ? (
+                <button
+                  type="button"
+                  onClick={() => setIsLoginOpen(true)}
+                  className="
       hidden
       sm:flex
       h-[46px]
@@ -281,27 +295,26 @@ export default function Navbar() {
       gap-2
       rounded-full
       border
-      border-[#D8C7E8]
-      bg-[#FCFAFE]
-      px-4
-      text-sm
+      border-[#BBF7D0]
+      bg-white
+      text-[#166534]
+
       font-semibold
       text-[#4A3656]
       transition-all
       duration-300
-      hover:bg-[#F6F1FA]
+      hover:bg-[#F0FDF4]
     "
-  >
-    <User size={18} />
-    Sign in
-  </button>
-) : (
+                >
+                  <User size={18} />
+                  Sign in
+                </button>
+              ) : (
                 <div className="relative hidden sm:block" ref={accountMenuRef}>
                   <button
                     type="button"
                     onClick={() => setIsAccountMenuOpen((prev) => !prev)}
-                    className="flex h-[46px] items-center gap-2 rounded-full border border-[#cfe5f5] bg-[#FCFAFE] px-4 text-sm font-semibold text-[#4A3656] transition hover:border-[#38bdf8] hover:bg-[#f2fbff]"
-                  >
+                    className="flex h-[46px] items-center gap-2 rounded-full border border-[#BBF7D0] bg-white px-4 text-sm font-semibold text-[#166534] transition hover:border-[#25D366] hover:bg-[#F0FDF4]"                  >
                     <User size={18} />
                     <span>{shortUserName}</span>
                     <ChevronDown
@@ -312,13 +325,13 @@ export default function Navbar() {
                   </button>
 
                   {isAccountMenuOpen ? (
-                    <div className="absolute right-0 top-[58px] z-[80] w-[320px] overflow-hidden rounded-[22px] border border-[#d7e7f4] bg-[#FCFAFE] shadow-[0_24px_60px_rgba(15,23,42,0.16)]">
-                      <div className="border-b border-[#e8f1f8] bg-gradient-to-r from-[#F8F4FC] to-[#F2EAF8] px-6 py-5">
+                    <div className="absolute right-0 top-[58px] z-[80] w-[320px] overflow-hidden rounded-[22px] border border-[#BBF7D0] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.12)]">
+                      <div className="border-b border-[#DCFCE7] bg-gradient-to-r from-[#F0FDF4] to-[#DCFCE7] px-6 py-5">
                         <p className="text-[16px] font-bold text-[#0f172a]">
                           Hi, {userName}
                         </p>
                         {userEmail ? (
-                          <p className="mt-1 text-sm text-[#5f7d95]">
+                          <p cclassName="mt-1 text-sm text-[#15803D]">
                             {userEmail}
                           </p>
                         ) : null}
@@ -333,8 +346,7 @@ export default function Navbar() {
                               key={item.label}
                               href={item.href}
                               onClick={() => setIsAccountMenuOpen(false)}
-                              className="flex items-center gap-3 px-6 py-3 text-[15px] font-medium text-[#23435b] transition hover:bg-[#f3f9ff] hover:text-[#0B2E59]"
-                            >
+                              className="flex items-center gap-3 px-6 py-3 text-[15px] font-medium text-[#1F2937] transition hover:bg-[#F0FDF4] hover:text-[#16A34A]"                            >
                               <Icon size={18} />
                               <span>{item.label}</span>
                             </Link>
@@ -342,12 +354,11 @@ export default function Navbar() {
                         })}
                       </div>
 
-                      <div className="border-t border-[#e8f1f8] px-4 py-3">
+                      <div className="border-t border-[#DCFCE7] px-4 py-3">
                         <button
                           type="button"
                           onClick={handleLogout}
-                          className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-[15px] font-semibold text-[#d14c5e] transition hover:bg-[#fff3f5]"
-                        >
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-[15px] font-semibold text-[#DC2626] transition hover:bg-[#FEF2F2]"                        >
                           <LogOut size={18} />
                           Logout
                         </button>
@@ -357,23 +368,19 @@ export default function Navbar() {
                 </div>
               )}
 
-              <div
-                className="hidden h-[46px] items-center gap-2 rounded-full border border-[#D8C7E8] bg-[#D8C7E8] px-5 text-sm font-bold text-[#4A3656] shadow-sm cursor-not-allowed md:flex"
-              >
+              <div className="hidden h-[46px] items-center gap-2 rounded-full border border-[#25D366] bg-[#25D366] px-5 text-sm font-bold text-white shadow-sm md:flex hover:bg-[#1FB857] transition-all">
                 <PackageSearch size={18} />
                 Request Products
               </div>
 
-              <div
-                className="hidden h-[46px] items-center gap-2 rounded-full border border-[#D8C7E8] bg-[#F6F1FA] px-5 text-sm font-bold text-[#4A3656] shadow-sm cursor-not-allowed md:flex"
-              >
+              <div className="hidden h-[46px] items-center gap-2 rounded-full border border-[#BBF7D0] bg-[#F0FDF4] px-5 text-sm font-bold text-[#166534] shadow-sm md:flex hover:bg-[#DCFCE7] transition-all">
                 <PackageSearch size={18} />
                 Track Request
               </div>
 
               <Link
                 href="/wishlist"
-                className="relative flex h-[46px] items-center justify-center rounded-full border border-[#D8C7E8] bg-[#FCFAFE] px-4 text-sm font-semibold text-[#4A3656]"
+                className="relative flex h-[46px] items-center justify-center rounded-full border border-[#BBF7D0] bg-white px-4 text-sm font-semibold text-[#166534]"
               >
                 <span className="relative inline-flex">
                   <Heart size={18} />
@@ -387,7 +394,7 @@ export default function Navbar() {
 
               <Link
                 href="/checkout/cart"
-                className="relative flex h-[46px] items-center gap-2 rounded-full border border-[#D8C7E8] bg-[#FCFAFE] px-4 text-sm font-semibold text-[#4A3656]"
+                className="relative flex h-[46px] items-center gap-2 rounded-full border border-[#BBF7D0] bg-white px-4 text-sm font-semibold text-[#166534]"
               >
                 <span className="relative inline-flex">
                   <ShoppingCart size={18} />
@@ -402,20 +409,18 @@ export default function Navbar() {
             </div>
           </div>
 
-          <nav className="hidden border-t border-[#e6f1f8] py-3 lg:block">
+          <nav className="hidden border-t border-[#E5E7EB] py-3 lg:block">
             <div className="flex items-center gap-2 whitespace-nowrap xl:gap-3">
-
-
               <Link
                 href="/blog"
-                className="group relative inline-flex shrink-0 items-center rounded-full px-4 py-2.5 text-[15px] font-extrabold text-[#4A3656] transition-all duration-200 hover:bg-[#EFE6F7] hover:text-[#0B2E59]]"
+                className="group relative inline-flex shrink-0 items-center rounded-full px-4 py-2.5 text-[15px] font-extrabold text-[#1F2937] transition-all duration-200 hover:bg-[#F0FDF4] hover:text-[#0B2E59]]"
               >
                 <span className="flex items-center gap-2">
                   <BookOpen size={16} />
                   Blogs
                 </span>
 
-                <span className="absolute inset-x-4 bottom-[4px] h-[2px] scale-x-0 rounded-full bg-[#D8C7E8] transition-transform duration-200 group-hover:scale-x-100" />
+                <span className="absolute inset-x-4 bottom-[4px] h-[2px] scale-x-0 rounded-full bg-[#25D366] transition-transform duration-200 group-hover:scale-x-100" />
               </Link>
 
               {/* BEHOMA STYLE MENUS */}
@@ -427,9 +432,9 @@ export default function Navbar() {
                   onMouseEnter={() => setActiveMegaMenu(item.name)}
                   onMouseLeave={() => setActiveMegaMenu(null)}
                 >
-                 <Link
-  href={item.href}
-  className="
+                  <Link
+                    href={item.href}
+                    className="
   group
   relative
   block
@@ -437,47 +442,48 @@ export default function Navbar() {
   py-2.5
   text-[15px]
   font-semibold
-  text-[#4A3656]
+  text-[#1F2937]
   transition-all
   duration-300
-  hover:text-[#4A3656]
+  hover:text-[#16A34A]  
   "
->
-  <span className="flex items-center gap-1">
-    {item.name}
-    <ChevronDown size={14} />
-  </span>
+                  >
+                    <span className="flex items-center gap-1">
+                      {item.name}
+                      <ChevronDown size={14} />
+                    </span>
 
-  <span
-    className="
+                    <span
+                      className="
     absolute
     bottom-0
     left-4
     h-[2px]
     w-0
-    bg-[#4A3656]
+    bg-[#25D366]  
     transition-all
     duration-300
     group-hover:w-[70%]
     "
-  />
-</Link>
+                    />
+                  </Link>
 
                   {activeMegaMenu === item.name && (
                     <div
                       className="
-        absolute
-        left-0
-        top-full
-        z-[999]
-        mt-3
-        min-w-[320px]
-        rounded-[20px]
-        bg-[#FCFAFE]
-        border
-        border-[#D8C7E8]
-        shadow-[0_20px_50px_rgba(0,0,0,0.12)]
-        overflow-hidden
+absolute
+left-0
+top-full
+z-[999]
+mt-3
+min-w-[320px]
+rounded-[20px]
+bg-white
+border
+border-[#BBF7D0]
+shadow-[0_20px_50px_rgba(0,0,0,0.12)]
+overflow-hidden
+
         "
                     >
                       <div className="py-4">
@@ -494,7 +500,7 @@ export default function Navbar() {
               text-[15px]
               font-medium
               text-[#4A3656]
-              hover:bg-[#EFE6F7]
+              hover:bg-[#F0FDF4]
               "
                           >
                             {child}

@@ -64,7 +64,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 
 app.use(
   helmet({
@@ -168,6 +168,7 @@ app.use("/api/blog-upload", blogUploadRoutes);
 app.use("/api/blog-page-setting", blogPageSettingRoutes);
 app.use("/api/promo-banners", require("./routes/promoBannerRoutes"));
 app.use("/api/homepage-builder", require("./routes/homepageBuilderRoutes"));
+app.use("/api/upload", require("./routes/uploadRoutes"));
 
 app.use((req, res) => {
   res.status(404).json({

@@ -74,7 +74,7 @@ export default function Hero() {
             .sort(
               (a, b) =>
                 Number(a.order || 0) - Number(b.order || 0) ||
-                new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+                new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
             );
 
           if (activeSlides.length) {
@@ -151,25 +151,27 @@ export default function Hero() {
   }, [activeSlide]);
 
   return (
-    <section className="relative isolate min-h-[650px] overflow-hidden bg-[#FBF8FD] sm:min-h-[590px] md:min-h-[560px] lg:min-h-[540px]">
-
+    <section className="relative isolate min-h-[650px] overflow-hidden bg-[#F5FBF5] sm:min-h-[590px] md:min-h-[560px] lg:min-h-[540px]">
       {slides.map((slide, index) => (
         <div
           key={slide._id || slide.image || index}
-          className={`absolute inset-0 bg-cover bg-[78%_center] transition-opacity duration-[2000ms] sm:bg-[72%_center] md:bg-center ${currentSlide === index ? "opacity-100" : "opacity-0"
-            }`}
+          className={`absolute inset-0 bg-cover bg-[78%_center] transition-opacity duration-[2000ms] sm:bg-[72%_center] md:bg-center ${
+            currentSlide === index ? "opacity-100" : "opacity-0"
+          }`}
           style={{
             backgroundImage: `url('${getImageUrl(slide.image)}')`,
           }}
         />
       ))}
 
-      <div className="absolute inset-0 bg-gradient-to-r from-[#FBF8FD]/98 via-[#F7F1FB]/90 to-[#F3ECF8]/40 sm:from-white/96 sm:via-white/80 sm:to-white/25 lg:from-white/90 lg:via-white/65 lg:to-transparent" />
+      <div
+        className="absolute inset-0 bg-gradient-to-r from-white/95 via-[#F5FBF5]/85 to-[#EAF6EA]/30 sm:from-white/96 sm:via-white/80 sm:to-white/25 lg:from-white/90 lg:via-white/65 lg:to-transparent"
+      />
 
       <div className="container-royal relative z-10 flex min-h-[650px] items-center px-4 py-8 sm:min-h-[590px] sm:px-6 md:min-h-[560px] lg:min-h-[540px]">
         <div className="w-full max-w-[760px] rounded-[32px] bg-white/15 backdrop-blur-[2px] p-2">
-          <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-[#D8C7E8] bg-[#FBF8FD]/95 px-3 py-2 text-[11px] font-bold text-[#0f172a] shadow-sm sm:px-4 sm:text-sm">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-[#B89BD3]" />
+          <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-[#BBF7D0] bg-[#F0FDF4]/95 px-3 py-2 text-[11px] font-bold text-[#0f172a] shadow-sm sm:px-4 sm:text-sm">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-[#25D366]" /> 
             <span className="truncate">
               {activeSlide?.label || "Trusted Industrial Components"} • Fast
               Procurement • B2B Supply
@@ -177,23 +179,23 @@ export default function Hero() {
           </div>
 
           <h1 className="max-w-3xl text-[34px] font-extrabold leading-[1.08] tracking-[-0.035em] sm:text-[44px] md:text-[50px] lg:text-[56px]">
-            <span className="bg-gradient-to-r from-[#4A3656] via-[#6D5A7E] to-[#B89BD3] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#128C7E] via-[#25D366] to-[#4ADE80] bg-clip-text text-transparent">
               {typedTitle1}
             </span>
             <br />
-            <span className="bg-gradient-to-r from-[#B89BD3] via-[#6D5A7E] to-[#4A3656] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#25D366] via-[#128C7E] to-[#065F46] bg-clip-text text-transparent">
               {typedTitle2}
             </span>
           </h1>
 
           <div className="mt-4 text-[18px] font-extrabold sm:text-[22px] md:text-[24px]">
             <span className="text-[#0f172a]">We supply </span>
-            <span className="inline-block bg-gradient-to-r from-[#8F7AA3] to-[#C7AEDF] bg-clip-text text-transparent">
+           <span className="inline-block bg-gradient-to-r from-[#25D366] to-[#128C7E] bg-clip-text text-transparent"> 
               {typedItem}
             </span>
           </div>
 
-          <div className="mt-2 text-[13px] font-semibold text-[#6D5A7E] sm:text-[14px]">
+          <div className="mt-2 text-[13px] font-semibold text-[#166534] sm:text-[14px]">
             Luxury Home Decor • Stylish Living • Premium Collection
           </div>
 
@@ -206,7 +208,7 @@ export default function Hero() {
             {/* Primary Button */}
             <Link
               href={activeSlide?.primaryLink || "/products"}
-              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#B89BD3] to-[#8F7AA3] px-7 py-3.5 text-sm font-extrabold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:w-auto"
+              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#25D366] to-[#128C7E] px-7 py-3.5 text-sm font-extrabold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:w-auto"
             >
               <ArrowRight
                 size={18}
@@ -221,7 +223,7 @@ export default function Hero() {
             {/* Secondary Button */}
             <Link
               href={activeSlide?.secondaryLink || "/quote-request"}
-              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#8F7AA3] via-[#7A638F] to-[#5E4A73] px-7 py-3.5 text-sm font-extrabold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:from-[#9E8AB2] hover:via-[#8B749F] hover:to-[#6B567F] sm:w-auto"
+              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#34D399] via-[#10B981] to-[#059669] px-7 py-3.5 text-sm font-extrabold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:from-[#9E8AB2] hover:via-[#8B749F] hover:to-[#6B567F] sm:w-auto"
             >
               <FileText
                 size={18}
@@ -241,8 +243,9 @@ export default function Hero() {
               return (
                 <div
                   key={item.text}
-                  className="flex items-center gap-3 rounded-2xl border border-[#D8C7E8] bg-gradient-to-r from-[#F7F1FB] to-[#F3ECF8] backdrop-blur-sm px-4 py-3 text-sm font-bold text-[#4A3656] shadow-lg"                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-[#B89BD3] to-[#8F7AA3] text-white">
+                  className="flex items-center gap-3 rounded-2xl border border-[#BBF7D0] bg-gradient-to-r from-[#F0FDF4] to-[#DCFCE7] backdrop-blur-sm px-4 py-3 text-sm font-bold text-[#166534] shadow-lg"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-[#34D399] to-[#059669] text-white">
                     <Icon size={18} />
                   </span>
                   {item.text}
@@ -259,10 +262,11 @@ export default function Hero() {
             <button
               key={slide._id || slide.image || index}
               onClick={() => setCurrentSlide(index)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${currentSlide === index
-                ? "w-8 bg-[#8F7AA3]"
-                : "w-2.5 bg-[#D8C7E8]"
-                }`}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                currentSlide === index
+                  ? "w-8 bg-[#25D366]"
+                 : "w-2.5 bg-[#BBF7D0]"
+              }`}
               type="button"
               aria-label={`Go to banner ${index + 1}`}
             />
