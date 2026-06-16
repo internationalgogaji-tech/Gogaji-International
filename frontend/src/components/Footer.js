@@ -280,7 +280,7 @@ function FooterColumn({ title, links }) {
             href={item.link}
             className="group flex items-start gap-2 text-[13px] font-semibold leading-5 text-slate-300 transition hover:text-white"
           >
-            <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#CBB7DD] transition group-hover:translate-x-1" />
+            <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#F6D27A] transition group-hover:translate-x-1" />
             <span>{item.label}</span>
           </Link>
         ))}
@@ -305,7 +305,7 @@ function ComponentsColumn({ links }) {
             href={item.link}
             className="group flex items-start gap-2 rounded-lg py-0.5 text-[13px] font-semibold leading-5 text-slate-300 transition hover:text-white"
           >
-            <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#CBB7DD] transition group-hover:translate-x-1" />
+            <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#F6D27A] transition group-hover:translate-x-1" />
             <span>{item.label}</span>
           </Link>
         ))}
@@ -339,8 +339,8 @@ export default function Footer() {
   const cleanWhatsapp = String(data.whatsapp || "").replace(/\D/g, "");
 
   return (
-    <footer className="mt-14 overflow-hidden bg-[#4B3B63] text-white">
-      <div className="bg-gradient-to-r from-[#D8C7E8] via-[#CBB7DD] to-[#B69ACC]">
+    <footer className="mt-14 overflow-hidden bg-[#1F5C4A] text-white">
+      <div className="bg-gradient-to-r from-[#B38B2D] via-[#C9A13A] to-[#D9B14A]">
         <div className="container-royal grid gap-3 py-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex items-center justify-center gap-2 lg:justify-start">
             <ShieldCheck className="h-5 w-5" />
@@ -365,17 +365,17 @@ export default function Footer() {
       </div>
 
       <div className="relative">
-        <div className="absolute -left-24 top-10 h-60 w-60 rounded-full bg-sky-500/10 blur-3xl" />
-        <div className="absolute -right-24 bottom-10 h-60 w-60 rounded-full bg-blue-500/10 blur-3xl" />
+        <div className="absolute -left-24 top-10 h-60 w-60 rounded-full bg-[#B38B2D]/20 blur-3xl" />
+        <div className="absolute -right-24 bottom-10 h-60 w-60 rounded-full bg-[#F6D27A]/20 blur-3xl" />
 
         <div className="container-royal relative py-9">
           <div className="grid gap-8 lg:grid-cols-12">
-            <div className="rounded-[26px] border border-white/10 bg-white/[0.04] p-5 lg:col-span-3">
+            <div className="rounded-[26px] border border-white/10 bg-white/[0.06] p-5 lg:col-span-3">
 
               <Link href="/" className="inline-flex items-center">
                 <div className="relative flex h-[80px] w-[300px] items-center">
                   <Image
-                    src="/GOGAJILOGO.png"
+                    src="/GOGAJILOGO1.png"
                     alt="Gogaji International"
                     width={280}
                     height={80}
@@ -388,19 +388,19 @@ export default function Footer() {
 
               <div className="mt-5 space-y-3 text-sm text-slate-300">
                 <p className="flex gap-2">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#CBB7DD]" />
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#F6D27A]" />
                   <span>{data.address}</span>
                 </p>
 
                 <p className="flex gap-2">
-                  <Phone className="h-4 w-4 shrink-0 text-[#CBB7DD]" />
+                  <Phone className="h-4 w-4 shrink-0 text-[#F6D27A]" />
                   <a href={`tel:${cleanPhone}`} className="hover:text-white">
                     {data.phone}
                   </a>
                 </p>
 
                 <p className="flex gap-2">
-                  <MessageCircle className="h-4 w-4 shrink-0 text-[#CBB7DD]" />
+                  <MessageCircle className="h-4 w-4 shrink-0 text-[#F6D27A]" />
                   <a
                     href={`https://wa.me/${cleanWhatsapp}`}
                     target="_blank"
@@ -412,14 +412,14 @@ export default function Footer() {
                 </p>
 
                 <p className="flex gap-2">
-                  <Mail className="h-4 w-4 shrink-0 text-[#CBB7DD]" />
+                  <Mail className="h-4 w-4 shrink-0 text-[#F6D27A]" />
                   <a href={`mailto:${data.email}`} className="hover:text-white">
                     {data.email}
                   </a>
                 </p>
 
                 <p className="flex gap-2">
-                  <Clock className="h-4 w-4 shrink-0 text-[#CBB7DD]" />
+                  <Clock className="h-4 w-4 shrink-0 text-[#F6D27A]" />
                   {data.supportHours}
                 </p>
               </div>
@@ -440,8 +440,20 @@ export default function Footer() {
                 <Link
                   href="/products"
 
-                  className="rounded-2xl border border-sky-300/20 bg-sky-400/10 px-4 py-3 text-sm font-black text-sky-100 transition hover:bg-sky-400/15"
-                >
+                  className="
+rounded-2xl
+border
+border-[#B38B2D]/30
+bg-[#B38B2D]
+px-4
+py-3
+text-sm
+font-black
+text-white
+transition-all
+duration-300
+hover:bg-[#9D7824]
+"                >
                   Shop Collection
 
                 </Link>
@@ -449,16 +461,40 @@ export default function Footer() {
                 <Link
                   href="/new-at-behoma"
 
-                  className="rounded-2xl border border-sky-300/20 bg-sky-400/10 px-4 py-3 text-sm font-black text-sky-100 transition hover:bg-sky-400/15"
-                >
+                  className="
+rounded-2xl
+border
+border-[#B38B2D]/30
+bg-[#B38B2D]
+px-4
+py-3
+text-sm
+font-black
+text-white
+transition-all
+duration-300
+hover:bg-[#9D7824]
+"                >
                   New Arrivals
 
                 </Link>
 
                 <Link
                   href="/contact"
-                  className="rounded-2xl border border-sky-300/20 bg-sky-400/10 px-4 py-3 text-sm font-black text-sky-100 transition hover:bg-sky-400/15"
-                >
+                  className="
+rounded-2xl
+border
+border-[#B38B2D]/30
+bg-[#B38B2D]
+px-4
+py-3
+text-sm
+font-black
+text-white
+transition-all
+duration-300
+hover:bg-[#9D7824]
+"                >
                   Contact Us
                 </Link>
               </div>

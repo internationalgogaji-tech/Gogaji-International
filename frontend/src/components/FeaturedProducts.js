@@ -88,14 +88,27 @@ export default function FeaturedProducts() {
       <div className="container-royal">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
-            <h2 className="heading-section">{section.title}</h2>
-            <p className="section-subtitle">{section.subtitle}</p>
+            <span className="inline-flex items-center rounded-full border border-[#B38B2D]/30 bg-[#FFF8E8] px-5 py-2 text-sm font-semibold text-[#1F5C4A] mb-4">
+              Premium Home Decor Collection
+            </span>
+
+            <h2 className="text-4xl md:text-6xl font-black leading-tight">
+              <span className="text-[#1F5C4A]">
+                {section.title?.split(" ")[0] || "Featured"}
+              </span>{" "}
+              <span className="text-[#B38B2D]">
+                {section.title?.split(" ").slice(1).join(" ") || "Products"}
+              </span>
+            </h2>
+
+            <p className="mt-4 max-w-3xl text-lg text-[#2F3A3A]">
+              {section.subtitle}
+            </p>
           </div>
 
           <Link
             href={section.viewAllLink || "/products"}
-            className="hidden rounded-full bg-gradient-to-r from-[#2563eb] to-[#7c3aed] px-6 py-3 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:from-[#1d4ed8] hover:to-[#6d28d9] md:inline-flex"
-          >
+            className="hidden md:inline-flex items-center rounded-full bg-[#B38B2D] px-8 py-3 font-bold text-white shadow-lg transition-all duration-300 hover:bg-[#9A7624]"          >
             <span className="text-white">
               {section.viewAllText || "View All"}
             </span>
@@ -103,17 +116,17 @@ export default function FeaturedProducts() {
         </div>
 
         {loading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[...Array(Number(section.limit || 8))].map((_, index) => (
               <div
                 key={index}
-                className="card-royal h-[340px] animate-pulse bg-white"
+                className="h-[420px] animate-pulse rounded-[24px] border border-[#B38B2D]/20 bg-[#FFFDF8]"
               />
             ))}
           </div>
         ) : products.length > 0 ? (
           <>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {products.map((product) => (
                 <ProductCard
                   key={product._id || product.slug}
@@ -125,8 +138,7 @@ export default function FeaturedProducts() {
             <div className="mt-8 flex justify-center md:hidden">
               <Link
                 href={section.viewAllLink || "/products"}
-                className="inline-flex rounded-full bg-gradient-to-r from-[#2563eb] to-[#7c3aed] px-6 py-3 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:from-[#1d4ed8] hover:to-[#6d28d9]"
-              >
+                className="inline-flex rounded-full bg-[#B38B2D] px-8 py-3 font-bold text-white shadow-lg transition-all duration-300 hover:bg-[#9A7624]"              >
                 <span className="text-white">
                   {section.viewAllText || "View All"}
                 </span>
@@ -134,8 +146,8 @@ export default function FeaturedProducts() {
             </div>
           </>
         ) : (
-          <div className="card-royal p-8 text-center">
-            <p className="text-sm text-slate-500">
+         <div className="rounded-[24px] border border-[#B38B2D]/20 bg-white p-8 text-center shadow-sm">
+           <p className="text-sm text-[#2F3A3A]">
               No products available right now.
             </p>
           </div>

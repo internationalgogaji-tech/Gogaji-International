@@ -12,27 +12,30 @@ const points = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="py-20 bg-[#faf6fd]">
+    <section className="py-20 bg-white">
       <div className="container-royal">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
 
           {/* LEFT CONTENT */}
           <div>
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.22em] text-[#8a5db2]">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.22em] text-[#B38B2D]">
               Why Choose Gogaji
             </p>
 
-            <h2 className="text-4xl font-extrabold leading-tight text-[#5d4475] md:text-5xl">
-              Elevate Every Space With Premium Home Decor.
+            <h2 className="text-4xl font-extrabold leading-tight text-[#1F5C4A] md:text-5xl">
+              Elevate Every Space With
+              <span className="block text-[#B38B2D]">
+                Premium Home Decor
+              </span>
             </h2>
 
-            <p className="mt-6 text-lg leading-8 text-[#7b7288]">
+            <p className="mt-6 text-lg leading-8 text-[#5A6464]">
               Gogaji International offers thoughtfully curated home decor
               collections designed to add elegance, warmth and sophistication
               to homes, offices, hotels and commercial spaces.
             </p>
 
-            <p className="mt-4 text-lg leading-8 text-[#7b7288]">
+            <p className="mt-4 text-lg leading-8 text-[#5A6464]">
               From decorative vases and planters to gifting collections and
               luxury accents, we help customers create beautiful interiors
               with premium quality products.
@@ -40,7 +43,25 @@ export default function WhyChooseUs() {
 
             <Link
               href="/products"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#8a5db2] to-[#b28ad4] px-8 py-4 text-sm font-bold shadow-lg transition-all duration-300 hover:scale-105"
+              className="
+                mt-8
+                inline-flex
+                items-center
+                gap-2
+                rounded-full
+                bg-[#B38B2D]
+                px-8
+                py-4
+                text-sm
+                font-bold
+                text-white
+                shadow-lg
+                transition-all
+                duration-300
+                hover:bg-[#9D7824]
+                hover:-translate-y-1
+                hover:shadow-xl
+              "
             >
               <span className="text-white">
                 Explore Collection
@@ -58,14 +79,40 @@ export default function WhyChooseUs() {
             {points.map((item) => (
               <div
                 key={item}
-                className="flex items-center gap-4 rounded-[24px] border border-[#eadcf7] bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="
+                  flex
+                  items-center
+                  gap-4
+                  rounded-[24px]
+                  border
+                  border-[#B38B2D]/15
+                  bg-white
+                  p-6
+                  shadow-sm
+                  transition-all
+                  duration-300
+                  hover:-translate-y-2
+                  hover:shadow-xl
+                "
               >
-                <CheckCircle2
-                  className="shrink-0 text-[#8a5db2]"
-                  size={22}
-                />
+                <div
+                  className="
+                    flex
+                    h-12
+                    w-12
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-[#E8F8EE]
+                  "
+                >
+                  <CheckCircle2
+                    className="text-[#1F5C4A]"
+                    size={22}
+                  />
+                </div>
 
-                <span className="font-semibold text-[#5d4475]">
+                <span className="font-semibold text-[#1F5C4A]">
                   {item}
                 </span>
               </div>

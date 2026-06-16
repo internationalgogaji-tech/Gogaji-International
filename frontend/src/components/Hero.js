@@ -7,17 +7,95 @@ import { API_BASE } from "@/lib/api";
 
 const fallbackSlides = [
   {
-    image: "/banner/banner-1.png",
-    label: "Bulk Procurement",
-    title1: "Bulk Procurement For",
-    title2: "Industrial Components",
-    item: "Semiconductors, Sensors & Automation Parts",
+    image: "/banner/hero-1.jpg",
+
+    label: "PREMIUM HOME DECOR",
+
+    title1: "Luxury Home Decor",
+
+    title2: "For Elegant Spaces",
+
+    item: "Premium Vases, Decorative Accents & Luxury Living",
+
     description:
-      "Buy electrical, electronic, mechanical and automation components online with trusted brand sourcing, technical specifications, bulk quantity support and reliable B2B delivery across India.",
-    primaryText: "Shop Components",
+      "Discover handcrafted decorative accessories, statement vases, candle holders and luxury home accents designed for modern homes, hospitality projects and interior styling professionals.",
+
+    primaryText: "Shop Collection",
+
     primaryLink: "/products",
-    secondaryText: "Request Bulk Quote",
-    secondaryLink: "/quote-request",
+
+    secondaryText: "Explore Categories",
+
+    secondaryLink: "/categories",
+  },
+
+  {
+    image: "/banner/hero-2.jpg",
+
+    label: "PREMIUM PLANTERS",
+
+    title1: "Premium Planters",
+
+    title2: "For Modern Living",
+
+    item: "Indoor Planters, Ceramic Pots & Green Styling",
+
+    description:
+      "Explore designer planters, ceramic pots and decorative greenery accessories crafted to elevate homes, offices and luxury interior spaces.",
+
+    primaryText: "Shop Planters",
+
+    primaryLink: "/products",
+
+    secondaryText: "View Collection",
+
+    secondaryLink: "/categories",
+  },
+
+  {
+    image: "/banner/hero-3.jpg",
+
+    label: "LUXURY VASE COLLECTION",
+
+    title1: "Luxury Vases",
+
+    title2: "For Timeless Interiors",
+
+    item: "Ceramic Vases, Floral Decor & Accent Styling",
+
+    description:
+      "Premium ceramic vases and decorative floral accessories designed to create elegant interiors and sophisticated living spaces.",
+
+    primaryText: "Shop Vases",
+
+    primaryLink: "/products",
+
+    secondaryText: "Explore Collection",
+
+    secondaryLink: "/categories",
+  },
+
+  {
+    image: "/banner/hero-4.jpg",
+
+    label: "ELEGANT CANDLE HOLDERS",
+
+    title1: "Decorative Candle Holders",
+
+    title2: "For Luxury Ambience",
+
+    item: "Premium Candle Stands & Table Styling",
+
+    description:
+      "Transform your home with elegant candle holders, luxury table accents and decorative accessories designed for modern interiors.",
+
+    primaryText: "Shop Decor",
+
+    primaryLink: "/products",
+
+    secondaryText: "Explore Collection",
+
+    secondaryLink: "/categories",
   },
 ];
 
@@ -151,13 +229,12 @@ export default function Hero() {
   }, [activeSlide]);
 
   return (
-    <section className="relative isolate min-h-[650px] overflow-hidden bg-[#F5FBF5] sm:min-h-[590px] md:min-h-[560px] lg:min-h-[540px]">
+    <section className="relative isolate min-h-[650px] overflow-hidden bg-[#FDFBF5] sm:min-h-[590px] md:min-h-[560px] lg:min-h-[540px]">
       {slides.map((slide, index) => (
         <div
           key={slide._id || slide.image || index}
-          className={`absolute inset-0 bg-cover bg-[78%_center] transition-opacity duration-[2000ms] sm:bg-[72%_center] md:bg-center ${
-            currentSlide === index ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute inset-0 bg-cover bg-[78%_center] transition-opacity duration-[2000ms] sm:bg-[72%_center] md:bg-center ${currentSlide === index ? "opacity-100" : "opacity-0"
+            }`}
           style={{
             backgroundImage: `url('${getImageUrl(slide.image)}')`,
           }}
@@ -165,41 +242,40 @@ export default function Hero() {
       ))}
 
       <div
-        className="absolute inset-0 bg-gradient-to-r from-white/95 via-[#F5FBF5]/85 to-[#EAF6EA]/30 sm:from-white/96 sm:via-white/80 sm:to-white/25 lg:from-white/90 lg:via-white/65 lg:to-transparent"
+        className="absolute inset-0 bg-gradient-to-r from-white/82 via-white/35 to-transparent sm:from-white/78 sm:via-white/25 sm:to-transparent lg:from-white/72 lg:via-white/15 lg:to-transparent"
       />
 
       <div className="container-royal relative z-10 flex min-h-[650px] items-center px-4 py-8 sm:min-h-[590px] sm:px-6 md:min-h-[560px] lg:min-h-[540px]">
-        <div className="w-full max-w-[760px] rounded-[32px] bg-white/15 backdrop-blur-[2px] p-2">
-          <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-[#BBF7D0] bg-[#F0FDF4]/95 px-3 py-2 text-[11px] font-bold text-[#0f172a] shadow-sm sm:px-4 sm:text-sm">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-[#25D366]" /> 
-            <span className="truncate">
-              {activeSlide?.label || "Trusted Industrial Components"} • Fast
-              Procurement • B2B Supply
-            </span>
-          </div>
+        <div className="w-full max-w-[560px] rounded-[32px] p-2">          <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-[#DCCB9E] bg-[#FDFBF5] px-3 py-2 text-[11px] font-bold text-[#2F3A3A] shadow-sm sm:px-4 sm:text-sm">
+          <span className="h-2 w-2 shrink-0 rounded-full bg-[#B38B2D]" />
+          <span className="truncate">
+            {activeSlide?.label || "Trusted Industrial Components"} • Fast
+            Procurement • B2B Supply
+          </span>
+        </div>
 
-          <h1 className="max-w-3xl text-[34px] font-extrabold leading-[1.08] tracking-[-0.035em] sm:text-[44px] md:text-[50px] lg:text-[56px]">
-            <span className="bg-gradient-to-r from-[#128C7E] via-[#25D366] to-[#4ADE80] bg-clip-text text-transparent">
+          <h1 className="max-w-3xl text-[32px] font-bold leading-[1.05] tracking-[-0.03em] sm:text-[40px] md:text-[46px] lg:text-[52px]">
+            <span className="text-[#1F5C4A]">
               {typedTitle1}
             </span>
             <br />
-            <span className="bg-gradient-to-r from-[#25D366] via-[#128C7E] to-[#065F46] bg-clip-text text-transparent">
+            <span className="text-[#B38B2D]">
               {typedTitle2}
             </span>
           </h1>
 
-          <div className="mt-4 text-[18px] font-extrabold sm:text-[22px] md:text-[24px]">
+          <div className="mt-3 text-[16px] font-bold sm:text-[18px] md:text-[20px]">
             <span className="text-[#0f172a]">We supply </span>
-           <span className="inline-block bg-gradient-to-r from-[#25D366] to-[#128C7E] bg-clip-text text-transparent"> 
+            <span className="inline-block text-[#25D366]">
               {typedItem}
             </span>
           </div>
 
-          <div className="mt-2 text-[13px] font-semibold text-[#166534] sm:text-[14px]">
+          <div className="mt-2 text-[13px] font-semibold text-[#B38B2D] sm:text-[14px]">
             Luxury Home Decor • Stylish Living • Premium Collection
           </div>
 
-          <p className="mt-4 max-w-2xl text-[14px] leading-7 text-[#334155] sm:text-[16px] md:text-[17px]">
+          <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[#2F3A3A] sm:text-[15px] md:text-[16px]">
             {activeSlide?.description ||
               "Source electrical, electronic, mechanical, automation and hardware products with technical clarity, trusted brand availability and reliable wholesale supply support."}
           </p>
@@ -208,8 +284,7 @@ export default function Hero() {
             {/* Primary Button */}
             <Link
               href={activeSlide?.primaryLink || "/products"}
-              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#25D366] to-[#128C7E] px-7 py-3.5 text-sm font-extrabold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:w-auto"
-            >
+              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1F5C4A] px-7 py-3.5 text-sm font-extrabold text-white shadow-lg transition-all duration-300 hover:bg-[#18483A] hover:-translate-y-1 hover:shadow-2xl sm:w-auto"            >
               <ArrowRight
                 size={18}
                 className="text-white transition-transform duration-300 group-hover:translate-x-1"
@@ -222,8 +297,8 @@ export default function Hero() {
 
             {/* Secondary Button */}
             <Link
-              href={activeSlide?.secondaryLink || "/quote-request"}
-              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#34D399] via-[#10B981] to-[#059669] px-7 py-3.5 text-sm font-extrabold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:from-[#9E8AB2] hover:via-[#8B749F] hover:to-[#6B567F] sm:w-auto"
+              href={activeSlide?.secondaryLink || "/categories"}
+              className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#B38B2D] px-8 py-4 text-sm font-extrabold text-white shadow-[0_10px_25px_rgba(179,139,45,0.25)] transition-all duration-300 hover:bg-[#9E7725] hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(179,139,45,0.35)] sm:w-auto"
             >
               <FileText
                 size={18}
@@ -231,7 +306,7 @@ export default function Hero() {
               />
 
               <span className="text-white">
-                {activeSlide?.secondaryText || "Request Bulk Quote"}
+                {activeSlide?.secondaryText || "View Collection"}
               </span>
             </Link>
           </div>
@@ -243,9 +318,8 @@ export default function Hero() {
               return (
                 <div
                   key={item.text}
-                  className="flex items-center gap-3 rounded-2xl border border-[#BBF7D0] bg-gradient-to-r from-[#F0FDF4] to-[#DCFCE7] backdrop-blur-sm px-4 py-3 text-sm font-bold text-[#166534] shadow-lg"
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-[#34D399] to-[#059669] text-white">
+                  className="flex items-center gap-3 rounded-2xl border border-[#E8D8AE] bg-[#FDFBF5] backdrop-blur-sm px-4 py-3 text-sm font-bold text-[#2F3A3A] shadow-lg"                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#1F5C4A] text-white">
                     <Icon size={18} />
                   </span>
                   {item.text}
@@ -262,11 +336,10 @@ export default function Hero() {
             <button
               key={slide._id || slide.image || index}
               onClick={() => setCurrentSlide(index)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                currentSlide === index
-                  ? "w-8 bg-[#25D366]"
-                 : "w-2.5 bg-[#BBF7D0]"
-              }`}
+              className={`h-2.5 rounded-full transition-all duration-300 ${currentSlide === index
+                ? "w-8 bg-[#25D366]"
+                : "w-2.5 bg-[#BBF7D0]"
+                }`}
               type="button"
               aria-label={`Go to banner ${index + 1}`}
             />

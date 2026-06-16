@@ -90,7 +90,7 @@ export default function Navbar() {
 
   const staticMenuItems = [
     {
-      name: "New at BEHOMA",
+      name: "New at GOGAJI",
       href: "/category/new-arrivals",
       children: ["Latest Collection", "Featured Products"],
     },
@@ -229,8 +229,9 @@ export default function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
-        <div className="bg-[#DCFCE7] text-[#166534] px-4 py-3 text-center text-sm font-semibold">
-          🚚 Free Shipping on Bulk Orders Above ₹10,000
+        <div className="bg-[#1F5C4A] text-white px-4 py-3 text-center text-sm font-semibold shadow-sm">
+          <span className="text-[#B38B2D]">🚚</span>{" "}
+          Free Shipping on Bulk Orders Above ₹10,000
         </div>
 
         <div className="mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-8">
@@ -368,7 +369,7 @@ export default function Navbar() {
                 </div>
               )}
 
-              <div className="hidden h-[46px] items-center gap-2 rounded-full border border-[#25D366] bg-[#25D366] px-5 text-sm font-bold text-white shadow-sm md:flex hover:bg-[#1FB857] transition-all">
+              <div className="hidden h-[46px] items-center gap-2 rounded-full border border-[#1F5C4A] bg-[#1F5C4A] px-5 text-sm font-bold text-white shadow-sm md:flex hover:bg-[#18493B] transition-all duration-300">
                 <PackageSearch size={18} />
                 Request Products
               </div>

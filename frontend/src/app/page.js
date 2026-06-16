@@ -178,7 +178,7 @@ export default async function HomePage() {
     await getPromoBanners("afterTrendingProducts");
 
   return (
-    <div className="min-h-screen bg-[#f7f9fc]">
+<div className="min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -247,12 +247,12 @@ export default async function HomePage() {
       <WhyChooseUs />
       <NewsletterCTA />
 
-     <section className="bg-white border-t border-[#eadcf7] py-16">
+     <section className="bg-white border-t border-[#B38B2D]/15 py-16">
   <div className="container-royal">
-    <div className="max-w-7xl mx-auto prose prose-lg max-w-none text-[#5d4475]">
+  <div className="max-w-7xl mx-auto prose prose-lg max-w-none text-[#5A6464]">
 
-      <h2 className="text-[38px] font-extrabold text-[#5d4475] leading-tight">
-        Premium Home Decor Products Online In India
+<h2 className="text-[38px] font-extrabold text-[#1F5C4A] leading-tight">
+          Premium Home Decor Products Online In India
       </h2>
 
       <p>
@@ -269,7 +269,7 @@ export default async function HomePage() {
         solutions help create elegant and inspiring interiors.
       </p>
 
-      <h2 className="mt-12 text-[32px] font-extrabold text-[#5d4475] leading-tight">
+      <h2 className="mt-12 text-[32px] font-extrabold text-[#1F5C4A] leading-tight">
         Luxury Decor Collections For Every Space
       </h2>
 
@@ -287,7 +287,7 @@ export default async function HomePage() {
         beauty and elegance to every environment.
       </p>
 
-      <h3 className="mt-8 text-[26px] font-bold text-[#5d4475]">
+      <h3 className="mt-8 text-[26px] font-bold text-[#1F5C4A]">
         Popular Home Decor Categories
       </h3>
 
@@ -304,7 +304,7 @@ export default async function HomePage() {
         <li>Luxury Interior Accessories</li>
       </ul>
 
-      <h2 className="mt-12 text-[32px] font-extrabold text-[#5d4475] leading-tight">
+      <h2 className="mt-12 text-[32px] font-extrabold text-[#1F5C4A] leading-tight">
         Wholesale Home Decor & Corporate Gifting
       </h2>
 
@@ -325,21 +325,21 @@ export default async function HomePage() {
   </div>
 </section>
 
-      <section className="bg-white py-14 border-t border-[#eadcf7]">
+      <section className="bg-white py-14 border-t border-[#B38B2D]/20">
   <div className="container-royal">
 
-    <h2 className="text-[34px] font-extrabold text-[#5d4475]">
+    <h2 className="text-[34px] font-extrabold text-[#1F5C4A]">
       Frequently Asked Questions
     </h2>
 
     <div className="mt-10 space-y-8">
 
       <div>
-        <h3 className="text-[24px] font-bold text-[#5d4475]">
+        <h3 className="text-[24px] font-bold text-[#1F5C4A]">
           What products does Gogaji International offer?
         </h3>
 
-        <p className="mt-3 text-[17px] leading-8 text-[#6b7280]">
+        <p className="mt-3 text-[17px] leading-8 text-[#5A6464]">
           We offer decorative vases, artificial flowers,
           premium planters, luxury gifting products and
           elegant home decor accessories.
@@ -347,33 +347,33 @@ export default async function HomePage() {
       </div>
 
       <div>
-        <h3 className="text-[24px] font-bold text-[#5d4475]">
+        <h3 className="text-[24px] font-bold text-[#1F5C4A]">
           Do you provide bulk order support?
         </h3>
 
-        <p className="mt-3 text-[17px] leading-8 text-[#6b7280]">
+        <p className="mt-3 text-[17px] leading-8 text-[#5A6464]">
           Yes. We support wholesale orders, interior
           projects, hotel requirements and corporate gifting.
         </p>
       </div>
 
       <div>
-        <h3 className="text-[24px] font-bold text-[#5d4475]">
+        <h3 className="text-[24px] font-bold text-[#1F5C4A]">
           Do you deliver across India?
         </h3>
 
-        <p className="mt-3 text-[17px] leading-8 text-[#6b7280]">
+        <p className="mt-3 text-[17px] leading-8 text-[#5A6464]">
           Yes, we offer reliable delivery services
           across India.
         </p>
       </div>
 
       <div>
-        <h3 className="text-[24px] font-bold text-[#5d4475]">
+        <h3 className="text-[24px] font-bold text-[#1F5C4A]">
           Do you work with interior designers?
         </h3>
 
-        <p className="mt-3 text-[17px] leading-8 text-[#6b7280]">
+        <p className="mt-3 text-[17px] leading-8 text-[#5A6464]">
           Absolutely. We regularly support interior
           designers, architects and hospitality projects.
         </p>
@@ -383,10 +383,10 @@ export default async function HomePage() {
   </div>
 </section>
 
-      <section className="bg-white py-14 border-t border-[#eadcf7]">
+<section className="bg-white py-14 border-t border-[#B38B2D]/15">
   <div className="container-royal">
 
-    <h2 className="text-[32px] font-extrabold text-[#5d4475]">
+    <h2 className="text-[32px] font-extrabold text-[#1F5C4A]">
       Explore Home Decor Collections
     </h2>
 
@@ -394,37 +394,121 @@ export default async function HomePage() {
 
       <a
         href="/products"
-        className="rounded-full border border-[#eadcf7] px-6 py-3 text-[16px] font-semibold text-[#8a5db2] transition hover:bg-[#8a5db2] hover:text-white"
-      >
-        Premium Home Decor
+className="
+rounded-full
+bg-[#B38B2D]
+border
+border-[#B38B2D]
+px-6
+py-3
+text-[16px]
+font-semibold
+!text-white
+no-underline
+shadow-sm
+transition-all
+duration-300
+hover:!text-white
+hover:bg-[#9D7824]
+hover:border-[#9D7824]
+hover:shadow-lg
+">
+          Premium Home Decor
       </a>
 
       <a
         href="/products"
-        className="rounded-full border border-[#eadcf7] px-6 py-3 text-[16px] font-semibold text-[#8a5db2] transition hover:bg-[#8a5db2] hover:text-white"
-      >
-        Decorative Vases
+className="
+rounded-full
+bg-[#B38B2D]
+border
+border-[#B38B2D]
+px-6
+py-3
+text-[16px]
+font-semibold
+!text-white
+no-underline
+shadow-sm
+transition-all
+duration-300
+hover:!text-white
+hover:bg-[#9D7824]
+hover:border-[#9D7824]
+hover:shadow-lg
+"
+>        Decorative Vases
       </a>
 
       <a
         href="/products"
-        className="rounded-full border border-[#eadcf7] px-6 py-3 text-[16px] font-semibold text-[#8a5db2] transition hover:bg-[#8a5db2] hover:text-white"
-      >
-        Artificial Flowers
+className="
+rounded-full
+bg-[#B38B2D]
+border
+border-[#B38B2D]
+px-6
+py-3
+text-[16px]
+font-semibold
+!text-white
+no-underline
+shadow-sm
+transition-all
+duration-300
+hover:!text-white
+hover:bg-[#9D7824]
+hover:border-[#9D7824]
+hover:shadow-lg
+">
+          Artificial Flowers
       </a>
 
       <a
         href="/products"
-        className="rounded-full border border-[#eadcf7] px-6 py-3 text-[16px] font-semibold text-[#8a5db2] transition hover:bg-[#8a5db2] hover:text-white"
-      >
-        Luxury Planters
+className="
+rounded-full
+bg-[#B38B2D]
+border
+border-[#B38B2D]
+px-6
+py-3
+text-[16px]
+font-semibold
+!text-white
+no-underline
+shadow-sm
+transition-all
+duration-300
+hover:!text-white
+hover:bg-[#9D7824]
+hover:border-[#9D7824]
+hover:shadow-lg
+">    Luxury Planters
       </a>
 
       <a
         href="/contact"
-        className="rounded-full border border-[#eadcf7] px-6 py-3 text-[16px] font-semibold text-[#8a5db2] transition hover:bg-[#8a5db2] hover:text-white"
-      >
-        Contact Us
+className="
+rounded-full
+bg-[#B38B2D]
+border
+border-[#B38B2D]
+px-6
+py-3
+text-[16px]
+font-semibold
+!text-white
+no-underline
+shadow-sm
+transition-all
+duration-300
+hover:!text-white
+hover:bg-[#9D7824]
+hover:border-[#9D7824]
+hover:shadow-lg
+">
+          Contact Us
       </a>
 
     </div>

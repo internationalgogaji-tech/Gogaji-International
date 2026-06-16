@@ -41,14 +41,14 @@ function getStockData(product) {
   if (qty <= 10 || product?.stockStatus === "low_stock") {
     return {
       label: "Only few left",
-      className: "bg-[#fff4e5] text-[#c26a00]",
+      className: "bg-[#FFF8E8] text-[#B38B2D]",
       isOut: false,
     };
   }
 
   return {
     label: "In Stock",
-    className: "bg-[#e8f8ee] text-[#0f8a4b]",
+    className: "bg-[#E8F8EE] text-[#1F5C4A]",
     isOut: false,
   };
 }
@@ -68,18 +68,28 @@ export default function ProductCard({ product }) {
   const rating = 4.8;
 
   return (
-    <div className="group overflow-hidden rounded-[16px] border border-[#d8e2ec] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md">
-      <div className="relative border-b border-[#edf2f7]">
+    <div className="group overflow-hidden rounded-[24px] border border-[#B38B2D]/20 bg-white shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+<div className="relative border-b border-[#B38B2D]/15 bg-[#F8F6F2]">
         <div className="absolute right-3 top-3 z-10">
           <WishlistToggleButton product={product} />
         </div>
 
         <Link href={productLink} className="block">
-          <div className="flex h-[150px] items-center justify-center overflow-hidden bg-white p-3">
+          <div className="h-[180px] overflow-hidden bg-[#F8F6F2]">
             <img
               src={getProductImage(product)}
               alt={product?.name || "Product"}
-              className="max-h-full max-w-full object-contain transition duration-300 group-hover:scale-[1.03]"
+              className="
+      w-full
+      h-full
+      h-[180px]
+
+      object-cover
+      object-center
+      transition-all
+      duration-500
+      group-hover:scale-105
+    "
               onError={(e) => {
                 e.currentTarget.onerror = null;
                 e.currentTarget.src = `${API_BASE}/uploads/new-products/LM358.jpg`;
@@ -97,33 +107,33 @@ export default function ProductCard({ product }) {
             {stockData.label}
           </span>
 
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#f4f7fb] px-3 py-[5px] text-[11px] font-semibold text-[#1f3b57]">
-            <Star size={12} className="fill-[#f5b301] text-[#f5b301]" />
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E8] px-3 py-[5px] text-[11px] font-semibold text-[#1F5C4A]">
+            <Star size={12} className="fill-[#B38B2D] text-[#B38B2D]" />
             {rating}
           </span>
         </div>
 
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#0b6aa2]">
+        <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#B38B2D]">
           {product?.brand || "Generic"}
         </p>
 
         <Link href={productLink}>
-          <h3 className="mt-2 line-clamp-2 min-h-[52px] text-[17px] font-extrabold leading-[1.2] text-[#102033] transition hover:text-[#0b6aa2]">
+          <h3 className="mt-2 line-clamp-2 min-h-[52px] text-[17px] font-extrabold leading-[1.2] text-[#2F3A3A] transition hover:text-[#1F5C4A]">
             {product?.name}
           </h3>
         </Link>
 
-        <p className="mt-1 line-clamp-1 min-h-[24px] text-[13px] leading-6 text-[#61758a]">
+        <p className="mt-1 line-clamp-1 min-h-[24px] text-[13px] leading-6 text-[#5A6464]">
           {product?.shortDescription || "Industrial electronic component."}
         </p>
 
         <div className="mt-2 flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-[#f4f7fb] px-3 py-[5px] text-[11px] font-semibold text-[#5b7087]">
+          <span className="rounded-full bg-[#F7F4EC] px-3 py-[5px] text-[11px] font-semibold text-[#1F5C4A]">
             MOQ: {moq} {product?.unit || "piece"}
           </span>
 
           {Number(product?.stock || 0) > 0 ? (
-            <span className="rounded-full bg-[#eef8ff] px-3 py-[5px] text-[11px] font-semibold text-[#0b6aa2]">
+            <span className="rounded-full bg-[#E8F8EE] px-3 py-[5px] text-[11px] font-semibold text-[#1F5C4A]">
               Stock: {Number(product?.stock || 0)}
             </span>
           ) : null}
@@ -131,7 +141,7 @@ export default function ProductCard({ product }) {
 
         <div className="mt-3">
           <div className="flex items-end gap-2">
-            <span className="text-[18px] font-extrabold leading-none text-[#102033]">
+            <span className="text-[18px] font-extrabold leading-none text-[#1F5C4A]">
               ₹{price.toLocaleString("en-IN")}
             </span>
 
@@ -142,19 +152,19 @@ export default function ProductCard({ product }) {
             ) : null}
 
             {mrp > price ? (
-              <span className="text-[12px] font-semibold text-[#ff6b35]">
+              <span className="text-[12px] font-semibold text-[#B38B2D]">
                 ({Math.round(((mrp - price) / mrp) * 100)}% OFF)
               </span>
             ) : null}
           </div>
 
-          <p className="mt-1 text-[11px] leading-5 text-[#6c8095]">
+          <p className="mt-1 text-[11px] leading-5 text-[#6A7373]">
             Ex. GST • Bulk procurement ready
           </p>
         </div>
 
         {stockData.isOut ? (
-          <div className="mt-4 flex h-[44px] w-full items-center justify-center gap-2 rounded-full border border-red-200 bg-red-50 text-[14px] font-extrabold text-red-700">
+          <div className="mt-4 flex h-[44px] w-full items-center justify-center gap-2 rounded-full border border-[#B38B2D]/30 bg-[#FFF8E8] text-[#B38B2D] font-extrabold text-red-700">
             <ShoppingCart size={16} />
             {product?.allowBackorder
               ? "Request Availability"
@@ -163,10 +173,35 @@ export default function ProductCard({ product }) {
         ) : (
           <Link
             href={productLink}
-            className="mt-4 flex h-[44px] w-full items-center justify-center gap-2 rounded-full border border-[#b6dcff] bg-[#d6ecff] text-[14px] font-extrabold text-[#000000] transition hover:bg-[#c5e4ff]"
+            className="
+    mt-4
+    flex
+    h-[50px]
+    w-full
+    items-center
+    justify-center
+    gap-2
+    rounded-full
+    bg-[#B38B2D]
+    text-[15px]
+    font-bold
+    text-white
+    shadow-md
+    transition-all
+    duration-300
+    hover:bg-[#9D7824]
+    hover:shadow-[0_10px_25px_rgba(179,139,45,0.35)]
+    hover:-translate-y-0.5
+  "
           >
-            <ShoppingCart size={16} className="text-[#0b6aa2]" />
-            View Details
+            <ShoppingCart
+              size={18}
+              className="text-white flex-shrink-0"
+            />
+
+            <span className="text-white">
+              View Details
+            </span>
           </Link>
         )}
       </div>
