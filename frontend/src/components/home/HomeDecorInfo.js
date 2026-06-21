@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import WishlistToggleButton from "@/components/WishlistToggleButton";
 import { Navigation, Autoplay } from "swiper/modules";
 
 import "swiper/css";
@@ -96,7 +96,28 @@ shadow-lg
                         },
                     }}
                 >
-                    {data.products?.map((item, index) => (
+                    {data.products?.map((item, index) => {
+
+  console.log(
+  "HOME DECOR PRODUCT =",
+  JSON.stringify({
+    productId: item.productId,
+    _id: item._id,
+    slug: item.slug,
+    title: item.title,
+    buttonLink: item.buttonLink,
+  })
+);
+
+console.log("WISHLIST PRODUCT =", {
+  productId: item.productId,
+  _id: item._id,
+  title: item.title,
+});
+
+  return (
+                        
+                        
                         <SwiperSlide key={index}>
 <div className="
 group
@@ -114,6 +135,26 @@ flex
 flex-col
 ">
 <div className="relative h-[260px] overflow-hidden bg-[#F8F6F2]">
+
+    <div
+  className="absolute top-4 right-4 z-20"
+  onClick={(e) => e.stopPropagation()}
+>
+
+    
+<WishlistToggleButton
+  product={{
+    ...item,
+    _id: item.productId || item._id,
+    id: item.productId || item._id,
+    slug: item.slug || item.buttonLink?.split("/product/")[1],
+    name: item.title,
+    thumbnail: item.image,
+    price: item.price,
+    mrp: item.mrp,
+  }}
+/>
+</div>
   <img
   src={item.image}
   alt={item.title}
@@ -197,7 +238,8 @@ hover:-translate-y-1
                                 </Link>
                             </div>
                         </SwiperSlide>
-                    ))}
+                     );
+})}
                 </Swiper>
             </div>
         </section>

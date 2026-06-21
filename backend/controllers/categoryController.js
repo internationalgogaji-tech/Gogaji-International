@@ -5,7 +5,7 @@ const slugify = (value = "") =>
     .toLowerCase()
     .trim()
     .replace(/&/g, "and")
-    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/[^a-z0-9- ]/g, "")
     .replace(/\s+/g, "-");
 
 const normalizeOptionalSlug = (value = "") => {
@@ -150,10 +150,20 @@ exports.getCategoryBySlug = async (req, res) => {
   try {
     const slug = slugify(req.params.slug);
 
+    const allCategories = await Category.find({})
+      .select("name slug");
+
+    console.log("ALL CATEGORIES =", allCategories);
+
+    console.log("REQ SLUG =", req.params.slug);
+    console.log("NORMALIZED =", slug);
+
     const category = await Category.findOne({
       slug,
       isActive: true,
     }).lean();
+
+    console.log("FOUND CATEGORY =", category);
 
     if (!category) {
       return res.status(404).json({

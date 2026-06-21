@@ -71,6 +71,9 @@ export function WishlistProvider({ children }) {
 
     const productId = product?._id || product?.id || product?.productId;
 
+    console.log("WISHLIST PRODUCT =", product);
+console.log("PRODUCT ID =", productId);
+
     if (!productId) {
       toast.error("Product ID missing");
       return { success: false };

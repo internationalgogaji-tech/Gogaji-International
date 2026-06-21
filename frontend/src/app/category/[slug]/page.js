@@ -13,11 +13,18 @@ function getImageUrl(url) {
 }
 
 async function getCategoryTree(slug) {
-  try {
-    return await apiRequest(`/api/categories/${slug}`, { cache: "no-store" });
-  } catch {
-    return null;
-  }
+  const res = await fetch(
+    `http://localhost:5000/api/categories/${slug}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  const data = await res.json();
+
+  console.log("CATEGORY API =", data);
+
+  return data;
 }
 
 export async function generateMetadata({ params, searchParams }) {
@@ -143,6 +150,10 @@ export default async function CategoryPage({ params, searchParams }) {
   const keyword = query?.keyword || "";
 
   const mainData = await getCategoryTree(slug);
+
+  console.log("SLUG =", slug);
+  console.log("MAIN DATA =", mainData);
+
   if (!mainData?.category) notFound();
 
   const activeData = finalSubCategory
@@ -265,8 +276,21 @@ export default async function CategoryPage({ params, searchParams }) {
                 const productSubCategory =
                   productSubCategoryMap[item.slug] || item.slug;
 
+                const categorySlugMap = {
+                  "home-decor": "homedecor",
+                  "new-at-behoma": "newatbehoma",
+                  "planters-vases": "plantersvases",
+                  "decor-accents": "decoraccents",
+                  "pooja-mandir": "poojamandir",
+                  "candle-holders": "candleholders",
+                  "trays-urlis": "traysurlis",
+                };
+
+                const productCategory =
+                  categorySlugMap[slug] || slug;
+
                 const href = selectedSubCategory
-                  ? `/products?category=${slug}&subCategory=${productSubCategory}`
+                  ? `/products?category=${productCategory}&subCategory=${productSubCategory}`
                   : `/category/${slug}?subCategory=${item.slug}`;
 
                 return (
