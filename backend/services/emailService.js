@@ -1,111 +1,28 @@
-console.log("🚨 EMAIL SERVICE LOADED");
-console.trace();
+const { Resend } = require("resend");
 
-const nodemailer = require("nodemailer");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// ===============================
-// 📧 TRANSPORTER
-// ===============================
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: Number(process.env.SMTP_PORT || 587) === 465,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
-
-
-
-// 👇 YE YAHI ADD KARO
-console.log("=================================");
-console.log("SMTP_USER =", process.env.SMTP_USER);
-console.log("SMTP_PASS =", process.env.SMTP_PASS);
-console.log(
-  "SMTP_PASS_LENGTH =",
-  process.env.SMTP_PASS ? process.env.SMTP_PASS.length : 0
-);
-console.log("=================================");
-
-// ===============================
-// ✅ VERIFY SMTP CONNECTION
-// ===============================
-const verifyEmailConfig = async () => {
-  try {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      console.log("❌ SMTP_USER or SMTP_PASS missing in .env");
-      return false;
-    }
-
-    await transporter.verify();
-    console.log("✅ SMTP server is ready to send emails");
-    return true;
-  } catch (error) {
-    console.error("❌ SMTP verify failed:", error.message);
-    return false;
-  }
-};
-
-// ===============================
-// 📧 SEND EMAIL FUNCTION
-// ===============================
 const sendEmail = async ({
   to,
   subject,
   html,
-  attachments = [],
 }) => {
-  if (!to) {
-    console.log("❌ No email provided");
-    return false;
-  }
-
-  if (!subject) {
-    console.log("❌ Email subject missing");
-    return false;
-  }
-
   try {
-    const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM || `Royal Component <${process.env.SMTP_USER}>`,
+    await resend.emails.send({
+      from: process.env.OTP_FROM_EMAIL,
       to,
       subject,
-      html: html || "",
-      attachments,
+      html,
     });
 
-    console.log("✅ Email sent:", info.messageId);
+    console.log("Email sent via Resend");
     return true;
   } catch (error) {
-    console.error("❌ Email send error:", error.message);
-
-    if (error.code) {
-      console.error("SMTP error code:", error.code);
-    }
-
-    if (error.response) {
-      console.error("SMTP response:", error.response);
-    }
-
-    return false;
+    console.error("Resend Error:", error);
+    throw error;
   }
 };
 
-// ===============================
-// EXPORTS
-// ===============================
-
-// (async () => {
-//   try {
-//     await transporter.verify();
-//     console.log("✅ SMTP VERIFIED");
-//   } catch (err) {
-//     console.log("❌ SMTP FAILED");
-//     console.log(err);
-//   }
-// })();
 module.exports = {
   sendEmail,
-  verifyEmailConfig,
 };

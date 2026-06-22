@@ -1061,3 +1061,31 @@ exports.logoutAllSessions = async (req, res) => {
     });
   }
 };
+
+exports.changeAdminPassword = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      email: "internationalgogaji@gmail.com",
+      role: "admin",
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Admin not found",
+      });
+    }
+
+    user.password = "GogajiInternational";
+
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Admin password changed successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
