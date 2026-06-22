@@ -120,6 +120,11 @@ if (process.env.NODE_ENV !== "production") {
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+console.log(
+  "UPLOAD PATH:",
+  path.join(__dirname, "uploads")
+);
+
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,

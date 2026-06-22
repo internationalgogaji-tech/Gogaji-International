@@ -7,7 +7,7 @@ import WishlistToggleButton from "@/components/WishlistToggleButton";
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
-  "https://royal-component-backend.onrender.com";
+  "https://gogaji-international.onrender.com";
 
 const getImageUrl = (url) => {
   if (!url) return "https://via.placeholder.com/500x500?text=No+Image";

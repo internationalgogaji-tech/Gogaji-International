@@ -28,6 +28,24 @@
     try {
       if (req.body.products?.length) {
 
+        const cleanImagePath = (value = "") => {
+  if (!value) return "";
+
+  return String(value)
+    .replace(/\/uploads\/uploads\//g, "/uploads/")
+    .replace(/\r/g, "")
+    .replace(/\n/g, "")
+    .trim();
+};
+
+req.body.image = cleanImagePath(req.body.image);
+
+req.body.products = req.body.products.map((item) => ({
+  ...item,
+  image: cleanImagePath(item.image),
+  hoverImage: cleanImagePath(item.hoverImage),
+}));
+
         const updatedProducts = await Promise.all(
           req.body.products.map(async (item) => {
 
