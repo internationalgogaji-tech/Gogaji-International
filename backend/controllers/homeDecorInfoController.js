@@ -94,6 +94,10 @@ req.body.products = req.body.products.map((item) => ({
         req.body.products = updatedProducts;
       }
 
+      console.log("AFTER CLEAN =", req.body.products?.[0]?.image);
+console.log("AFTER CLEAN HOVER =", req.body.products?.[0]?.hoverImage);
+
+
       const data = await HomeDecorInfo.findOneAndUpdate(
         {},
         req.body,
