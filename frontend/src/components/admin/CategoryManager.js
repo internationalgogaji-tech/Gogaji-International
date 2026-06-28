@@ -41,8 +41,9 @@ function makeSlug(value) {
   return String(value || "")
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9]+/g, "")
-    .replace(/^-|-$/g, "");
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function imageUrl(src) {
@@ -357,7 +358,7 @@ export default function CategoryManager({ title, subtitle, level = "main" }) {
             className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#2454b5] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#1f49a0]"
           >
             <Plus size={18} />
-            Add {level === "main" ? "Main" : level === "sub" ? "Sub" : "Child"}{" "}
+           Add {level === "main" ? "Main" : "Sub"} Category
             Category
           </button>
         </div>
@@ -401,7 +402,7 @@ export default function CategoryManager({ title, subtitle, level = "main" }) {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search name, slug, parent..."
+              placeholder="Search home decor category..."
               className="w-full rounded-2xl border border-[#d8e1ec] bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-[#2454b5]"
             />
           </div>
@@ -479,7 +480,7 @@ export default function CategoryManager({ title, subtitle, level = "main" }) {
                   {editing ? "Edit Category" : "Add Category"}
                 </h2>
                 <p className="text-sm text-slate-500">
-                  Category hierarchy DB ke parentSlug se dynamic manage hogi.
+                 Main aur sub category parentSlug ke through manage hongi.
                 </p>
               </div>
 

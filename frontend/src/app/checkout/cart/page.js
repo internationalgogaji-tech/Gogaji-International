@@ -90,11 +90,11 @@ function QuantityInput({ item, updateQty, disabled }) {
       alert(
         `Insufficient Stock
 
-Available Stock: ${stock} pcs
+Available Stock: ${item.stock} pcs
 
 The quantity you entered exceeds the currently available inventory.
 
-You can add a maximum of ${stock} pcs to your cart.
+You can add a maximum of ${item.stock} pcs to your cart.
 
 For larger quantity requirements, please submit a BOM Request and our sourcing team will assist you.`
       );
@@ -214,8 +214,8 @@ For larger quantity requirements, please submit a BOM Request and our sourcing t
 const serviceHighlights = [
   {
     icon: PackageCheck,
-    title: "Bulk MOQ support",
-    desc: "Order in planned quantities for wholesale and repeat procurement.",
+    title: "Bulk decor order support",
+desc: "Order premium decor products in planned quantities for home, hotel and gifting needs.",
   },
   {
     icon: CreditCard,
@@ -224,8 +224,8 @@ const serviceHighlights = [
   },
   {
     icon: NotebookTabs,
-    title: "Parts list workflow",
-    desc: "Save product lists for repeat buying and internal approval flow.",
+    title: "Wishlist ready",
+desc: "Save favorite decor products for repeat buying and styling approvals.",
   },
   {
     icon: BadgeCheck,
@@ -251,9 +251,9 @@ const faqItems = [
       "Yes. Your guest basket stays saved on this device. After login, the basket can continue with your account flow.",
   },
   {
-    question: "Can I buy by stock number or upload a product list?",
+    question: "Can I order decor products in bulk?",
     answer:
-      "Yes. The basket experience is designed for quick reordering, stock-number based buying and bulk product additions.",
+      "Yes. You can add multiple home decor products and request support for bulk gifting, hotel, event or reseller orders.",
   },
 ];
 
@@ -512,20 +512,19 @@ export default function CartPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f7fb] text-[#1f2937]">
+    <div className="min-h-screen bg-[#F8F6F2] text-[#2F3A3A]">
       <Navbar />
 
       <div className="mx-auto max-w-[1360px] px-4 py-6 lg:px-6">
         <div className="mb-5">
-          <h1 className="text-[44px] font-semibold leading-none text-[#202124] md:text-[48px]">
-            Basket{" "}
+          <h1 className="text-[44px] font-black leading-none text-[#1F5C4A] md:text-[48px]">
+            Shopping Cart{" "}
             <span className="text-[24px] font-normal text-[#6b7280] md:text-[28px]">
               ({itemCountLabel})
             </span>
           </h1>
           <p className="mt-3 text-[16px] text-[#607287]">
-            Add any quantity you need for wholesale, hardware supply, project
-            procurement or repeat industrial buying.
+            Premium home decor products, gifting items aur bulk decor orders ko yahan review kar sakte ho.
           </p>
         </div>
 
@@ -536,9 +535,9 @@ export default function CartPage() {
           </div>
         ) : null}
 
-        <div className="mb-5 rounded-[12px] border border-[#dbe5f0] bg-white p-4 shadow-sm">
+        <div className="mb-5 rounded-[18px] border border-[#B38B2D]/25 bg-white p-4 shadow-md">
           <div className="flex gap-3">
-            <AlertCircle size={22} className="mt-1 shrink-0 text-[#2454b5]" />
+            <AlertCircle size={22} className="mt-1 shrink-0 text-[#B38B2D]" />
             <div>
               <p className="font-bold text-[#102033]">
                 Wholesale quantity is open
@@ -553,7 +552,7 @@ export default function CartPage() {
         </div>
 
         <div className="mb-5 flex flex-wrap gap-3">
-          <button className="border border-[#2454b5] bg-white px-5 py-3 text-[15px] font-semibold text-[#2454b5] transition hover:bg-[#f3f8ff]">
+          <button className="rounded-full border border-[#B38B2D] bg-white px-5 py-3 text-[15px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]">
             <span className="inline-flex items-center gap-2">
               <Share2 size={16} />
               Share basket
@@ -563,19 +562,19 @@ export default function CartPage() {
           <button
             onClick={clearCart}
             disabled={cartActionLoading || cartItems.length === 0}
-            className="border border-[#2454b5] bg-white px-5 py-3 text-[15px] font-semibold text-[#2454b5] transition hover:bg-[#f3f8ff] disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-full border border-[#B38B2D] bg-white px-5 py-3 text-[15px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Remove all items
           </button>
 
-          <button className="border border-[#2454b5] bg-white px-5 py-3 text-[15px] font-semibold text-[#2454b5] transition hover:bg-[#f3f8ff]">
+          <button className="rounded-full border border-[#B38B2D] bg-white px-5 py-3 text-[15px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]">
             <span className="inline-flex items-center gap-2">
               <Printer size={16} />
               Print as a quote
             </span>
           </button>
 
-          <button className="border border-[#2454b5] bg-white px-5 py-3 text-[15px] font-semibold text-[#2454b5] transition hover:bg-[#f3f8ff]">
+          <button className="rounded-full border border-[#B38B2D] bg-white px-5 py-3 text-[15px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]">
             <span className="inline-flex items-center gap-2">
               <Download size={16} />
               Download basket
@@ -583,15 +582,15 @@ export default function CartPage() {
             </span>
           </button>
 
-          <button className="border border-[#2454b5] bg-white px-5 py-3 text-[15px] font-semibold text-[#2454b5] transition hover:bg-[#f3f8ff]">
+          <button className="rounded-full border border-[#B38B2D] bg-white px-5 py-3 text-[15px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]">
             Save as list
           </button>
 
-          <button className="border border-[#2454b5] bg-white px-5 py-3 text-[15px] font-semibold text-[#2454b5] transition hover:bg-[#f3f8ff]">
+          <button className="rounded-full border border-[#B38B2D] bg-white px-5 py-3 text-[15px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]">
             Add by stock number
           </button>
 
-          <button className="border border-[#2454b5] bg-white px-5 py-3 text-[15px] font-semibold text-[#2454b5] transition hover:bg-[#f3f8ff]">
+          <button className="rounded-full border border-[#B38B2D] bg-white px-5 py-3 text-[15px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]">
             Add products in bulk
           </button>
         </div>
@@ -733,9 +732,9 @@ export default function CartPage() {
               </div>
             )}
             {cartItems.length > 0 ? (
-              <div className="mt-5 rounded-[18px] border border-[#d8e8f8] bg-white p-6 shadow-[0_12px_32px_rgba(15,23,42,0.05)]">
+              <div className="mt-5 rounded-[18px] border border-[#B38B2D]/20 bg-white p-6 shadow-[0_12px_32px_rgba(15,23,42,0.05)]">
                 <div className="flex items-start gap-4">
-                  <div className="rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                  <div className="rounded-full bg-[#FFF8E8] p-3 text-[#B38B2D]">
                     <NotebookTabs size={24} />
                   </div>
 
@@ -970,8 +969,7 @@ export default function CartPage() {
 
               <button
                 onClick={handleCheckout}
-                className="mt-5 h-[50px] w-full rounded-[6px] bg-[#2454b5] text-[18px] font-semibold text-white transition hover:bg-[#1e4695]"
-              >
+                className="mt-5 h-[52px] w-full rounded-full bg-[#1F5C4A] text-[18px] font-bold text-white shadow-md transition hover:bg-[#164638]"              >
                 {user?.token ? "Proceed to checkout" : "Log in to continue"}
               </button>
 
@@ -1018,9 +1016,9 @@ export default function CartPage() {
 
         {cartItems.length > 0 ? (
           <section className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_430px]">
-            <div className="rounded-[18px] border border-[#d8e8f8] bg-white p-6 shadow-[0_12px_32px_rgba(15,23,42,0.05)]">
+            <div className="rounded-[18px] border border-[#B38B2D]/20 bg-white p-6 shadow-[0_12px_32px_rgba(15,23,42,0.05)]">
               <div className="flex items-start gap-4">
-                <div className="rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                <div className="rounded-full bg-[#FFF8E8] p-3 text-[#B38B2D]">
                   <Truck size={24} />
                 </div>
 
@@ -1108,9 +1106,9 @@ export default function CartPage() {
                   return (
                     <div
                       key={item.label}
-                      className="rounded-[14px] border border-[#d8e8f8] bg-white p-5 shadow-[0_8px_20px_rgba(15,23,42,0.04)]"
+                      className="rounded-[14px] border border-[#B38B2D]/20 bg-white p-5 shadow-[0_8px_20px_rgba(15,23,42,0.04)]"
                     >
-                      <div className="mb-4 inline-flex rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                      <div className="mb-4 inline-flex rounded-full bg-[#FFF8E8] p-3 text-[#B38B2D]">
                         <Icon size={22} />
                       </div>
                       <p className="text-[14px] font-semibold uppercase tracking-[0.08em] text-[#5d7287]">
@@ -1131,7 +1129,7 @@ export default function CartPage() {
             <section className="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
               <div className="rounded-[16px] border border-[#dbe8f5] bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.04)] sm:p-8">
                 <div className="flex items-start gap-3">
-                  <div className="inline-flex rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                  <div className="inline-flex rounded-full bg-[#FFF8E8] p-3 text-[#B38B2D]">
                     <Boxes size={22} />
                   </div>
                   <div>
@@ -1152,7 +1150,7 @@ export default function CartPage() {
                         key={card.title}
                         className="rounded-[14px] border border-[#dbe8f5] bg-[#f9fcff] p-5"
                       >
-                        <div className="mb-4 inline-flex rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                        <div className="mb-4 inline-flex rounded-full bg-[#FFF8E8] p-3 text-[#B38B2D]">
                           <Icon size={20} />
                         </div>
                         <h3 className="text-[19px] font-semibold text-[#102033]">
@@ -1222,7 +1220,7 @@ export default function CartPage() {
 
             <section className="mt-8 rounded-[16px] border border-[#dbe8f5] bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.04)] sm:p-8">
               <div className="flex items-start gap-3">
-                <div className="inline-flex rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                <div className="inline-flex rounded-full bg-[#FFF8E8] p-3 text-[#B38B2D]">
                   <CircleDollarSign size={22} />
                 </div>
                 <div>
@@ -1258,7 +1256,7 @@ export default function CartPage() {
 
             <section className="mt-8 grid gap-6 lg:grid-cols-3">
               <div className="rounded-[14px] border border-[#dbe8f5] bg-white p-6 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
-                <div className="mb-4 inline-flex rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                <div className="mb-4 inline-flex rounded-full bg-[#FFF8E8] p-3 text-[#B38B2D]">
                   <Clock3 size={22} />
                 </div>
                 <h3 className="text-[22px] font-semibold text-[#102033]">
@@ -1276,7 +1274,7 @@ export default function CartPage() {
               </div>
 
               <div className="rounded-[14px] border border-[#dbe8f5] bg-white p-6 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
-                <div className="mb-4 inline-flex rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                <div className="mb-4 inline-flex rounded-full bg-[#FFF8E8] p-3 text-[#B38B2D]">
                   <Layers3 size={22} />
                 </div>
                 <h3 className="text-[22px] font-semibold text-[#102033]">
@@ -1301,7 +1299,7 @@ export default function CartPage() {
               </div>
 
               <div className="rounded-[14px] border border-[#dbe8f5] bg-white p-6 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
-                <div className="mb-4 inline-flex rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                <div className="mb-4 inline-flex rounded-full bg-[#FFF8E8] p-3 text-[#B38B2D]">
                   <CircleHelp size={22} />
                 </div>
                 <h3 className="text-[22px] font-semibold text-[#102033]">

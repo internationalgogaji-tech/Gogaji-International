@@ -10,11 +10,11 @@ const heroSlideSchema = new mongoose.Schema(
 
     image: { type: String, required: true, trim: true },
 
-    primaryText: { type: String, default: "Shop Components", trim: true },
-    primaryLink: { type: String, default: "/products", trim: true },
+    primaryText: { type: String, default: "Shop Collection", trim: true },
+primaryLink: { type: String, default: "/products", trim: true },
 
-    secondaryText: { type: String, default: "Request Bulk Quote", trim: true },
-    secondaryLink: { type: String, default: "/quote-request", trim: true },
+secondaryText: { type: String, default: "Explore Categories", trim: true },
+secondaryLink: { type: String, default: "/categories", trim: true },
 
     order: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },

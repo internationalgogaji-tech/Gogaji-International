@@ -9,8 +9,7 @@ import ProductCard from "@/components/ProductCard";
 import { getProductImage } from "@/lib/getProductImage";
 import ProductImageGallery from "@/components/ProductImageGallery";
 import { apiRequest, API_BASE } from "@/lib/api";
-import ProductMatchBox from "@/components/ProductMatchBox";
-import ImageMatchBox from "@/components/ImageMatchBox";
+
 import {
   Star,
   Truck,
@@ -79,6 +78,19 @@ async function getSimilarProducts(product) {
   } catch (error) {
     console.error("Similar products fetch error:", error);
     return [];
+  }
+}
+
+async function getActiveCoupon() {
+  try {
+    const data = await apiRequest("/api/coupons/active", {
+      cache: "no-store",
+    });
+
+    return data?.coupons?.[0] || null;
+  } catch (error) {
+    console.error("Coupon fetch error:", error);
+    return null;
   }
 }
 
@@ -273,102 +285,58 @@ export async function generateMetadata({ params }) {
 
   if (!product) {
     return {
-      title: "Product Not Found | Royal Trading Component",
-      description:
-        "Electronic component not found at Royal Trading Component.",
+      title: "Product Not Found | Goga Ji International",
+      description: "Home decor product not found at Goga Ji International.",
     };
   }
 
-  const productName = product?.name || "Electronic Component";
-
-  const category =
-    product?.subCategory ||
-    product?.category ||
-    "Electronic Components";
-
-  const brand = product?.brand || "Royal Trading Component";
-
-  const image =
-    product?.thumbnail ||
-    product?.images?.[0]?.url ||
-    "/og-image.jpg";
-
-  const imageUrl = image.startsWith("http")
-    ? image
-    : `${API_BASE}${image}`;
+  const productName = product?.name || "Home Decor Product";
+  const category = product?.subCategory || product?.category || "Home Decor";
+  const brand = product?.brand || "Goga Ji International";
+  const image = product?.thumbnail || product?.images?.[0]?.url || "/og-image.jpg";
+  const imageUrl = image.startsWith("http") ? image : `${API_BASE}${image}`;
 
   const description =
     product?.shortDescription ||
     product?.description ||
-    `Buy ${productName} online in India at best price from Royal Trading Component. Wholesale electronic components supplier in Delhi India.`;
-
-  const keywords = [
-    productName,
-    `${productName} price in India`,
-    `${productName} supplier`,
-    `${productName} online`,
-    `${productName} Delhi`,
-    `${productName} India`,
-    `${category} supplier India`,
-    `${category} Delhi`,
-    `${brand} components`,
-    "Electronic Components India",
-    "IC Supplier Delhi",
-    "Wholesale Electronics India",
-    "Electronic Parts Store",
-    "Royal Trading Component",
-  ];
+    `Buy ${productName} online in India from Goga Ji International. Premium home decor, planters, vases, pooja decor and decorative accessories supplier.`;
 
   return {
-    title: `${productName} | Buy Online India | Royal Trading Component`,
-
+    title: `${productName} | Premium Home Decor | Goga Ji International`,
     description,
-
-    keywords,
-
+    keywords: [
+      productName,
+      `${productName} price in India`,
+      `${productName} online`,
+      `${category} home decor`,
+      `${category} supplier India`,
+      "Goga Ji International",
+      "Premium Home Decor India",
+      "Planters and Vases",
+      "Pooja Decor",
+      "Candle Holders",
+      "Decor Accents",
+      "Trays and Urlis",
+    ],
     alternates: {
-      canonical: `https://www.royalsmd.com/products/${product?.slug || resolvedParams?.id
-        }`,
+      canonical: `https://www.gogajiinternational.com/products/${product?.slug || resolvedParams?.id}`,
     },
-
     openGraph: {
-      title: `${productName} | Royal Trading Component`,
-
+      title: `${productName} | Goga Ji International`,
       description,
-
-      url: `https://www.royalsmd.com/products/${product?.slug || resolvedParams?.id
-        }`,
-
-      siteName: "Royal Trading Component",
-
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: productName,
-        },
-      ],
-
+      url: `https://www.gogajiinternational.com/products/${product?.slug || resolvedParams?.id}`,
+      siteName: "Goga Ji International",
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: productName }],
       locale: "en_IN",
-
       type: "website",
     },
-
     twitter: {
       card: "summary_large_image",
-
-      title: `${productName} | Royal Trading Component`,
-
+      title: `${productName} | Goga Ji International`,
       description,
-
       images: [imageUrl],
     },
-
-    robots: {
-      index: true,
-      follow: true,
-    },
+    robots: { index: true, follow: true },
   };
 }
 
@@ -381,6 +349,8 @@ export default async function ProductDetailPage({ params }) {
   }
 
   const similarProducts = await getSimilarProducts(product);
+
+  const activeCoupon = await getActiveCoupon();
 
   const primaryImage = getPrimaryImage(product);
   const stockMeta = getStockMeta(product);
@@ -490,7 +460,7 @@ export default async function ProductDetailPage({ params }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5fbff] text-[#1f2937]">
+    <div className="min-h-screen bg-[#F8F6F2] text-[#2F3A3A]">
 
       <script
         type="application/ld+json"
@@ -501,7 +471,7 @@ export default async function ProductDetailPage({ params }) {
       <Navbar />
 
       <section className="mx-auto max-w-[1540px] px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px] text-[#1d4ea5]">
+        <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px] font-semibold text-[#1F5C4A]">
           <Link
             href="/products"
             className="inline-flex items-center gap-2 font-medium hover:underline"
@@ -532,35 +502,35 @@ export default async function ProductDetailPage({ params }) {
           ) : null}
         </div>
 
-        <div className="mb-6 rounded-sm bg-white px-5 py-5 shadow-sm">
+        <div className="mb-6 rounded-[24px] border border-[#B38B2D]/20 bg-white px-6 py-6 shadow-md">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-[#111827] md:text-[38px] lg:text-[42px]">
+              <h1 className="text-[28px] font-black tracking-[-0.02em] text-[#1F5C4A] md:text-[38px] lg:text-[42px]">
                 {product?.name}
               </h1>
 
               <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-[15px] text-[#111827]">
-                <span>
-                  <span className="font-bold">RS Stock No.:</span>{" "}
-                  {product?.sku || product?._id?.slice?.(-6) || "RC-001"}
-                </span>
+             <span>
+  <span className="font-bold">Product Code:</span>{" "}
+  {product?.sku || product?._id?.slice?.(-6) || "GI-001"}
+</span>
 
-                <span>
-                  <span className="font-bold">Brand:</span>{" "}
-                  <span className="text-[#1d4ed8]">
-                    {product?.brand || "Generic"}
-                  </span>
-                </span>
+<span>
+  <span className="font-bold">Brand:</span>{" "}
+  <span className="font-semibold text-[#1F5C4A]">
+    {product?.brand || "Gogaji International"}
+  </span>
+</span>
 
-                <span>
-                  <span className="font-bold">Manufacturers Part No.:</span>{" "}
-                  {product?.mpn || product?.slug || "N/A"}
-                </span>
+<span>
+  <span className="font-bold">Style No.:</span>{" "}
+  {product?.mpn || product?.slug || product?.sku || "N/A"}
+</span>
               </div>
             </div>
 
             <div className="text-right text-sm font-semibold text-slate-500">
-              Royal Component
+              Gogaji International 
             </div>
           </div>
         </div>
@@ -570,11 +540,10 @@ export default async function ProductDetailPage({ params }) {
 
           <div className="space-y-6">
             <ProductImageGallery product={product} />
-            <ImageMatchBox />
 
             <section className="rounded-sm bg-white p-6 shadow-sm">
               <div className="flex items-start gap-3">
-                <div className="rounded-full bg-[#eef4ff] p-2 text-[#2452c6]">
+                <div className="rounded-full bg-[#FFF8E8] p-2 text-[#B38B2D]">
                   <FileText size={20} />
                 </div>
 
@@ -684,13 +653,20 @@ export default async function ProductDetailPage({ params }) {
           </div>
 
           <div className="space-y-4">
+            <div className="rounded-[24px] border border-[#B38B2D]/20 bg-white p-6 shadow-md">
+              <div className="mb-5">
+                <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#B38B2D]">
+                  Premium Home Decor
+                </p>
 
-
-            <div className="rounded-sm bg-white p-5 shadow-sm">
+                <h2 className="mt-2 text-[28px] font-black leading-tight text-[#1F5C4A] md:text-[34px]">
+                  {product?.name || "Product Name"}
+                </h2>
+              </div>
               <div className="space-y-3">
                 <div>
                   <div className="flex flex-wrap items-baseline gap-3">
-                    <span className="text-[28px] font-extrabold text-[#111827]">
+                    <span className="text-[30px] font-black text-[#1F5C4A]">
                       {formatCurrency(packPriceExGst)}
                     </span>
                     <span className="text-[15px] text-[#111827]">
@@ -756,14 +732,33 @@ export default async function ProductDetailPage({ params }) {
 
               <button
                 type="button"
-                className="mt-5 inline-flex items-center gap-2 text-[18px] font-medium text-[#2452c6] transition hover:underline"
+                className="mt-5 inline-flex items-center gap-2 text-[18px] font-bold text-[#1F5C4A] transition hover:text-[#B38B2D]"
               >
                 <Star size={22} />
                 Add to parts list
               </button>
-              <ProductMatchBox
-                productId={product?._id}
-              />
+              <div className="mt-6 rounded-[18px] border border-[#B38B2D]/30 bg-[#FFF8E8] p-5 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-extrabold uppercase tracking-[0.16em] text-[#B38B2D]">
+                      Coupon Code
+                    </p>
+
+                    <h3 className="mt-1 text-[22px] font-black text-[#1F5C4A]">
+                      Save more on {product?.name}
+                    </h3>
+
+                    <p className="mt-2 text-[15px] leading-6 text-[#2F3A3A]">
+                      {activeCoupon?.description ||
+                        "Bulk order ya premium decor purchase par coupon apply kar sakte ho."}
+                    </p>
+                  </div>
+
+                  <div className="rounded-full border border-[#B38B2D] bg-white px-6 py-3 text-[18px] font-black text-[#1F5C4A] shadow-sm">
+                    {activeCoupon?.code || "GOGAJI10"}
+                  </div>
+                </div>
+              </div>
 
               <div className="mt-6 border-t border-slate-200 pt-5 text-[15px] leading-7 text-[#111827]">
                 <p>
@@ -777,7 +772,7 @@ export default async function ProductDetailPage({ params }) {
               </div>
             </div>
 
-                        <div className="rounded-sm bg-white p-5 shadow-sm">
+            <div className="rounded-[24px] border border-[#B38B2D]/20 bg-white p-6 shadow-md">
 
               <div
 
@@ -825,7 +820,7 @@ export default async function ProductDetailPage({ params }) {
 
                 type="button"
 
-                className="mt-5 inline-flex h-[52px] w-full items-center justify-center gap-2 border-2 border-[#2452c6] bg-white px-5 text-[18px] font-semibold text-[#2452c6] transition hover:bg-[#eff6ff]"
+                className="mt-5 inline-flex h-[52px] w-full items-center justify-center gap-2 border-2 border-[#B38B2D] bg-white px-5 text-[18px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]"
 
               >
 
@@ -874,14 +869,14 @@ export default async function ProductDetailPage({ params }) {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <button
                 type="button"
-                className="inline-flex h-[56px] items-center justify-center border-2 border-[#2452c6] bg-white px-5 text-[18px] font-semibold text-[#2452c6] transition hover:bg-[#eff6ff]"
+                className="inline-flex h-[56px] items-center justify-center border-2 border-[#B38B2D] bg-white px-5 text-[18px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]"
               >
                 View all in this category
               </button>
 
               <button
                 type="button"
-                className="inline-flex h-[56px] items-center justify-center border-2 border-[#2452c6] bg-white px-5 text-[18px] font-semibold text-[#2452c6] transition hover:bg-[#eff6ff]"
+                className="inline-flex h-[56px] items-center justify-center border-2 border-[#B38B2D] bg-white px-5 text-[18px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]"
               >
                 Search for similar products
               </button>
@@ -992,7 +987,7 @@ export default async function ProductDetailPage({ params }) {
                     {section.buttonText && section.buttonLink ? (
                       <Link
                         href={section.buttonLink}
-                        className="mt-5 inline-flex bg-[#2452c6] px-5 py-3 font-bold text-white"
+                        className="mt-5 inline-flex rounded-full bg-[#1F5C4A] px-6 py-3 font-bold text-white transition hover:bg-[#164638]"
                       >
                         {section.buttonText}
                       </Link>
@@ -1068,8 +1063,7 @@ export default async function ProductDetailPage({ params }) {
 
               <button
                 type="button"
-                className="mt-5 inline-flex h-[52px] w-full items-center justify-center bg-[#2452c6] px-5 text-[18px] font-semibold text-white transition hover:bg-[#1e40af]"
-              >
+                className="mt-5 inline-flex h-[52px] w-full items-center justify-center rounded-full bg-[#1F5C4A] px-5 text-[18px] font-bold text-white transition hover:bg-[#164638]"                >
                 Request bulk quotation
               </button>
             </div>
@@ -1079,173 +1073,66 @@ export default async function ProductDetailPage({ params }) {
 
       <section className="rounded-sm bg-white p-8 shadow-sm mt-8">
         <div className="max-w-none prose prose-lg text-[#172033]">
-
-          <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
+          <h2 className="mt-12 text-[30px] font-extrabold text-[#1f604d] leading-tight">
             Buy {product?.name} Online in India
           </h2>
 
           <p>
-            {product?.name} is a high quality electronic component widely used in
-            industrial electronics, embedded systems, PCB design, automation,
-            educational projects, repair applications and OEM manufacturing. Royal
-            Trading Component provides reliable electronic components with bulk
-            procurement support, technical sourcing assistance and fast delivery
-            across India.
+            {product?.name} is a premium home decor product suitable for modern homes,
+            hotels, showrooms, gifting, festive styling and interior decoration.
+            Goga Ji International provides elegant decor products with bulk order
+            support, reliable sourcing and pan India delivery.
           </p>
 
           <p>
-            Engineers, service professionals, electronics manufacturers and B2B
-            buyers trust Royal Trading Component for genuine semiconductor products,
-            industrial electronics and reliable component sourcing. This component is
-            suitable for industrial automation systems, development boards,
-            communication devices, consumer electronics, embedded hardware and repair
-            industries.
+            Interior designers, retailers, hotels, event planners and home decor buyers
+            trust Goga Ji International for premium planters, vases, pooja decor,
+            candle holders, trays, urlis and decorative accents.
           </p>
 
-          <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
-            Trusted Electronic Components Supplier in Delhi India
-          </h2>
-
-          <p>
-            Royal Trading Component supplies electronic components in Delhi,
-            Uttam Nagar, Janakpuri, Lajpat Rai Market, Nehru Place, Noida,
-            Gurugram and all major industrial locations across India. We support
-            wholesale procurement, bulk purchasing and industrial sourcing for
-            manufacturers, engineers and repair professionals.
-          </p>
-
-          <p>
-            Our electronic components platform provides access to semiconductors,
-            ICs, displays, development modules, power management products,
-            transistors, connectors, relays and industrial automation products.
-            Businesses rely on us for consistent product quality, procurement
-            support and nationwide delivery.
-          </p>
-
-          <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
+          <h2 className="mt-12 text-[30px] font-extrabold text-[#1f604d] leading-tight">
             Applications of {product?.name}
           </h2>
 
           <ul>
-            <li>Industrial electronics projects</li>
-            <li>PCB circuit design and development</li>
-            <li>Embedded systems and automation</li>
-            <li>Repair and maintenance applications</li>
-            <li>Consumer electronics manufacturing</li>
-            <li>Educational and engineering projects</li>
-            <li>OEM manufacturing requirements</li>
-            <li>Industrial automation systems</li>
-            <li>IoT and smart device projects</li>
-            <li>Prototype hardware development</li>
+            <li>Living room decoration</li>
+            <li>Bedroom and balcony styling</li>
+            <li>Pooja room and mandir decor</li>
+            <li>Hotel, cafe and showroom decor</li>
+            <li>Festive and wedding decoration</li>
+            <li>Corporate and premium gifting</li>
+            <li>Interior design projects</li>
+            <li>Retail and bulk home decor supply</li>
           </ul>
 
-          <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
-            Why Buy from Royal Trading Component
+          <h2 className="mt-12 text-[30px] font-extrabold text-[#1f604d] leading-tight">
+            Why Buy from Goga Ji International
           </h2>
 
           <ul>
-            <li>Trusted electronic component supplier in India</li>
-            <li>Bulk order procurement support</li>
-            <li>Wholesale pricing available</li>
-            <li>Fast dispatch and delivery</li>
-            <li>Technical sourcing assistance</li>
-            <li>GST invoice support</li>
-            <li>Large semiconductor inventory</li>
-            <li>Reliable quality products</li>
-            <li>Industrial grade electronic components</li>
-            <li>Professional customer support</li>
+            <li>Premium quality home decor products</li>
+            <li>Bulk order and B2B supply support</li>
+            <li>Elegant designs for modern spaces</li>
+            <li>Fast procurement assistance</li>
+            <li>Pan India delivery support</li>
+            <li>Trusted supplier for retailers and designers</li>
           </ul>
-
-          <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
-            Wholesale Electronic Components Supplier
-          </h2>
-
-          <p>
-            Royal Trading Component helps industries and businesses source
-            electronic components in bulk quantities with competitive pricing and
-            procurement support. Whether you are an OEM manufacturer, electronics
-            repair center, reseller, educational institute or industrial buyer,
-            we provide reliable component sourcing solutions tailored for your
-            requirements.
-          </p>
-
-          <p>
-            Our inventory includes semiconductors, power management ICs,
-            microcontrollers, wireless communication modules, embedded
-            development boards, industrial sensors, displays, relays,
-            connectors and automation products suitable for commercial and
-            industrial applications.
-          </p>
-
-          <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
-            Industrial & Semiconductor Components Online
-          </h2>
-
-          <p>
-            Modern electronic industries require reliable semiconductor products
-            and industrial components for automation, robotics, monitoring,
-            communication and embedded technologies. Royal Trading Component
-            provides products used in industrial machines, consumer devices,
-            automation systems, educational labs, repair centers and PCB
-            manufacturing projects.
-          </p>
-
-          <p>
-            We continuously update our inventory with trending electronic
-            components and industrial products to support engineers,
-            manufacturers and electronics professionals across India.
-          </p>
-
-          <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
-            Order {product?.name} Online
-          </h2>
-
-          <p>
-            Buy {product?.name} online at best price in India from Royal
-            Trading Component. We provide secure ordering, fast shipping,
-            bulk procurement support and nationwide delivery for industrial
-            and commercial buyers.
-          </p>
-
-          <p>
-            Explore our wide range of electronic components, semiconductors,
-            displays, development boards and industrial automation products
-            suitable for engineering, manufacturing and repair applications.
-          </p>
-
         </div>
       </section>
 
       <section className="rounded-sm bg-white p-8 shadow-sm mt-8">
-        <h2 className="text-[32px] font-extrabold text-[#111827]">
+        <h2 className="text-[32px] font-extrabold text-[#1f604d]">
           Frequently Asked Questions
         </h2>
 
         <div className="mt-8 space-y-6">
-
-          <div>
-            <h3 className="text-[22px] font-bold text-[#111827]">
-              What is {product?.name} used for?
-            </h3>
-
-            <p className="mt-3 text-[17px] leading-8 text-[#374151]">
-              {product?.name} is commonly used in electronic circuits,
-              embedded systems, PCB projects, industrial automation,
-              repair applications, IoT projects and semiconductor-based
-              electronic designs.
-            </p>
-          </div>
-
           <div>
             <h3 className="text-[22px] font-bold text-[#111827]">
               Where to buy {product?.name} online in India?
             </h3>
-
             <p className="mt-3 text-[17px] leading-8 text-[#374151]">
-              You can buy {product?.name} online from Royal Trading
-              Component, a trusted electronic components supplier in
-              Delhi India offering wholesale pricing, bulk procurement
-              support and nationwide delivery.
+              You can buy {product?.name} online from Goga Ji International, a premium
+              home decor supplier in India.
             </p>
           </div>
 
@@ -1253,84 +1140,46 @@ export default async function ProductDetailPage({ params }) {
             <h3 className="text-[22px] font-bold text-[#111827]">
               Is {product?.name} available for bulk orders?
             </h3>
-
             <p className="mt-3 text-[17px] leading-8 text-[#374151]">
-              Yes, Royal Trading Component supports bulk quantity orders,
-              OEM procurement, industrial sourcing and wholesale electronic
-              component supply for manufacturers and businesses.
+              Yes, Goga Ji International supports bulk orders for retailers, hotels,
+              interior designers, event planners and B2B buyers.
             </p>
           </div>
 
           <div>
             <h3 className="text-[22px] font-bold text-[#111827]">
-              Do you provide GST invoices?
+              Do you deliver across India?
             </h3>
-
             <p className="mt-3 text-[17px] leading-8 text-[#374151]">
-              Yes, GST invoices are available for industrial buyers,
-              businesses, resellers, educational institutes and
-              procurement companies across India.
+              Yes, pan India delivery support is available for premium home decor
+              products and bulk procurement orders.
             </p>
           </div>
-
-          <div>
-            <h3 className="text-[22px] font-bold text-[#111827]">
-              Which industries use {product?.name}?
-            </h3>
-
-            <p className="mt-3 text-[17px] leading-8 text-[#374151]">
-              {product?.name} is used in industrial automation,
-              embedded electronics, robotics, PCB manufacturing,
-              consumer electronics, IoT systems, repair industries
-              and OEM manufacturing applications.
-            </p>
-          </div>
-
         </div>
       </section>
 
       <section className="rounded-sm bg-white p-8 shadow-sm mt-8">
-        <h2 className="text-[30px] font-extrabold text-[#111827]">
-          Explore More Electronic Components
+        <h2 className="text-[30px] font-extrabold text-[#1f604d]">
+          Explore More Home Decor
         </h2>
 
         <div className="mt-6 flex flex-wrap gap-3">
-
-          <Link
-            href="/products"
-            className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
-          >
-            Electronic Components India
-          </Link>
-
-          <Link
-            href="/category/semiconductors"
-            className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
-          >
-            Semiconductor Components
-          </Link>
-
-          <Link
-            href="/category/semiconductors?subCategory=logic-ics"
-            className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
-          >
-            Logic IC Supplier India
-          </Link>
-
-          <Link
-            href="/category/semiconductors?subCategory=power-management-ics"
-            className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
-          >
-            Power Management ICs
-          </Link>
-
-          <Link
-            href="/contact"
-            className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
-          >
-            Contact Electronic Components Supplier
-          </Link>
-
+          {[
+            ["Planters & Vases", "/products?category=planters-vases"],
+            ["Pooja & Mandir", "/products?category=pooja-mandir"],
+            ["Candle Holders", "/products?category=candle-holders"],
+            ["Decor Accents", "/products?category=decor-accents"],
+            ["Trays & Urlis", "/products?category=trays-urlis"],
+            ["All Home Decor", "/products"],
+          ].map(([label, href]) => (
+            <Link
+              key={label}
+              href={href}
+              className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
+            >
+              {label}
+            </Link>
+          ))}
         </div>
       </section>
 

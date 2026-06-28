@@ -4,8 +4,8 @@ export default function MainCategoriesPage() {
   return (
     <CategoryManager
       level="main"
-      title="Main Categories"
-      subtitle="Manage top-level categories like Semiconductors, Automation, Switchgear."
+      title="Home Decor Main Categories"
+      subtitle="Manage main home decor categories like Planters & Vases, Pooja & Mandir, Candle Holders, Decor Accents and Trays & Urlis."
     />
   );
 }

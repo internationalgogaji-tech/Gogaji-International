@@ -2,72 +2,85 @@
 
 import Link from "next/link";
 import {
-  Cpu,
-  Cable,
-  Factory,
-  PackageSearch,
   LoaderCircle,
+  Sparkles,
+  Leaf,
+  Flower2,
+  Home,
   ShieldCheck,
-  Zap,
-  Boxes,
+  Truck,
+  PackageSearch,
+  LampDesk,
+  ShoppingBag,
+  HeartHandshake,
 } from "lucide-react";
 
 const iconMap = {
-  Cpu,
-  Cable,
-  Factory,
-  PackageSearch,
+  Sparkles,
+  Leaf,
+  Flower2,
+  Home,
   ShieldCheck,
-  Zap,
-  Boxes,
+  Truck,
+  PackageSearch,
+  LampDesk,
+  ShoppingBag,
+  HeartHandshake,
 };
 
 const fallbackLoader = {
-  title: "Industrial Electronics & Semiconductor Marketplace",
-  subtitle: "Global electronic component sourcing and procurement platform",
+  title: "Elegant Home Decor For Modern Living",
+  subtitle: "Premium Home Decor • Fast Procurement • B2B Supply",
   description:
-    "Royal Component supplies semiconductors, automation products, industrial electronics, relays, sensors, ICs, PLC systems, connectors, cables and OEM procurement solutions.",
-  seoHeading: "Online Industrial Component Sourcing Made Easy",
+    "Goga Ji International supplies premium planters, vases, candle holders, pooja essentials, trays, urlis and luxury home decor accessories crafted to elevate modern living spaces.",
+  seoHeading: "Premium Home Decor Sourcing Made Easy",
   seoParagraph:
-    "Royal Component helps engineers, OEM buyers, distributors, factories and procurement teams source genuine electronic components, industrial automation parts, embedded systems, connectors, power modules and semiconductor products.",
+    "Goga Ji International helps retailers, interior designers, hotels, event planners and bulk buyers source stylish home decor products including planters, vases, pooja and mandir items, candle holders, trays, urlis and decor accents.",
   bottomContent:
-    "Buy semiconductors, connectors, sensors, relays, switches, power modules, cables and industrial electronic hardware with bulk procurement assistance.",
+    "Shop elegant home decor, premium quality accessories and bulk procurement products with reliable pan India delivery support.",
   keywords: [
-    { label: "Semiconductors", link: "/products?category=semiconductors" },
-    { label: "Industrial Automation", link: "/products?category=automation" },
-    { label: "Connectors", link: "/products?category=connectors" },
-    { label: "Power Electronics", link: "/products" },
-    { label: "Sensors", link: "/products" },
+    { label: "Planters & Vases", link: "/products?category=planters-vases" },
+    { label: "Pooja & Mandir", link: "/products?category=pooja-mandir" },
+    { label: "Candle Holders", link: "/products?category=candle-holders" },
+    { label: "Decor Accents", link: "/products?category=decor-accents" },
+    { label: "Trays & Urlis", link: "/products?category=trays-urlis" },
   ],
   cards: [
     {
-      title: "Semiconductors",
+      title: "Premium Home Decor",
       description:
-        "ICs, microcontrollers, MOSFETs, diodes, transistors and industrial-grade electronic chips.",
-      icon: "Cpu",
-      link: "/products?category=semiconductors",
+        "Elegant decor pieces, luxury accessories and stylish products for homes, hotels and interiors.",
+      icon: "Sparkles",
+      link: "/products",
+    },
+    {
+      title: "Planters & Vases",
+      description:
+        "Beautiful ceramic, metal and designer planters, flower vases and table styling products.",
+      icon: "Flower2",
+      link: "/products?category=planters-vases",
     },
     {
       title: "Bulk Procurement",
       description:
-        "Fast sourcing support for OEM, factories, repair teams and distributors.",
+        "Fast sourcing support for retailers, interior projects, gifting suppliers and B2B buyers.",
       icon: "PackageSearch",
-      link: "/request-component",
+      link: "/request-products",
     },
     {
-      title: "Automation Components",
+      title: "Pan India Delivery",
       description:
-        "Relays, sensors, PLC accessories, switches, control modules and panel parts.",
-      icon: "Factory",
-      link: "/products",
+        "Reliable shipping support for decor products, bulk orders and premium collections.",
+      icon: "Truck",
+      link: "/track-request",
     },
   ],
   trustedBrands: [
-    { name: "ABB" },
-    { name: "Siemens" },
-    { name: "Schneider Electric" },
-    { name: "Texas Instruments" },
-    { name: "Panasonic" },
+    { name: "Premium Quality" },
+    { name: "Elegant Styling" },
+    { name: "Pan India Delivery" },
+    { name: "Bulk Orders" },
+    { name: "B2B Supply" },
   ],
 };
 
@@ -87,25 +100,25 @@ export default function SeoLoaderContent({ loader }) {
     .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#f8fcff] px-4 py-8 text-[#102033] sm:px-6 lg:px-10">
-      <div className="absolute left-8 top-10 h-32 w-32 rounded-full border-[14px] border-[#dff2ff]" />
-      <div className="absolute right-10 bottom-10 h-44 w-44 rounded-full border-[16px] border-[#dff2ff]" />
-      <div className="absolute right-24 top-20 h-8 w-8 rounded-full bg-[#b8e7ff]" />
-      <div className="absolute left-1/4 bottom-20 h-5 w-5 rounded-full bg-[#93d8ff]" />
+    <section className="relative min-h-screen overflow-hidden bg-[#fbfaf4] px-4 py-8 text-[#11231c] sm:px-6 lg:px-10">
+      <div className="absolute left-8 top-10 h-32 w-32 rounded-full border-[14px] border-[#d9ead7]" />
+      <div className="absolute right-10 bottom-10 h-44 w-44 rounded-full border-[16px] border-[#efe2b8]" />
+      <div className="absolute right-24 top-20 h-8 w-8 rounded-full bg-[#c19a2e]/30" />
+      <div className="absolute left-1/4 bottom-20 h-5 w-5 rounded-full bg-[#1f604d]/25" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="grid min-h-[72vh] items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
-            <div className="inline-flex items-center gap-3 rounded-full border border-[#c7e8ff] bg-white px-5 py-3 text-sm font-extrabold text-[#0b6aa2] shadow-sm">
+            <div className="inline-flex items-center gap-3 rounded-full border border-[#d6bd72] bg-white px-5 py-3 text-sm font-extrabold text-[#1f604d] shadow-sm">
               <LoaderCircle className="animate-spin" size={18} />
-              Loading Royal Component Marketplace
+              Loading Goga Ji International Home Decor
             </div>
 
-            <h1 className="mt-6 text-4xl font-black leading-tight tracking-[-0.04em] text-[#102033] md:text-6xl">
+            <h1 className="mt-6 text-4xl font-black leading-tight text-[#1f604d] md:text-6xl">
               {data.title}
             </h1>
 
-            <h2 className="mt-4 text-xl font-extrabold leading-snug text-[#2454b5] md:text-2xl">
+            <h2 className="mt-4 text-xl font-extrabold leading-snug text-[#c09324] md:text-2xl">
               {data.subtitle}
             </h2>
 
@@ -116,7 +129,7 @@ export default function SeoLoaderContent({ loader }) {
             <div className="mt-7 flex flex-wrap gap-3">
               {keywords.slice(0, 10).map((item, index) => {
                 const chip = (
-                  <span className="inline-flex rounded-full border border-[#bde3ff] bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-wide text-[#2454b5] shadow-sm">
+                  <span className="inline-flex rounded-full border border-[#e3cd88] bg-white px-4 py-2 text-xs font-extrabold uppercase text-[#1f604d] shadow-sm">
                     {item.label}
                   </span>
                 );
@@ -131,26 +144,26 @@ export default function SeoLoaderContent({ loader }) {
               })}
             </div>
 
-            <div className="mt-8 h-2 overflow-hidden rounded-full bg-[#dff2ff]">
-              <div className="h-full w-2/3 animate-pulse rounded-full bg-[#2454b5]" />
+            <div className="mt-8 h-2 overflow-hidden rounded-full bg-[#e7eadf]">
+              <div className="h-full w-2/3 animate-pulse rounded-full bg-[#1f604d]" />
             </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {cards.slice(0, 4).map((card, index) => {
-              const Icon = iconMap[card.icon] || Cpu;
+              const Icon = iconMap[card.icon] || Sparkles;
 
               return (
                 <Link
                   key={`${card.title}-${index}`}
                   href={card.link || "/products"}
-                  className="group rounded-[28px] border border-[#d8ebfb] bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition hover:-translate-y-1 hover:shadow-lg"
+                  className="group rounded-[24px] border border-[#eadba9] bg-white p-5 shadow-[0_18px_50px_rgba(31,96,77,0.10)] transition hover:-translate-y-1 hover:shadow-lg"
                 >
-                  <div className="mb-4 inline-flex rounded-2xl bg-[#eef7ff] p-4 text-[#2454b5]">
+                  <div className="mb-4 inline-flex rounded-2xl bg-[#eef7ed] p-4 text-[#1f604d]">
                     <Icon size={30} />
                   </div>
 
-                  <h3 className="text-lg font-black text-[#102033]">
+                  <h3 className="text-lg font-black text-[#11231c]">
                     {card.title}
                   </h3>
 
@@ -161,24 +174,26 @@ export default function SeoLoaderContent({ loader }) {
               );
             })}
 
-            <div className="rounded-[28px] border border-[#d8ebfb] bg-[#102033] p-5 text-white shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+            <div className="rounded-[24px] border border-[#d6bd72] bg-[#1f604d] p-5 text-white shadow-[0_18px_50px_rgba(31,96,77,0.18)]">
               <div className="mb-4 inline-flex rounded-2xl bg-white/10 p-4">
-                <Cable size={30} />
+                <LampDesk size={30} />
               </div>
-              <h3 className="text-lg font-black">Fast Loading Catalogue</h3>
+
+              <h3 className="text-lg font-black">Preparing Catalogue</h3>
+
               <p className="mt-3 text-sm leading-7 text-white/80">
-                Preparing product categories, component data, stock status,
-                technical details and procurement links.
+                Loading premium decor categories, product collections, request
+                options and bulk order details.
               </p>
             </div>
           </div>
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
-          <div className="rounded-[30px] border border-[#d8ebfb] bg-white p-6 shadow-sm">
+          <div className="rounded-[26px] border border-[#eadba9] bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3">
-              <Factory className="text-[#2454b5]" />
-              <h3 className="text-xl font-black text-[#102033]">
+              <Home className="text-[#1f604d]" />
+              <h3 className="text-xl font-black text-[#11231c]">
                 {data.seoHeading}
               </h3>
             </div>
@@ -192,16 +207,16 @@ export default function SeoLoaderContent({ loader }) {
             </p>
           </div>
 
-          <div className="rounded-[30px] border border-[#d8ebfb] bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-black text-[#102033]">
-              Trusted Industrial Brands
+          <div className="rounded-[26px] border border-[#eadba9] bg-white p-6 shadow-sm">
+            <h3 className="text-lg font-black text-[#11231c]">
+              Why Choose Goga Ji
             </h3>
 
             <div className="mt-4 flex flex-wrap gap-2">
               {brands.slice(0, 12).map((brand, index) => (
                 <span
                   key={`${brand.name}-${index}`}
-                  className="rounded-full bg-[#eef7ff] px-3 py-2 text-xs font-extrabold text-[#2454b5]"
+                  className="rounded-full bg-[#eef7ed] px-3 py-2 text-xs font-extrabold text-[#1f604d]"
                 >
                   {brand.name}
                 </span>
@@ -209,9 +224,14 @@ export default function SeoLoaderContent({ loader }) {
             </div>
 
             <p className="mt-5 text-sm leading-7 text-slate-600">
-              Searching genuine parts, procurement availability, technical
-              documents and electronics sourcing options.
+              Finding elegant home decor products, premium collections, request
+              support and reliable delivery options for your order.
             </p>
+
+            <div className="mt-5 flex items-center gap-3 rounded-2xl bg-[#fbfaf4] p-4 text-sm font-bold text-[#1f604d]">
+              <ShieldCheck size={20} />
+              Premium quality decor with trusted sourcing support.
+            </div>
           </div>
         </div>
       </div>

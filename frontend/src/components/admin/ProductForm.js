@@ -49,7 +49,7 @@ export function ProductForm({ mode = "add", productId = "" }) {
     { key: "", value: "" },
   ]);
   const [documents, setDocuments] = useState([
-    { label: "Datasheet", url: "", type: "datasheet" },
+    { label: "Product Catalog", url: "", type: "catalog" },
   ]);
 
   const [highlights, setHighlights] = useState([
@@ -307,21 +307,26 @@ export function ProductForm({ mode = "add", productId = "" }) {
     setForm((prev) => ({
       ...prev,
       metaTitle:
-        prev.metaTitle || `${prev.name} | ${prev.brand || "Royal Component"}`,
+        prev.metaTitle ||
+        `${prev.name} | Premium Home Decor | Goga Ji International`,
       metaDescription:
         prev.metaDescription ||
-        `Buy ${prev.name} from Royal Component. Suitable for industrial electronics, embedded systems, repair, automation and power supply applications.`,
+        `Buy ${prev.name} from Goga Ji International. Premium home decor product suitable for modern homes, hotels, gifting, interior styling and bulk decor requirements.`,
       metaKeywords:
         prev.metaKeywords ||
         [
           prev.name,
-          prev.mpn,
           prev.brand,
           prev.category,
           prev.subCategory,
           prev.childCategory,
-          "electronic component",
-          "industrial electronics",
+          "premium home decor",
+          "home decor India",
+          "planters and vases",
+          "pooja decor",
+          "candle holders",
+          "decor accents",
+          "Goga Ji International",
         ]
           .filter(Boolean)
           .join(", "),
@@ -661,21 +666,21 @@ export function ProductForm({ mode = "add", productId = "" }) {
     <form onSubmit={submit} className="space-y-6">
       <BulkPasteBox
         title="Bulk Paste Product Data"
-        placeholder={`Product Name=LM7812CV 12V Voltage Regulator IC
-Brand=STMicroelectronics
-SKU=LM7812CV-ST-12V
-MPN=LM7812CV
-Category=semiconductors
-Sub Category=powermanagementics
-Child Category=voltageregulators
-Price=18
-MRP=25
-Stock=500
+        placeholder={`Product Name=Premium Ceramic Flower Vase
+Brand=Goga Ji International
+SKU=GJI-VASE-001
+MPN=VASE-001
+Category=planters-vases
+Sub Category=flower-vases
+Child Category=ceramic-vases
+Price=799
+MRP=1299
+Stock=50
 MOQ=1
 Unit=piece
-Lead Time Days=2
-Short Description=LM7812CV is a fixed 12V positive voltage regulator IC.
-Full Description=LM7812CV is used for regulated DC power supply circuits.`}
+Lead Time Days=3
+Short Description=Premium ceramic flower vase for modern home decor.
+Full Description=Elegant ceramic vase suitable for living room, bedroom, hotel, gifting and interior styling.`}
         onApply={applyBulkProductInfo}
       />
       <div>
@@ -683,8 +688,8 @@ Full Description=LM7812CV is used for regulated DC power supply circuits.`}
           {mode === "edit" ? "Edit Product" : "Add New Product"}
         </h1>
         <p className="text-sm text-slate-500">
-          Manage industrial components, pricing, stock, specifications and
-          datasheets.
+         Manage home decor products, pricing, stock, specifications and
+catalog details.
         </p>
       </div>
 
@@ -716,7 +721,7 @@ Full Description=LM7812CV is used for regulated DC power supply circuits.`}
             />
           </Field>
 
-          <Field label="MPN">
+          <Field label="Model No.">
             <input
               className="input"
               value={form.mpn}
@@ -729,7 +734,7 @@ Full Description=LM7812CV is used for regulated DC power supply circuits.`}
               className="input"
               value={form.category}
               onChange={(e) => updateForm("category", e.target.value)}
-              placeholder="semiconductors"
+             placeholder="planters-vases"
             />
           </Field>
 
@@ -985,11 +990,12 @@ Full Description=LM7812CV is used for regulated DC power supply circuits.`}
 
         <BulkPasteBox
           title="Bulk Paste Specifications"
-          placeholder={`Output Voltage=12V
-Input Voltage=35V Max
-Output Current=1.5A
-Package Type=TO-220
-Mounting Type=Through Hole`}
+         placeholder={`Material=Ceramic
+Color=White and Gold
+Finish=Glossy
+Size=Medium
+Usage=Living Room Decor
+Care Instructions=Wipe with dry cloth`}
           onApply={applyBulkSpecifications}
         />
 
@@ -998,13 +1004,13 @@ Mounting Type=Through Hole`}
             <div key={index} className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
               <input
                 className="input"
-                placeholder="Key e.g. Voltage"
+                placeholder="Key e.g. Material"
                 value={spec.key}
                 onChange={(e) => updateSpec(index, "key", e.target.value)}
               />
               <input
                 className="input"
-                placeholder="Value e.g. 5V"
+               placeholder="Value e.g. Ceramic"
                 value={spec.value}
                 onChange={(e) => updateSpec(index, "value", e.target.value)}
               />
@@ -1079,9 +1085,9 @@ Mounting Type=Through Hole`}
 
         <BulkPasteBox
           title="Bulk Paste Feature Cards"
-          placeholder={`Stable 12V Output | Provides reliable regulated 12V DC output | ShieldCheck
-Thermal Protection | Built-in overload and thermal shutdown protection | ShieldCheck
-Industrial Grade | Suitable for industrial and embedded applications | ShieldCheck`}
+          placeholder={`Premium Finish | Elegant finish suitable for modern interiors | ShieldCheck
+Decor Ready | Perfect for living room, bedroom and gifting | ShieldCheck
+Bulk Supply | Available for retailers and interior projects | ShieldCheck`}
           onApply={applyBulkFeatureCards}
         />
 
@@ -1143,12 +1149,12 @@ Industrial Grade | Suitable for industrial and embedded applications | ShieldChe
 
         <BulkPasteBox
           title="Bulk Paste Applications"
-          placeholder={`Power Supply Circuits
-Arduino Projects
-Embedded Systems
-Industrial Automation
-Battery Chargers
-Motor Driver Circuits`}
+         placeholder={`Living Room Decor
+Bedroom Styling
+Hotel and Cafe Decor
+Pooja Room Decoration
+Festive Gifting
+Interior Design Projects`}
           onApply={applyBulkApplications}
         />
 
@@ -1336,7 +1342,7 @@ Motor Driver Circuits`}
               className="input"
               value={form.metaKeywords}
               onChange={(e) => updateForm("metaKeywords", e.target.value)}
-              placeholder="ic, transistor, sensor"
+             placeholder="home decor, planters, vases, pooja decor"
             />
           </Field>
 

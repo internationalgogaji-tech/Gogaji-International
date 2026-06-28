@@ -1,11 +1,5 @@
-import CategoryManager from "@/components/admin/CategoryManager";
+import { redirect } from "next/navigation";
 
 export default function ChildCategoriesPage() {
-  return (
-    <CategoryManager
-      level="child"
-      title="Child Categories"
-      subtitle="Select main and subcategory, then manage child categories."
-    />
-  );
+  redirect("/admin/categories/sub");
 }

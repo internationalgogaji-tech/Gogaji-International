@@ -51,12 +51,17 @@ req.body.products = req.body.products.map((item) => ({
 
             if (!item.sku) return item;
 
-            const product = await Product.findOne({
-              $or: [
-                { sku: item.sku },
-                { mpn: item.sku }
-              ]
-            });
+          const sku = String(item.sku || "").trim();
+
+const product = await Product.findOne({
+  isActive: true,
+  status: "published",
+  $or: [
+    { sku: sku.toUpperCase() },
+    { mpn: sku },
+    { slug: sku.toLowerCase() },
+  ],
+});
 
             console.log(
     "UPDATED PRODUCT =",

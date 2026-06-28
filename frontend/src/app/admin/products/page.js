@@ -50,14 +50,14 @@ export default function AdminProductsPage() {
       );
 
       setInventoryStats({
-  inStock: data.inStockProducts || 0,
+        inStock: data.inStockProducts || 0,
 
-  lowStock: data.lowStockProducts || 0,
+        lowStock: data.lowStockProducts || 0,
 
-  outOfStock: data.outOfStockProducts || 0,
+        outOfStock: data.outOfStockProducts || 0,
 
-  inventoryValue: data.totalInventoryValue || 0,
-});
+        inventoryValue: data.totalInventoryValue || 0,
+      });
 
     } catch (error) {
       toast.error(error.message || "Products load failed");
@@ -166,7 +166,7 @@ export default function AdminProductsPage() {
         <div>
           <h1 className="text-2xl font-bold text-[#102033]">Products</h1>
           <p className="text-sm text-slate-500">
-            Manage Royal Component product catalogue.
+            Manage Goga Ji International home decor product catalogue.
           </p>
         </div>
 
@@ -191,7 +191,7 @@ export default function AdminProductsPage() {
               setPage(1);
               setSearch(e.target.value);
             }}
-            placeholder="Search name, SKU, MPN, brand..."
+            placeholder="Search name, Product Code, brand, category..."
             className="w-full rounded-xl border px-10 py-3 text-sm outline-none focus:border-[#2454b5]"
           />
         </div>
@@ -208,7 +208,7 @@ export default function AdminProductsPage() {
               <thead className="bg-[#f3f7fb] text-xs uppercase text-slate-500">
                 <tr>
                   <th className="px-4 py-4">Product</th>
-                  <th className="px-4 py-4">SKU / MPN</th>
+                  <th className="px-4 py-4">Product Code / Style No.</th>
                   <th className="px-4 py-4">Category</th>
                   <th className="px-4 py-4">Price</th>
                   <th className="px-4 py-4">Stock</th>
@@ -243,16 +243,18 @@ export default function AdminProductsPage() {
                             {product.name}
                           </p>
                           <p className="text-xs text-slate-500">
-                            {product.brand || "Generic"}
+                            {product.brand || "Gogaji International"}
                           </p>
                         </div>
                       </div>
                     </td>
 
                     <td className="px-4 py-4">
-                      <p className="font-semibold">{product.sku || "N/A"}</p>
+                      <p className="font-semibold">
+                        Product Code: {product.sku || "N/A"}
+                      </p>
                       <p className="text-xs text-slate-500">
-                        MPN: {product.mpn || "N/A"}
+                        Style No.: {product.mpn || "N/A"}
                       </p>
                     </td>
 

@@ -249,7 +249,7 @@ export default function Hero() {
         <div className="w-full max-w-[560px] rounded-[32px] p-2">          <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-[#DCCB9E] bg-[#FDFBF5] px-3 py-2 text-[11px] font-bold text-[#2F3A3A] shadow-sm sm:px-4 sm:text-sm">
           <span className="h-2 w-2 shrink-0 rounded-full bg-[#B38B2D]" />
           <span className="truncate">
-            {activeSlide?.label || "Trusted Industrial Components"} • Fast
+            {activeSlide?.label || "Premium Home Decor"} • Fast
             Procurement • B2B Supply
           </span>
         </div>
@@ -277,7 +277,7 @@ export default function Hero() {
 
           <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[#2F3A3A] sm:text-[15px] md:text-[16px]">
             {activeSlide?.description ||
-              "Source electrical, electronic, mechanical, automation and hardware products with technical clarity, trusted brand availability and reliable wholesale supply support."}
+              "Discover premium home decor products, elegant planters, decorative accents, candle holders and luxury styling pieces with reliable bulk supply support."}
           </p>
 
           <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
@@ -291,7 +291,7 @@ export default function Hero() {
               />
 
               <span className="text-white">
-                {activeSlide?.primaryText || "Shop Components"}
+               {activeSlide?.primaryText || "Shop Collection"}
               </span>
             </Link>
 

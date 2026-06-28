@@ -211,7 +211,7 @@ export default function AdminCategoriesPage() {
         <div>
           <h1 className="text-2xl font-bold text-[#102033]">Categories</h1>
           <p className="text-sm text-slate-500">
-            Manage main, sub and child categories.
+            Manage main and sub categories for Goga Ji International home decor.
           </p>
         </div>
 
@@ -347,7 +347,7 @@ export default function AdminCategoriesPage() {
                   {editId ? "Edit Category" : "Add Category"}
                 </h2>
                 <p className="text-sm text-slate-500">
-                  Main category ke liye parent empty rakho. Sub category ke liye parentSlug भरो.
+                 Main category ke liye parent empty rakho. Sub category ke liye main category ka slug parentSlug me add karo.
                 </p>
               </div>
 
@@ -379,7 +379,7 @@ export default function AdminCategoriesPage() {
                     onChange={(e) =>
                       setForm((p) => ({ ...p, slug: e.target.value }))
                     }
-                    placeholder="category-slug"
+                   placeholder="planters-vases"
                   />
                 </Field>
 
@@ -390,7 +390,7 @@ export default function AdminCategoriesPage() {
                     onChange={(e) =>
                       setForm((p) => ({ ...p, parentSlug: e.target.value }))
                     }
-                    placeholder="main category ke liye empty"
+                   placeholder="sub category ke liye parent slug, main ke liye empty"
                   />
                 </Field>
 
@@ -401,7 +401,7 @@ export default function AdminCategoriesPage() {
                     onChange={(e) =>
                       setForm((p) => ({ ...p, group: e.target.value }))
                     }
-                    placeholder="group-name"
+                   placeholder="home-decor"
                   />
                 </Field>
 
@@ -455,7 +455,7 @@ export default function AdminCategoriesPage() {
                     onChange={(e) =>
                       setForm((p) => ({ ...p, countText: e.target.value }))
                     }
-                    placeholder="100+ Products"
+                    placeholder="50+ Decor Items"
                   />
                 </Field>
 
@@ -530,7 +530,7 @@ export default function AdminCategoriesPage() {
                     onChange={(e) =>
                       setForm((p) => ({ ...p, metaKeywords: e.target.value }))
                     }
-                    placeholder="keyword1, keyword2, keyword3"
+                   placeholder="home decor, planters, vases, pooja decor"
                   />
                 </Field>
               </div>

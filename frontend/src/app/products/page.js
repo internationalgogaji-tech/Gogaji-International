@@ -4,12 +4,7 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import InfiniteProducts from "@/components/InfiniteProducts";
 import ImageSearchResults from "@/components/ImageSearchResults";
-import { apiRequest } from "@/lib/api";
-import {
-  categories,
-  getCategoryBySlug,
-  semiconductorSubcategories,
-} from "@/lib/categories";
+import { apiRequest, API_BASE } from "@/lib/api";
 
 async function getProducts(searchParams) {
   try {
@@ -103,6 +98,40 @@ async function getProducts(searchParams) {
   }
 }
 
+
+function getCategoryImage(src) {
+  if (!src) return "";
+  if (src.startsWith("http")) return src;
+  return `${API_BASE}${src}`;
+}
+
+async function getCategories() {
+  try {
+    const data = await apiRequest("/api/categories", {
+      cache: "no-store",
+    });
+
+    return data?.categories || [];
+  } catch (error) {
+    console.error("Categories fetch error:", error);
+    return [];
+  }
+}
+
+async function getCategoryBySlugFromApi(slug) {
+  if (!slug) return null;
+
+  try {
+    const data = await apiRequest(`/api/categories/${encodeURIComponent(slug)}`, {
+      cache: "no-store",
+    });
+
+    return data?.category || null;
+  } catch (error) {
+    console.error("Category fetch error:", error);
+    return null;
+  }
+}
 export async function generateMetadata({ searchParams }) {
   const resolvedSearchParams = await searchParams;
 
@@ -211,12 +240,11 @@ const totalPages = data.pages || 1;
   const isImageSearch =
   resolvedSearchParams?.imageSearch === "true";
 
-  const selectedCategory = resolvedSearchParams?.category
-    ? getCategoryBySlug(resolvedSearchParams.category)
-    : null;
+    const allCategories = await getCategories();
 
-  const isSemiconductorPage = selectedCategory?.slug === "semiconductors";
-  const activeSubCategory = resolvedSearchParams?.subCategory || "";
+  const selectedCategory = resolvedSearchParams?.category
+    ? await getCategoryBySlugFromApi(resolvedSearchParams.category)
+    : null;
 
   const pageTitle = keyword
     ? `Search Results for "${keyword}"`
@@ -261,44 +289,45 @@ const totalPages = data.pages || 1;
             </div>
           </div>
 
-          {!keyword && !selectedCategory ? (
-            <div className="mb-8 flex flex-wrap gap-3">
-              {categories.map((item) => (
-                <Link
-                  key={item.slug}
-                  href={`/products?category=${item.slug}`}
-                  className="rounded-full border border-[var(--color-border)] bg-white px-4 py-2 text-sm font-medium text-[var(--color-heading)] transition hover:border-sky-600 hover:text-sky-700"
-                >
-                  {item.name}
-                </Link>
-              ))}
+                {selectedCategory?.image ? (
+            <div className="mb-8 overflow-hidden rounded-2xl border border-[#d6bd72]/50 bg-white shadow-sm">
+              <img
+                src={getCategoryImage(selectedCategory.image)}
+                alt={selectedCategory.iconAlt || selectedCategory.name}
+                className="h-[260px] w-full object-cover"
+              />
+
+              <div className="p-5">
+                <h2 className="text-2xl font-extrabold text-[#1f604d]">
+                  {selectedCategory.name}
+                </h2>
+
+                {selectedCategory.description ? (
+                  <p className="mt-2 text-sm leading-7 text-slate-600">
+                    {selectedCategory.description}
+                  </p>
+                ) : null}
+              </div>
             </div>
           ) : null}
 
-          {isSemiconductorPage && !keyword ? (
+          {!keyword && !selectedCategory ? (
             <div className="mb-8 flex flex-wrap gap-3">
-              {semiconductorSubcategories.map((item) => {
-                const href = item.slug
-                  ? `/category/semiconductors?subCategory=${item.slug}`
-                  : `/products?category=semiconductors`;
-
-                const isActive = activeSubCategory === item.slug;
-
-                return (
+              {allCategories
+                .filter((item) => !item.parentSlug)
+                .map((item) => (
                   <Link
-                    key={item.name}
-                    href={href}
-                    className={`rounded-full px-5 py-3 text-sm font-semibold transition ${isActive
-                      ? "bg-sky-600 text-white shadow-sm"
-                      : "border border-[#d2dce8] bg-white text-[#42566d] hover:border-sky-500 hover:text-sky-700"
-                      }`}
+                    key={item.slug}
+                    href={`/products?category=${item.slug}`}
+                    className="rounded-full border border-[#d6bd72] bg-white px-4 py-2 text-sm font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
                   >
                     {item.name}
                   </Link>
-                );
-              })}
+                ))}
             </div>
           ) : null}
+
+       
 
          {isImageSearch ? (
   <ImageSearchResults />
@@ -339,195 +368,193 @@ const totalPages = data.pages || 1;
         </div>
       </section>
 
-      <section className="bg-white border-t border-[#e5e7eb] py-14">
+  <section className="bg-white border-t border-[#e5e7eb] py-14">
   <div className="container-royal">
-
     <div className="max-w-7xl mx-auto prose prose-lg max-w-none text-[#172033]">
-
-      <h2 className="text-[34px] font-extrabold text-[#111827] leading-tight">
-        Buy Electronic Components Online in India
+      <h2 className="text-[34px] font-extrabold text-[#1f604d] leading-tight">
+        Buy Premium Home Decor Online in India
       </h2>
 
       <p>
-        Royal Trading Component is one of the leading electronic components
-        suppliers in India offering semiconductors, integrated circuits,
-        development boards, displays, automation products, industrial
-        electronics and embedded system components for engineers,
-        manufacturers, OEM industries and repair professionals.
+        Goga Ji International is a premium home decor supplier in India
+        offering elegant planters, flower vases, pooja and mandir items,
+        candle holders, trays, urlis, table decor and decorative accents
+        for modern homes, hotels, interior designers, retailers and bulk
+        buyers.
       </p>
 
       <p>
-        Our online electronics store provides access to high quality
-        industrial and semiconductor components with fast delivery,
-        wholesale pricing, GST invoice support and bulk procurement
-        assistance across India.
+        Our online home decor store provides stylish and quality decor
+        products with fast procurement support, wholesale pricing, bulk
+        order assistance and pan India delivery for homes and businesses.
       </p>
 
-      <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
-        Trusted Semiconductor Supplier in Delhi India
+      <h2 className="mt-12 text-[30px] font-extrabold text-[#1f604d] leading-tight">
+        Trusted Home Decor Supplier in India
       </h2>
 
       <p>
-        Royal Trading Component supplies electronic parts in Delhi,
-        Uttam Nagar, Janakpuri, Lajpat Rai Market, Nehru Place,
-        Noida, Gurugram and all major industrial regions across India.
+        Goga Ji International supplies home decor products for retailers,
+        interior projects, gifting suppliers, event decorators, hotels,
+        showrooms and customers across Delhi NCR and all major cities in
+        India.
       </p>
 
       <p>
-        Businesses trust us for semiconductor sourcing, industrial
-        electronics procurement and reliable component availability
-        for embedded systems, automation and PCB manufacturing.
+        Businesses trust us for premium decor sourcing, elegant product
+        collections, reliable availability and smooth procurement support
+        for bulk home decor requirements.
       </p>
 
-      <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
-        Popular Electronic Components Categories
+      <h2 className="mt-12 text-[30px] font-extrabold text-[#1f604d] leading-tight">
+        Popular Home Decor Categories
       </h2>
 
       <ul>
-        <li>Semiconductor Components</li>
-        <li>Logic ICs</li>
-        <li>Power Management ICs</li>
-        <li>Microcontrollers</li>
-        <li>Wireless Communication Modules</li>
-        <li>Displays & LCD Modules</li>
-        <li>Sensors & Sensor Modules</li>
-        <li>Embedded Electronics</li>
-        <li>PCB Components</li>
-        <li>Industrial Automation Products</li>
+        <li>Planters & Vases</li>
+        <li>Pooja & Mandir Decor</li>
+        <li>Candle Holders</li>
+        <li>Decor Accents</li>
+        <li>Trays & Urlis</li>
+        <li>Table Decor</li>
+        <li>Flower Vases</li>
+        <li>Luxury Home Accessories</li>
+        <li>Gift Decor Items</li>
+        <li>Modern Living Room Decor</li>
       </ul>
 
-      <h3 className="mt-8 text-[24px] font-bold text-[#111827]">
-        Industrial Applications & Engineering Usage
+      <h3 className="mt-8 text-[24px] font-bold text-[#1f604d]">
+        Premium Decor for Homes, Hotels and Interior Projects
       </h3>
 
       <p>
-        Our electronic components are widely used in industrial
-        automation systems, embedded hardware, robotics, consumer
-        electronics, repair industries, IoT systems, smart devices,
-        educational engineering projects and PCB development.
+        Our decor products are suitable for living rooms, bedrooms,
+        balconies, pooja rooms, hotels, cafes, offices, showrooms,
+        festive styling, gifting, interior design projects and modern
+        decorative spaces.
       </p>
 
-      <h2 className="mt-12 text-[30px] font-extrabold text-[#111827] leading-tight">
-        Wholesale Electronic Components Supplier
+      <h2 className="mt-12 text-[30px] font-extrabold text-[#1f604d] leading-tight">
+        Wholesale Home Decor Supplier
       </h2>
 
       <p>
-        Royal Trading Component supports OEM manufacturers,
-        electronics businesses, repair centers and industrial
-        procurement teams with bulk electronic component sourcing,
-        wholesale pricing and technical procurement support.
+        Goga Ji International supports retailers, resellers, interior
+        designers, event planners and procurement teams with bulk home
+        decor sourcing, wholesale pricing and fast product request support.
       </p>
 
       <p>
-        Our inventory includes semiconductors, ICs, relays,
-        connectors, voltage regulators, displays, embedded
-        development boards and industrial automation products.
+        Our collection includes premium planters, designer vases, candle
+        holders, pooja accessories, trays, urlis, decorative accents and
+        luxury home styling products.
       </p>
-
     </div>
-
   </div>
 </section>
 
 <section className="rounded-sm bg-white p-8 shadow-sm mt-8">
-  <h2 className="text-[32px] font-extrabold text-[#111827]">
+  <h2 className="text-[32px] font-extrabold text-[#1f604d]">
     Frequently Asked Questions
   </h2>
 
   <div className="mt-8 space-y-6">
-
     <div>
       <h3 className="text-[22px] font-bold text-[#111827]">
-        Where to buy electronic components online in India?
+        Where to buy premium home decor online in India?
       </h3>
 
       <p className="mt-3 text-[17px] leading-8 text-[#374151]">
-        You can buy electronic components online from Royal Trading
-        Component, a trusted semiconductor and industrial electronics
-        supplier in Delhi India offering wholesale pricing and fast delivery.
+        You can buy premium home decor online from Goga Ji International,
+        a trusted supplier of planters, vases, candle holders, pooja decor,
+        trays, urlis and decorative accessories in India.
       </p>
     </div>
 
     <div>
       <h3 className="text-[22px] font-bold text-[#111827]">
-        Do you provide bulk electronic components supply?
+        Do you provide bulk home decor supply?
       </h3>
 
       <p className="mt-3 text-[17px] leading-8 text-[#374151]">
-        Yes, Royal Trading Component supports OEM procurement,
-        industrial sourcing, wholesale electronics supply and
-        bulk quantity purchasing for businesses and manufacturers.
+        Yes, Goga Ji International supports bulk home decor orders for
+        retailers, interior designers, hotels, event planners, gifting
+        suppliers and B2B buyers.
       </p>
     </div>
 
     <div>
       <h3 className="text-[22px] font-bold text-[#111827]">
-        Which industries use semiconductor components?
+        Which home decor products are available?
       </h3>
 
       <p className="mt-3 text-[17px] leading-8 text-[#374151]">
-        Semiconductor components are widely used in industrial
-        automation, embedded systems, robotics, PCB manufacturing,
-        consumer electronics, IoT systems and engineering projects.
+        We offer planters, flower vases, pooja and mandir decor, candle
+        holders, trays, urlis, table decor, luxury accessories and modern
+        decorative accents.
       </p>
     </div>
 
     <div>
       <h3 className="text-[22px] font-bold text-[#111827]">
-        Do you provide GST invoices?
+        Do you deliver home decor products across India?
       </h3>
 
       <p className="mt-3 text-[17px] leading-8 text-[#374151]">
-        Yes, GST invoices are available for businesses,
-        resellers, educational institutions and industrial buyers.
+        Yes, pan India delivery support is available for home decor
+        products, premium collections and bulk procurement orders.
       </p>
     </div>
-
   </div>
 </section>
 
 <section className="rounded-sm bg-white p-8 shadow-sm mt-8">
-  <h2 className="text-[30px] font-extrabold text-[#111827]">
-    Explore Electronic Components Categories
+  <h2 className="text-[30px] font-extrabold text-[#1f604d]">
+    Explore Home Decor Categories
   </h2>
 
   <div className="mt-6 flex flex-wrap gap-3">
-
     <Link
-      href="/category/semiconductors"
-      className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
+      href="/products?category=planters-vases"
+      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
     >
-      Semiconductor Components
+      Planters & Vases
     </Link>
 
     <Link
-      href="/category/semiconductors?subCategory=logic-ics"
-      className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
+      href="/products?category=pooja-mandir"
+      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
     >
-      Logic ICs
+      Pooja & Mandir
     </Link>
 
     <Link
-      href="/category/semiconductors?subCategory=power-management-ics"
-      className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
+      href="/products?category=candle-holders"
+      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
     >
-      Power Management ICs
+      Candle Holders
     </Link>
 
     <Link
-      href="/category/semiconductors?subCategory=sensor-ics"
-      className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
+      href="/products?category=decor-accents"
+      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
     >
-      Sensor ICs
+      Decor Accents
+    </Link>
+
+    <Link
+      href="/products?category=trays-urlis"
+      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
+    >
+      Trays & Urlis
     </Link>
 
     <Link
       href="/products"
-      className="rounded-full border border-[#dbe4f0] px-5 py-3 text-[15px] font-semibold text-[#174ea6] transition hover:bg-[#174ea6] hover:text-white"
+      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
     >
-      Buy Electronic Components Online
+      View All Home Decor
     </Link>
-
   </div>
 </section>
 

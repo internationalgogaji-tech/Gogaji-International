@@ -6,14 +6,14 @@ import { toast } from "sonner";
 import { adminRequest } from "@/lib/api";
 
 const emptyForm = {
-  key: "featured-products",
-  title: "Semiconductor Products",
+  key: "featured-home-decor",
+  title: "Featured Home Decor",
   subtitle:
-    "Explore ICs, voltage regulators, transistors, MOSFETs and other semiconductor components for wholesale supply.",
-  categorySlug: "semiconductors",
+    "Explore premium planters, vases, candle holders, pooja decor and elegant decorative accents for modern living spaces.",
+  categorySlug: "planters-vases",
   limit: 8,
   viewAllText: "View All",
-  viewAllLink: "/products?category=semiconductors",
+  viewAllLink: "/products?category=planters-vases",
   order: 1,
   isActive: true,
 };
@@ -113,7 +113,7 @@ export default function HomeSectionsPage() {
               Home Sections
             </h1>
             <p className="mt-1 text-sm text-slate-500">
-              Manage homepage product sections like Featured Products.
+             Manage homepage home decor product sections like Featured Decor and Premium Collections.
             </p>
           </div>
 

@@ -14,6 +14,17 @@ import { useEffect, useState } from "react";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
+const getProductHref = (item = {}) => {
+    if (item.buttonLink) return item.buttonLink;
+
+    if (item.slug) return `/products/${item.slug}`;
+
+    const id = item.productId || item._id || item.id;
+    if (id) return `/products/${id}`;
+
+    return "/products";
+};
+
 export default function HomeDecorInfo() {
     const [data, setData] = useState(null);
 
@@ -98,28 +109,28 @@ shadow-lg
                 >
                     {data.products?.map((item, index) => {
 
-  console.log(
-  "HOME DECOR PRODUCT =",
-  JSON.stringify({
-    productId: item.productId,
-    _id: item._id,
-    slug: item.slug,
-    title: item.title,
-    buttonLink: item.buttonLink,
-  })
-);
+                        console.log(
+                            "HOME DECOR PRODUCT =",
+                            JSON.stringify({
+                                productId: item.productId,
+                                _id: item._id,
+                                slug: item.slug,
+                                title: item.title,
+                                buttonLink: item.buttonLink,
+                            })
+                        );
 
-console.log("WISHLIST PRODUCT =", {
-  productId: item.productId,
-  _id: item._id,
-  title: item.title,
-});
+                        console.log("WISHLIST PRODUCT =", {
+                            productId: item.productId,
+                            _id: item._id,
+                            title: item.title,
+                        });
 
-  return (
-                        
-                        
-                        <SwiperSlide key={index}>
-<div className="
+                        return (
+
+
+                            <SwiperSlide key={index}>
+                                <div className="
 group
 bg-white
 rounded-[24px]
@@ -134,31 +145,31 @@ h-[520px]
 flex
 flex-col
 ">
-<div className="relative h-[260px] overflow-hidden bg-[#F8F6F2]">
+                                    <div className="relative h-[260px] overflow-hidden bg-[#F8F6F2]">
 
-    <div
-  className="absolute top-4 right-4 z-20"
-  onClick={(e) => e.stopPropagation()}
->
+                                        <div
+                                            className="absolute top-4 right-4 z-20"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
 
-    
-<WishlistToggleButton
-  product={{
-    ...item,
-    _id: item.productId || item._id,
-    id: item.productId || item._id,
-    slug: item.slug || item.buttonLink?.split("/product/")[1],
-    name: item.title,
-    thumbnail: item.image,
-    price: item.price,
-    mrp: item.mrp,
-  }}
-/>
-</div>
-  <img
-  src={item.image}
-  alt={item.title}
-  className="
+
+                                            <WishlistToggleButton
+                                                product={{
+                                                    ...item,
+                                                    _id: item.productId,
+                                                    id: item.productId,
+                                                    slug: item.slug,
+                                                    name: item.title,
+                                                    thumbnail: item.image,
+                                                    price: item.price,
+                                                    mrp: item.mrp,
+                                                }}
+                                            />
+                                        </div>
+                                        <img
+                                            src={item.image}
+                                            alt={item.title}
+                                            className="
     w-full
     h-full
     object-cover
@@ -168,13 +179,13 @@ flex-col
     group-hover:scale-105
     group-hover:opacity-0
   "
-/>
+                                        />
 
-                                    {item.hoverImage && (
-                                     <img
-  src={item.hoverImage}
-  alt={item.title}
-  className="
+                                        {item.hoverImage && (
+                                            <img
+                                                src={item.hoverImage}
+                                                alt={item.title}
+                                                className="
     absolute inset-0
     w-full
     h-full
@@ -186,35 +197,35 @@ flex-col
     group-hover:opacity-100
     group-hover:scale-105
   "
-/>
+                                            />
+                                        )}
+
+                                    </div>
+
+                                    {item.badge && (
+                                        <div className="flex justify-center mt-4">
+                                            <span className="bg-[#1F5C4A] text-white text-xs px-3 py-1 uppercase rounded-full">
+                                                {item.badge}
+                                            </span>
+                                        </div>
                                     )}
 
-                                </div>
+                                    <h3 className="text-center text-[18px] font-bold text-[#2F3A3A] mt-4 px-4 line-clamp-2 h-[60px]">{item.title}</h3>
 
-                                {item.badge && (
-                                    <div className="flex justify-center mt-4">
-                                        <span className="bg-[#1F5C4A] text-white text-xs px-3 py-1 uppercase rounded-full">
-                                            {item.badge}
+                                    <div className="flex justify-center gap-2 mt-2">
+                                        <span className="font-bold text-lg text-[#1F5C4A]">₹{item.price}</span>
+
+                                        <span className="line-through text-gray-400">
+                                            ₹{item.mrp}
                                         </span>
+
+                                        <span className="text-[#B38B2D] font-semibold">{item.discount}</span>
                                     </div>
-                                )}
 
-                               <h3 className="text-center text-[18px] font-bold text-[#2F3A3A] mt-4 px-4 line-clamp-2 h-[60px]">{item.title}</h3>
 
-                                <div className="flex justify-center gap-2 mt-2">
-                                    <span className="font-bold text-lg text-[#1F5C4A]">₹{item.price}</span>
-
-                                    <span className="line-through text-gray-400">
-                                        ₹{item.mrp}
-                                    </span>
-
-                                    <span className="text-[#B38B2D] font-semibold">{item.discount}</span>
-                                </div>
-                              
-
-                                <Link
-                                    href={item.buttonLink || "#"}
-                                    className="
+                                    <Link
+                                        href={getProductHref(item)}
+                                        className="
 block
 w-full
 text-center
@@ -231,15 +242,15 @@ shadow-[0_10px_25px_rgba(179,139,45,0.35)]
 hover:shadow-[0_15px_35px_rgba(179,139,45,0.45)]
 hover:-translate-y-1
 "
-                                >
-                                    <span className="text-white">
-                                        {item.buttonText || "Add To Cart"}
-                                    </span>
-                                </Link>
-                            </div>
-                        </SwiperSlide>
-                     );
-})}
+                                    >
+                                        <span className="text-white">
+                                            {item.buttonText || "Add To Cart"}
+                                        </span>
+                                    </Link>
+                                </div>
+                            </SwiperSlide>
+                        );
+                    })}
                 </Swiper>
             </div>
         </section>

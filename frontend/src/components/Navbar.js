@@ -65,12 +65,56 @@ const accountMenuItems = [
   },
 ];
 
-function getCategoryHref(item) {
-  if (item?.href) return item.href;
+function resolveCategoryImage(src) {
+  if (!src) return "";
+  if (src.startsWith("http")) return src;
+  return `${API_BASE}${src}`;
+}
 
-  return `/products?category=semiconductors&subCategory=${encodeURIComponent(
-    item?.slug || "",
-  )}`;
+
+
+function slugifyCategory(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function getFixedCategorySlug(item) {
+  const slug = slugifyCategory(item?.slug);
+  const nameSlug = slugifyCategory(item?.name);
+
+  const slugFixMap = {
+    tabledecor: "table-decor",
+    walldecor: "wall-decor",
+    decoraccents: "decor-accents",
+    traysurlis: "trays-urlis",
+    traysandurlis: "trays-urlis",
+    luxuryhome: "luxury-home",
+  };
+
+  return slugFixMap[slug] || nameSlug || slug;
+}
+
+
+
+function getCategoryHref(item) {
+  const slug = getFixedCategorySlug(item);
+
+  if (!slug) return "/products";
+
+  return `/products?category=${encodeURIComponent(slug)}`;
+}
+
+function getChildCategoryHref(parent, child) {
+  const parentSlug = getFixedCategorySlug(parent);
+  const childSlug = getFixedCategorySlug(child);
+
+  return `/products?category=${encodeURIComponent(
+    parentSlug,
+  )}&subCategory=${encodeURIComponent(childSlug)}`;
 }
 
 export default function Navbar() {
@@ -168,7 +212,7 @@ export default function Navbar() {
   useEffect(() => {
     const fetchNavbarCategories = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/categories`, {
+        const res = await fetch(`${API_BASE}/api/categories/navbar`, {
           cache: "no-store",
         });
 
@@ -176,28 +220,32 @@ export default function Navbar() {
 
         if (!data?.success) return;
 
-        const semiconductorSubCategories = (data.categories || [])
+        const list = (data.categories || [])
           .filter((cat) => cat.isActive !== false)
           .filter((cat) => cat.showInNavbar !== false)
-          .filter((cat) => cat.parentSlug === "semiconductors")
           .sort(
             (a, b) =>
               Number(a.navbarOrder || 0) - Number(b.navbarOrder || 0) ||
               Number(a.order || 0) - Number(b.order || 0),
-          )
-          .map((cat) => ({
-            _id: cat._id,
-            name: cat.name,
-            slug: cat.slug,
-            href: `/products?category=semiconductors&subCategory=${encodeURIComponent(
-              cat.slug,
-            )}`,
-          }))
-          .filter((cat) => cat.name && cat.slug);
+          );
 
-        if (semiconductorSubCategories.length > 0) {
-          setCategories(semiconductorSubCategories);
-        }
+        const mainCategories = list
+          .filter((cat) => !cat.parentSlug)
+          .map((main) => ({
+            ...main,
+            slug: getFixedCategorySlug(main),
+            href: `/products?category=${encodeURIComponent(getFixedCategorySlug(main))}`,
+            children: list
+              .filter((child) => child.parentSlug === main.slug)
+              .map((child) => ({
+                ...child,
+                slug: getFixedCategorySlug(child),
+                href: getChildCategoryHref(main, child),
+              })),
+          }));
+
+        setCategories(mainCategories);
+
       } catch (error) {
         console.error("Navbar category fetch error:", error);
       }
@@ -410,111 +458,113 @@ export default function Navbar() {
             </div>
           </div>
 
-          <nav className="hidden border-t border-[#E5E7EB] py-3 lg:block">
-            <div className="flex items-center gap-2 whitespace-nowrap xl:gap-3">
-              <Link
-                href="/blog"
-                className="group relative inline-flex shrink-0 items-center rounded-full px-4 py-2.5 text-[15px] font-extrabold text-[#1F2937] transition-all duration-200 hover:bg-[#F0FDF4] hover:text-[#0B2E59]]"
-              >
-                <span className="flex items-center gap-2">
-                  <BookOpen size={16} />
-                  Blogs
+         <nav className="hidden border-t border-[#E5E7EB] bg-white lg:block">
+  <div className="mx-auto flex w-full max-w-[1500px] items-center gap-4 px-2 py-3">
+    <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-[#D6E4DA] scrollbar-track-transparent">
+      {categories.map((item) => {
+        const hasChildren = item.children?.length > 0;
+        const isActive = activeMegaMenu === item.slug;
+
+        return (
+          <div
+            key={item._id || item.slug}
+            className="group relative shrink-0"
+            onMouseEnter={() => setActiveMegaMenu(item.slug)}
+            onMouseLeave={() => setActiveMegaMenu(null)}
+          >
+            <Link
+              href={getCategoryHref(item)}
+              className={`relative inline-flex h-[58px] items-center gap-3 rounded-2xl border px-3.5 pr-4 text-[15px] font-extrabold transition-all duration-200 ${
+                isActive
+                  ? "border-[#B38B2D] bg-[#FFF8E8] text-[#1F5C4A] shadow-sm"
+                  : "border-[#E5E7EB] bg-[#FCFFFC] text-[#24364B] hover:border-[#B38B2D]/70 hover:bg-[#FFFDF5] hover:text-[#1F5C4A]"
+              }`}
+            >
+              {item.image ? (
+                <span className="relative h-10 w-10 overflow-hidden rounded-xl border border-[#E5E7EB] bg-white shadow-sm">
+                  <img
+                    src={resolveCategoryImage(item.image)}
+                    alt={item.iconAlt || item.name}
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                  />
                 </span>
+              ) : null}
 
-                <span className="absolute inset-x-4 bottom-[4px] h-[2px] scale-x-0 rounded-full bg-[#25D366] transition-transform duration-200 group-hover:scale-x-100" />
-              </Link>
+              <span className="max-w-[190px] truncate">{item.name}</span>
 
-              {/* BEHOMA STYLE MENUS */}
-
-              {staticMenuItems.map((item) => (
-                <div
-                  key={item.name}
-                  className="relative"
-                  onMouseEnter={() => setActiveMegaMenu(item.name)}
-                  onMouseLeave={() => setActiveMegaMenu(null)}
+              {hasChildren ? (
+                <span
+                  className={`ml-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border transition ${
+                    isActive
+                      ? "border-[#B38B2D] bg-white text-[#B38B2D]"
+                      : "border-[#D8E1EC] bg-white text-[#64748B] group-hover:border-[#B38B2D] group-hover:text-[#B38B2D]"
+                  }`}
+                  title="Sub categories"
                 >
-                  <Link
-                    href={item.href}
-                    className="
-  group
-  relative
-  block
-  px-4
-  py-2.5
-  text-[15px]
-  font-semibold
-  text-[#1F2937]
-  transition-all
-  duration-300
-  hover:text-[#16A34A]  
-  "
-                  >
-                    <span className="flex items-center gap-1">
-                      {item.name}
-                      <ChevronDown size={14} />
-                    </span>
+                  <ChevronDown
+                    size={15}
+                    className={`transition-transform duration-200 ${
+                      isActive ? "rotate-180" : ""
+                    }`}
+                  />
+                </span>
+              ) : null}
+            </Link>
 
-                    <span
-                      className="
-    absolute
-    bottom-0
-    left-4
-    h-[2px]
-    w-0
-    bg-[#25D366]  
-    transition-all
-    duration-300
-    group-hover:w-[70%]
-    "
-                    />
-                  </Link>
-
-                  {activeMegaMenu === item.name && (
-                    <div
-                      className="
-absolute
-left-0
-top-full
-z-[999]
-mt-3
-min-w-[320px]
-rounded-[20px]
-bg-white
-border
-border-[#BBF7D0]
-shadow-[0_20px_50px_rgba(0,0,0,0.12)]
-overflow-hidden
-
-        "
-                    >
-                      <div className="py-4">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child}
-                            href="#"
-                            className="
-              flex
-              items-center
-              justify-between
-              px-6
-              py-3
-              text-[15px]
-              font-medium
-              text-[#4A3656]
-              hover:bg-[#F0FDF4]
-              "
-                          >
-                            {child}
-                            <ChevronRight size={16} />
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+            {hasChildren && isActive ? (
+              <div className="absolute left-0 top-[calc(100%+8px)] z-[999] w-[340px] overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.16)]">
+                <div className="border-b border-[#EEF2F7] bg-[#FAFBF8] px-5 py-4">
+                  <p className="text-xs font-black uppercase tracking-[0.14em] text-[#B38B2D]">
+                    Explore
+                  </p>
+                  <p className="mt-1 text-lg font-black text-[#1F5C4A]">
+                    {item.name}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </nav>
+
+                <div className="max-h-[360px] overflow-y-auto py-2">
+                  {item.children.map((child) => (
+                    <Link
+                      key={child._id || child.slug}
+                      href={child.href}
+                      className="flex items-center gap-3 px-5 py-3.5 text-[15px] font-bold text-[#26364A] transition hover:bg-[#FFF8E8] hover:text-[#1F5C4A]"
+                    >
+                      {child.image ? (
+                        <span className="h-11 w-11 overflow-hidden rounded-xl border border-[#E5E7EB] bg-white">
+                          <img
+                            src={resolveCategoryImage(child.image)}
+                            alt={child.iconAlt || child.name}
+                            className="h-full w-full object-cover"
+                          />
+                        </span>
+                      ) : (
+                        <span className="h-2.5 w-2.5 rounded-full bg-[#B38B2D]" />
+                      )}
+
+                      <span className="min-w-0 flex-1 truncate">
+                        {child.name}
+                      </span>
+
+                      <ChevronRight size={16} className="text-[#94A3B8]" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
+
+    <Link
+      href="/blog"
+      className="inline-flex h-[46px] shrink-0 items-center gap-2 rounded-full border border-[#D8E1EC] bg-white px-4 text-[14px] font-extrabold text-[#1F5C4A] shadow-sm transition hover:border-[#B38B2D] hover:bg-[#FFF8E8]"
+    >
+      <BookOpen size={16} />
+      Blogs
+    </Link>
+  </div>
+</nav>
         </div>
 
         {mobileOpen ? (

@@ -9,6 +9,16 @@ const SERVER_API_BASE =
 export const API_BASE =
   typeof window === "undefined" ? SERVER_API_BASE : PUBLIC_API_BASE;
 
+export function clearAuthStorage() {
+  if (typeof window === "undefined") return;
+
+  localStorage.removeItem("user");
+  localStorage.removeItem("adminToken");
+  localStorage.removeItem("token");
+
+  window.dispatchEvent(new Event("auth-expired"));
+}
+
 export function getAdminToken() {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("adminToken");
@@ -24,6 +34,7 @@ export function getUserToken() {
     const parsedUser = JSON.parse(rawUser);
     return parsedUser?.token || null;
   } catch {
+    localStorage.removeItem("user");
     return null;
   }
 }
@@ -53,7 +64,28 @@ export async function apiRequest(endpoint, options = {}) {
   }
 
   if (!res.ok) {
-    throw new Error(data?.message || "API request failed");
+    const message = data?.message || "API request failed";
+
+    if (
+      res.status === 401 &&
+      (message === "User no longer exists" ||
+        message === "Unauthorized" ||
+        message === "Invalid token" ||
+        message === "Token expired")
+    ) {
+      clearAuthStorage();
+
+      const authError = new Error(message);
+      authError.status = 401;
+      authError.code = "AUTH_EXPIRED";
+      authError.data = data;
+      throw authError;
+    }
+
+    const error = new Error(message);
+    error.status = res.status;
+    error.data = data;
+    throw error;
   }
 
   return data;

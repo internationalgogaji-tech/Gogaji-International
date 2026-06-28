@@ -343,8 +343,8 @@ productSchema.pre("validate", function () {
   }
 
   if (!this.seo.metaTitle && this.name) {
-    this.seo.metaTitle =
-      `${this.name} Price in India | RoyalSMD`;
+   this.seo.metaTitle =
+  `${this.name} Price in India | Goga Ji International`;
   }
   if (
     !this.seo.metaDescription &&
@@ -360,16 +360,19 @@ productSchema.pre("validate", function () {
     this.name
   ) {
     this.seo.metaKeywords = [
-      this.name,
-      `${this.name} price`,
-      `${this.name} buy online`,
-      `${this.name} datasheet`,
-      `${this.name} distributor`,
-      "electronics components",
-      "SMD components",
-      "IC chips",
-      "electronic components India",
-    ];
+  this.name,
+  `${this.name} price`,
+  `${this.name} buy online`,
+  `${this.name} home decor`,
+  `${this.name} supplier`,
+  "premium home decor",
+  "home decor India",
+  "planters and vases",
+  "pooja decor",
+  "candle holders",
+  "decor accents",
+  "Goga Ji International",
+];
   }
 
   if (this.images && this.images.length > 0) {
@@ -382,16 +385,20 @@ productSchema.pre("validate", function () {
     }));
   }
   if ((!this.tags || this.tags.length === 0) && this.name) {
-    this.tags = [
-      this.name,
-      this.brand,
-      this.category,
-      this.subCategory,
-      this.childCategory,
-      "electronics",
-      "SMD",
-      "IC",
-    ].filter(Boolean);
+this.tags = [
+  this.name,
+  this.brand,
+  this.category,
+  this.subCategory,
+  this.childCategory,
+  "home decor",
+  "premium decor",
+  "planters",
+  "vases",
+  "pooja decor",
+  "candle holders",
+  "Goga Ji International",
+].filter(Boolean);
   }
 
   this.searchKeywords = [

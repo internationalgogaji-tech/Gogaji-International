@@ -17,38 +17,31 @@ export default function NavbarCategoriesPage() {
   const [savingId, setSavingId] = useState("");
 
   const fetchCategories = async () => {
-  try {
-    let list = [];
-
     try {
-      const data = await adminRequest("/api/admin/navbar-categories");
-      list = data.categories || [];
-    } catch {
-      list = [];
-    }
+      let data;
 
-    if (!list.length) {
-      const res = await fetch(`${API_BASE}/api/categories`, {
-        cache: "no-store",
-      });
+      try {
+        data = await adminRequest("/api/admin/categories/navbar");
+      } catch {
+        const res = await fetch(`${API_BASE}/api/categories/navbar`, {
+          cache: "no-store",
+        });
+        data = await res.json();
+      }
 
-      const data = await res.json();
-
-      list = (data.categories || [])
+      const list = (data.categories || [])
         .filter((cat) => cat.isActive !== false)
-        .filter((cat) => cat.parentSlug === "semiconductors")
         .sort(
           (a, b) =>
             Number(a.navbarOrder || 0) - Number(b.navbarOrder || 0) ||
             Number(a.order || 0) - Number(b.order || 0)
         );
-    }
 
-    setCategories(list);
-  } catch (error) {
-    toast.error(error.message || "Navbar categories load failed");
-  }
-};
+      setCategories(list);
+    } catch (error) {
+      toast.error(error.message || "Navbar categories load failed");
+    }
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -64,11 +57,12 @@ export default function NavbarCategoriesPage() {
     try {
       setSavingId(cat._id);
 
-      await adminRequest(`/api/admin/navbar-categories/${cat._id}`, {
-        method: "PATCH",
+      await adminRequest(`/api/admin/categories/${cat._id}`, {
+        method: "PUT",
         body: JSON.stringify({
           showInNavbar: cat.showInNavbar !== false,
           navbarOrder: Number(cat.navbarOrder || 0),
+          showInHomeSlider: Boolean(cat.showInHomeSlider),
           isActive: cat.isActive !== false,
         }),
       });
@@ -86,7 +80,7 @@ export default function NavbarCategoriesPage() {
     const q = search.trim().toLowerCase();
     if (!q) return true;
 
-    return [cat.name, cat.slug, cat.parentSlug]
+    return [cat.name, cat.slug, cat.parentSlug, cat.group]
       .filter(Boolean)
       .join(" ")
       .toLowerCase()
@@ -99,8 +93,10 @@ export default function NavbarCategoriesPage() {
         <h1 className="text-2xl font-extrabold text-[#102033]">
           Navbar Categories
         </h1>
+
         <p className="mt-1 text-sm text-slate-500">
-          Manage semiconductor subcategories shown in website navbar. First 5 active items show directly, बाकी All Semiconductors dropdown में जाएंगे.
+          Manage Goga Ji International home decor categories shown in website
+          navbar. Category image, order and visibility backend se control hogi.
         </p>
 
         <div className="relative mt-5 max-w-xl">
@@ -108,19 +104,21 @@ export default function NavbarCategoriesPage() {
             size={18}
             className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
           />
+
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search navbar category..."
-            className="w-full rounded-2xl border border-[#d8e1ec] bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-[#2454b5]"
+            placeholder="Search home decor navbar category..."
+            className="w-full rounded-2xl border border-[#d8e1ec] bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-[#1F5C4A]"
           />
         </div>
       </div>
 
       <div className="overflow-hidden rounded-3xl border border-[#d7e7f4] bg-white shadow-sm">
-        <div className="grid grid-cols-[1.4fr_1fr_140px_140px_120px] bg-[#f3f7fb] px-5 py-4 text-xs font-extrabold uppercase tracking-wide text-slate-500">
+        <div className="grid grid-cols-[1.4fr_1fr_1fr_140px_140px_120px] bg-[#f3f7fb] px-5 py-4 text-xs font-extrabold uppercase tracking-wide text-slate-500">
           <div>Category</div>
           <div>Slug</div>
+          <div>Parent</div>
           <div>Show Navbar</div>
           <div>Navbar Order</div>
           <div className="text-right">Action</div>
@@ -129,7 +127,7 @@ export default function NavbarCategoriesPage() {
         {filtered.map((cat) => (
           <div
             key={cat._id}
-            className="grid grid-cols-[1.4fr_1fr_140px_140px_120px] items-center border-t px-5 py-4"
+            className="grid grid-cols-[1.4fr_1fr_1fr_140px_140px_120px] items-center border-t px-5 py-4"
           >
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 overflow-hidden rounded-xl border bg-[#f8fcff]">
@@ -139,18 +137,26 @@ export default function NavbarCategoriesPage() {
                     alt={cat.iconAlt || cat.name}
                     className="h-full w-full object-cover"
                   />
-                ) : null}
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-xs text-slate-400">
+                    No Img
+                  </div>
+                )}
               </div>
 
               <div>
                 <p className="font-bold text-[#102033]">{cat.name}</p>
                 <p className="line-clamp-1 text-xs text-slate-500">
-                  {cat.description || "Semiconductor subcategory"}
+                  {cat.description || "Home decor category"}
                 </p>
               </div>
             </div>
 
             <div className="font-semibold text-[#102033]">{cat.slug}</div>
+
+            <div className="text-sm text-slate-600">
+              {cat.parentSlug || "Main"}
+            </div>
 
             <label className="inline-flex items-center gap-2 font-semibold">
               <input
@@ -169,14 +175,14 @@ export default function NavbarCategoriesPage() {
               onChange={(e) =>
                 updateLocal(cat._id, "navbarOrder", Number(e.target.value))
               }
-              className="w-24 rounded-xl border px-3 py-2 outline-none focus:border-[#2454b5]"
+              className="w-24 rounded-xl border px-3 py-2 outline-none focus:border-[#1F5C4A]"
             />
 
             <div className="text-right">
               <button
                 onClick={() => saveCategory(cat)}
                 disabled={savingId === cat._id}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#2454b5] px-4 py-2 text-sm font-bold text-white disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#1F5C4A] px-4 py-2 text-sm font-bold text-white disabled:opacity-60"
               >
                 <Save size={16} />
                 {savingId === cat._id ? "Saving" : "Save"}

@@ -45,63 +45,28 @@ const normalizeCategorySlug = (value = "") => {
     .trim();
 
   const map = {
-    semiconductors: "semiconductors",
-    semiconductor: "semiconductors",
+        "planters & vases": "plantersvases",
+    "planters and vases": "plantersvases",
+    "planters-vases": "plantersvases",
+    plantersvases: "plantersvases",
 
-    "cables & wires": "cableswires",
-    "cables and wires": "cableswires",
-    "cables-wires": "cableswires",
-    cableswires: "cableswires",
-    "cables-wires-components": "cableswires",
-    cables: "cableswires",
+    "pooja & mandir": "poojamandir",
+    "pooja and mandir": "poojamandir",
+    "pooja-mandir": "poojamandir",
+    poojamandir: "poojamandir",
 
-    connectors: "connectors",
-    connector: "connectors",
+    "candle holders": "candleholders",
+    "candle-holders": "candleholders",
+    candleholders: "candleholders",
 
-    "mechanical & hardware": "mechanicalhardware",
-    "mechanical and hardware": "mechanicalhardware",
-    "mechanical-hardware": "mechanicalhardware",
-    mechanicalhardware: "mechanicalhardware",
+    "decor accents": "decoraccents",
+    "decor-accents": "decoraccents",
+    decoraccents: "decoraccents",
 
-    "passive components": "passivecomponents",
-    "passive-components": "passivecomponents",
-    passivecomponents: "passivecomponents",
-    passives: "passivecomponents",
-
-    "power supplies & regulators": "powersuppliesregulators",
-    "power supplies and regulators": "powersuppliesregulators",
-    "power-supplies-regulators": "powersuppliesregulators",
-    powersuppliesregulators: "powersuppliesregulators",
-    power: "powersuppliesregulators",
-
-    "rf & wireless": "rfwireless",
-    "rf and wireless": "rfwireless",
-    "rf-wireless": "rfwireless",
-    rfwireless: "rfwireless",
-
-    automation: "automation",
-
-    "sensors & transducers": "sensorstransducers",
-    "sensors and transducers": "sensorstransducers",
-    "sensors-transducers": "sensorstransducers",
-    sensorstransducers: "sensorstransducers",
-    sensors: "sensorstransducers",
-
-    "tools & accessories": "toolsaccessories",
-    "tools and accessories": "toolsaccessories",
-    "tools-accessories": "toolsaccessories",
-    toolsaccessories: "toolsaccessories",
-    tools: "toolsaccessories",
-
-    "displays & interface modules": "displaysinterfacemodules",
-    "displays and interface modules": "displaysinterfacemodules",
-    "displays-interface-modules": "displaysinterfacemodules",
-    displaysinterfacemodules: "displaysinterfacemodules",
-
-    "switches, buzzers & indicators": "switchesbuzzersindicators",
-    "switches buzzers indicators": "switchesbuzzersindicators",
-    "switches-buzzers-indicators": "switchesbuzzersindicators",
-    switchesbuzzersindicators: "switchesbuzzersindicators",
+    "trays & urlis": "traysurlis",
+    "trays and urlis": "traysurlis",
+    "trays-urlis": "traysurlis",
+    traysurlis: "traysurlis",
   };
 
   if (map[raw]) return map[raw];
@@ -112,82 +77,37 @@ const getCategoryAliases = (value = "") => {
   const normalized = normalizeCategorySlug(value);
 
   const aliases = {
-    semiconductors: [
-      "semiconductors",
-      "semiconductor",
-      "components",
-      "component",
+        plantersvases: [
+      "plantersvases",
+      "planters & vases",
+      "planters and vases",
+      "planters-vases",
     ],
 
-    cableswires: [
-      "cableswires",
-      "cables & wires",
-      "cables and wires",
-      "cables-wires",
-      "cables",
+    poojamandir: [
+      "poojamandir",
+      "pooja & mandir",
+      "pooja and mandir",
+      "pooja-mandir",
     ],
 
-    connectors: ["connectors", "connector"],
-
-    mechanicalhardware: [
-      "mechanicalhardware",
-      "mechanical & hardware",
-      "mechanical and hardware",
-      "mechanical-hardware",
+    candleholders: [
+      "candleholders",
+      "candle holders",
+      "candle-holders",
     ],
 
-    passivecomponents: [
-      "passivecomponents",
-      "passive components",
-      "passive-components",
-      "passives",
+    decoraccents: [
+      "decoraccents",
+      "decor accents",
+      "decor-accents",
     ],
 
-    powersuppliesregulators: [
-      "powersuppliesregulators",
-      "power supplies & regulators",
-      "power supplies and regulators",
-      "power-supplies-regulators",
-      "power",
-    ],
-
-    rfwireless: [
-      "rfwireless",
-      "rf & wireless",
-      "rf and wireless",
-      "rf-wireless",
-    ],
-
-    automation: ["automation"],
-
-    sensorstransducers: [
-      "sensorstransducers",
-      "sensors & transducers",
-      "sensors and transducers",
-      "sensors-transducers",
-      "sensors",
-    ],
-
-    toolsaccessories: [
-      "toolsaccessories",
-      "tools & accessories",
-      "tools and accessories",
-      "tools-accessories",
-      "tools",
-    ],
-
-    displaysinterfacemodules: [
-      "displaysinterfacemodules",
-      "displays & interface modules",
-      "displays and interface modules",
-      "displays-interface-modules",
-    ],
-
-    switchesbuzzersindicators: [
-      "switchesbuzzersindicators",
-      "switches, buzzers & indicators",
-      "switches buzzers indicators",
-      "switches-buzzers-indicators",
+    traysurlis: [
+      "traysurlis",
+      "trays & urlis",
+      "trays and urlis",
+      "trays-urlis",
     ],
   };
 

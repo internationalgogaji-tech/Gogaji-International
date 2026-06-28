@@ -103,92 +103,37 @@ export default function HomeDecorSectionPage() {
         }
     };
 
-    const saveData = async () => {
-        try {
-            const updatedProducts = await Promise.all(
-                form.products.map(async (item) => {
-                    if (!item.sku) return item;
+   const saveData = async () => {
+  try {
+    const res = await fetch(`${API}/api/home-decor-info`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
 
-                    try {
-                        const res = await fetch(
-                            `${API}/api/products?limit=5000`
-                        );
+    const data = await res.json();
 
-                        const data = await res.json();
+    if (res.ok) {
+      setForm({
+        ...data,
+        products: (data.products || []).map((p) => ({
+          ...p,
+          isEditing: false,
+        })),
+      });
 
-                        console.log("API PRODUCTS =", data);
-                        console.log("TOTAL PRODUCTS =", data?.products?.length);
+      setShowSuccess(true);
 
-                        data?.products?.forEach((p) => {
-                            console.log({
-                                name: p.name,
-                                sku: p.sku,
-                                mpn: p.mpn,
-                                slug: p.slug,
-                                id: p._id,
-                            });
-                        });
-
-                        const product = data?.products?.find(
-                            (p) =>
-                                p.sku?.trim()?.toLowerCase() ===
-                                item.sku?.trim()?.toLowerCase()
-                        );
-
-                        console.log("PRODUCT ID =", product?._id);
-                        console.log("PRODUCT SLUG =", product?.slug);
-
-                        if (product?.slug) {
-                            return {
-                                ...item,
-
-                                productId: product._id,
-
-                                slug: product.slug,
-
-                                buttonLink: `/product/${product.slug}`,
-                            };
-                        }
-                        return item;
-                    } catch {
-                        return item;
-                    }
-                })
-            );
-
-            const res = await fetch(
-                `${API}/api/home-decor-info`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        ...form,
-                        products: updatedProducts,
-                    }),
-                }
-            );
-
-            if (res.ok) {
-                setForm({
-                    ...form,
-                    products: updatedProducts.map((p) => ({
-                        ...p,
-                        isEditing: false,
-                    })),
-                });
-
-                setShowSuccess(true);
-
-                setTimeout(() => {
-                    setShowSuccess(false);
-                }, 3000);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
     return (
         <>
@@ -433,7 +378,7 @@ export default function HomeDecorSectionPage() {
                                                 </div>
 
                                                 <img
-                                                    src={item.image}
+                                                    src={getImageUrl(item.image)}
                                                     alt="Product"
                                                     onError={(e) => {
                                                         e.target.style.display = "none";

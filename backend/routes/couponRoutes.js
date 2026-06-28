@@ -3,6 +3,7 @@ const router = express.Router();
 
 const {
   getMyCoupons,
+  getActiveCoupons,
   createCoupon,
 } = require("../controllers/couponController");
 
@@ -16,6 +17,7 @@ router.get("/test", (req, res) => {
 });
 
 router.get("/my", protect, getMyCoupons);
+router.get("/active", getActiveCoupons);
 router.post("/", protect, admin, createCoupon);
 
 module.exports = router;
