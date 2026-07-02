@@ -11,15 +11,83 @@ async function getProducts(searchParams) {
     const query = new URLSearchParams();
     query.set("limit", "20");
 
+    const normalizeCategorySlug = (value) => {
+      if (!value) return "";
+
+      const normalized = String(value)
+        .trim()
+        .toLowerCase()
+        .replace(/&/g, "and")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+      const map = {
+        decoraccents: "decor-accents",
+        "decor-accents": "decor-accents",
+        plantersvases: "planters-vases",
+        "planters-vases": "planters-vases",
+        "planters-and-vases": "planters-vases",
+        poojamandir: "pooja-mandir",
+        "pooja-mandir": "pooja-mandir",
+        "pooja-and-mandir": "pooja-mandir",
+        candleholders: "candle-holders",
+        "candle-holders": "candle-holders",
+        "candle-and-holders": "candle-holders",
+        traysurlis: "trays-urlis",
+        "trays-urlis": "trays-urlis",
+        "trays-and-urlis": "trays-urlis",
+        tabledecor: "table-decor",
+        "table-decor": "table-decor",
+        walldecor: "wall-decor",
+        "wall-decor": "wall-decor",
+        luxuryhome: "luxury-home-collection",
+        "luxury-home": "luxury-home-collection",
+        "luxury-home-collection": "luxury-home-collection",
+        potsplanters: "pots-planters",
+        "pots-planters": "pots-planters",
+        cakestand: "cake-stand",
+        "cake-stand": "cake-stand",
+        cosmeticorganizer: "cosmetic-organizer",
+        "cosmetic-organizer": "cosmetic-organizer",
+        "lanterns-candle-holder": "lanterns-candle-holder",
+      };
+
+      return map[normalized] || normalized;
+    };
+
     if (searchParams?.category) {
-      query.set("category", searchParams.category);
+      query.set("category", normalizeCategorySlug(searchParams.category));
     }
 
-    // 🔥 FIX: normalize subCategory (important)
     const normalizeSubCategory = (sub) => {
       if (!sub) return "";
 
+      const normalized = normalizeCategorySlug(sub);
+
       const map = {
+        vases: "vases",
+        planters: "planters",
+        "artificial-plants": "artificial-plants",
+        "pooja-essentials": "pooja-essentials",
+        "temple-decor": "temple-decor",
+        "metal-holders": "metal-holders",
+        "glass-holders": "glass-holders",
+        "lanterns-candle-holder": "lanterns-candle-holder",
+        figurines: "figurines",
+        frames: "frames",
+        lamps: "lamps",
+        "wall-decor": "wall-decor",
+        trays: "trays",
+        urlis: "urlis",
+        "metal-trays": "metal-trays",
+        hampers: "hampers",
+        "for-her": "for-her",
+        "for-him": "for-him",
+        birthday: "birthday",
+        anniversary: "anniversary",
+        housewarming: "housewarming",
+        "everything-under-999": "everything-under-999",
+
         // Amplifier
         amplifiermodules: "op-amps",
         "amplifier-modules": "op-amps",
@@ -62,7 +130,7 @@ async function getProducts(searchParams) {
         "programmable-logic-ics": "programmable-logic-ics",
       };
 
-      return map[sub] || sub;
+      return map[normalized] || normalized;
     };
 
     if (searchParams?.subCategory) {
@@ -116,6 +184,148 @@ async function getCategories() {
     console.error("Categories fetch error:", error);
     return [];
   }
+}
+
+function slugifyCategory(value = "") {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function getFixedCategorySlug(value = "") {
+  const slug = slugifyCategory(value);
+
+  const slugFixMap = {
+    decoraccents: "decor-accents",
+    "decor-accents": "decor-accents",
+    plantersvases: "planters-vases",
+    "planters-vases": "planters-vases",
+    "planters-and-vases": "planters-vases",
+    poojamandir: "pooja-mandir",
+    "pooja-mandir": "pooja-mandir",
+    "pooja-and-mandir": "pooja-mandir",
+    "pooja-mandir-decor": "pooja-mandir",
+    candleholders: "candle-holders",
+    "candle-holders": "candle-holders",
+    "candle-and-holders": "candle-holders",
+    traysurlis: "trays-urlis",
+    "trays-urlis": "trays-urlis",
+    "trays-and-urlis": "trays-urlis",
+    tabledecor: "table-decor",
+    "table-decor": "table-decor",
+    walldecor: "wall-decor",
+    "wall-decor": "wall-decor",
+    luxuryhome: "luxury-home-collection",
+    "luxury-home": "luxury-home-collection",
+    "luxury-home-collection": "luxury-home-collection",
+    potsplanters: "pots-planters",
+    "pots-planters": "pots-planters",
+    cakestand: "cake-stand",
+    "cake-stand": "cake-stand",
+    cosmeticorganizer: "cosmetic-organizer",
+    "cosmetic-organizer": "cosmetic-organizer",
+    seasonaldecor: "seasonal-decor",
+    showpieces: "showpieces",
+  };
+
+  return slugFixMap[slug] || slug;
+}
+
+function formatCategoryName(value = "") {
+  const knownNames = {
+    plantersvases: "Planters & Vases",
+    "planters-vases": "Planters & Vases",
+    poojamandir: "Pooja & Mandir Decor",
+    "pooja-mandir": "Pooja & Mandir Decor",
+    candleholders: "Candle Holders",
+    "candle-holders": "Candle Holders",
+    decoraccents: "Decor Accents",
+    "decor-accents": "Decor Accents",
+    traysurlis: "Trays & Urlis",
+    "trays-urlis": "Trays & Urlis",
+    tabledecor: "Table Decor",
+    "table-decor": "Table Decor",
+    walldecor: "Wall Decor",
+    "wall-decor": "Wall Decor",
+    luxuryhome: "Luxury Home Collection",
+    "luxury-home-collection": "Luxury Home Collection",
+    seasonaldecor: "Seasonal Decor",
+    "seasonal-decor": "Seasonal Decor",
+    showpieces: "Showpieces",
+  };
+
+  const slug = slugifyCategory(value);
+  const compact = String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  if (knownNames[slug]) return knownNames[slug];
+  if (knownNames[compact]) return knownNames[compact];
+
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+async function getProductCategories() {
+  try {
+    const data = await apiRequest("/api/products?limit=500", {
+      cache: "no-store",
+    });
+
+    const map = new Map();
+
+    (data?.products || []).forEach((product) => {
+      const rawCategory = String(product?.category || "").trim();
+      if (!rawCategory) return;
+
+      const slug = getFixedCategorySlug(rawCategory);
+      if (!slug || map.has(slug)) return;
+
+      map.set(slug, {
+        name: formatCategoryName(rawCategory),
+        slug,
+        parentSlug: "",
+        fromProducts: true,
+      });
+    });
+
+    return Array.from(map.values());
+  } catch (error) {
+    console.error("Product categories fetch error:", error);
+    return [];
+  }
+}
+
+function mergeCategoryLists(categoryList = [], productCategoryList = []) {
+  const map = new Map();
+
+  categoryList
+    .filter((item) => !item.parentSlug)
+    .forEach((item) => {
+      const slug = getFixedCategorySlug(item?.slug || item?.name);
+      if (!slug || map.has(slug)) return;
+
+      map.set(slug, {
+        ...item,
+        slug,
+      });
+    });
+
+  productCategoryList.forEach((item) => {
+    const slug = getFixedCategorySlug(item?.slug || item?.name);
+    if (!slug || map.has(slug)) return;
+
+    map.set(slug, {
+      ...item,
+      slug,
+    });
+  });
+
+  return Array.from(map.values());
 }
 
 async function getCategoryBySlugFromApi(slug) {
@@ -240,22 +450,35 @@ const totalPages = data.pages || 1;
   const isImageSearch =
   resolvedSearchParams?.imageSearch === "true";
 
-    const allCategories = await getCategories();
+    const [apiCategories, productCategories] = await Promise.all([
+      getCategories(),
+      getProductCategories(),
+    ]);
+
+    const allCategories = mergeCategoryLists(apiCategories, productCategories);
 
   const selectedCategory = resolvedSearchParams?.category
     ? await getCategoryBySlugFromApi(resolvedSearchParams.category)
     : null;
 
+  const fallbackCategoryName = resolvedSearchParams?.category
+    ? formatCategoryName(resolvedSearchParams.category)
+    : "";
+
   const pageTitle = keyword
     ? `Search Results for "${keyword}"`
     : selectedCategory
       ? `${selectedCategory.name} Products`
+      : fallbackCategoryName
+        ? `${fallbackCategoryName} Products`
       : "All Products";
 
   const pageDescription = keyword
     ? `Showing matching industrial, electrical and electronic components for "${keyword}".`
     : selectedCategory
       ? selectedCategory.description
+      : fallbackCategoryName
+        ? `Explore ${fallbackCategoryName.toLowerCase()} products.`
       : "Explore industrial, electrical and electronic products.";
 
   return (
@@ -311,14 +534,13 @@ const totalPages = data.pages || 1;
             </div>
           ) : null}
 
-          {!keyword && !selectedCategory ? (
+          {!keyword && !resolvedSearchParams?.category ? (
             <div className="mb-8 flex flex-wrap gap-3">
               {allCategories
-                .filter((item) => !item.parentSlug)
                 .map((item) => (
                   <Link
                     key={item.slug}
-                    href={`/products?category=${item.slug}`}
+                    href={`/products?category=${encodeURIComponent(item.slug)}`}
                     className="rounded-full border border-[#d6bd72] bg-white px-4 py-2 text-sm font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
                   >
                     {item.name}
@@ -514,40 +736,15 @@ const totalPages = data.pages || 1;
   </h2>
 
   <div className="mt-6 flex flex-wrap gap-3">
-    <Link
-      href="/products?category=planters-vases"
-      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
-    >
-      Planters & Vases
-    </Link>
-
-    <Link
-      href="/products?category=pooja-mandir"
-      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
-    >
-      Pooja & Mandir
-    </Link>
-
-    <Link
-      href="/products?category=candle-holders"
-      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
-    >
-      Candle Holders
-    </Link>
-
-    <Link
-      href="/products?category=decor-accents"
-      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
-    >
-      Decor Accents
-    </Link>
-
-    <Link
-      href="/products?category=trays-urlis"
-      className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
-    >
-      Trays & Urlis
-    </Link>
+    {allCategories.map((item) => (
+      <Link
+        key={item.slug}
+        href={`/products?category=${encodeURIComponent(item.slug)}`}
+        className="rounded-full border border-[#d6bd72] px-5 py-3 text-[15px] font-semibold text-[#1f604d] transition hover:bg-[#1f604d] hover:text-white"
+      >
+        {item.name}
+      </Link>
+    ))}
 
     <Link
       href="/products"

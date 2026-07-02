@@ -21,6 +21,7 @@ import {
   LayoutDashboard,
   BookOpen,
   FileText,
+  Grid3X3,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LoginModal from "@/app/authPage/LoginModel";
@@ -32,11 +33,72 @@ import SearchBar from "@/components/SearchBar";
 import { API_BASE } from "@/lib/api";
 
 const fallbackCategories = [
-  { name: "New Arrivals", slug: "new-arrivals" },
   { name: "Top Picks", slug: "top-picks" },
-  { name: "Gifts", slug: "gifts" },
-  { name: "Pooja & Mandir", slug: "pooja-mandir" },
-  { name: "Decor Accents", slug: "decor-accents" },
+  {
+    name: "Planters & Vases",
+    slug: "planters-vases",
+    children: [
+      { name: "Vases", slug: "vases" },
+      { name: "Planters", slug: "planters" },
+      { name: "Artificial Plants", slug: "artificial-plants" },
+    ],
+  },
+  {
+    name: "Pooja & Mandir Decor",
+    slug: "pooja-mandir",
+    children: [
+      { name: "Pooja Essentials", slug: "pooja-essentials" },
+      { name: "Temple Decor", slug: "temple-decor" },
+    ],
+  },
+  {
+    name: "Candle Holders",
+    slug: "candle-holders",
+    children: [
+      { name: "Metal Holders", slug: "metal-holders" },
+      { name: "Glass Holders", slug: "glass-holders" },
+      { name: "Lanterns & Candle Holder", slug: "lanterns-candle-holder" },
+    ],
+  },
+  {
+    name: "Trays & Urlis",
+    slug: "trays-urlis",
+    children: [
+      { name: "Trays", slug: "trays" },
+      { name: "Urlis", slug: "urlis" },
+      { name: "Metal Trays", slug: "metal-trays" },
+    ],
+  },
+  {
+    name: "Gifts",
+    slug: "gifts",
+    children: [
+      { name: "Hampers", slug: "hampers" },
+      { name: "For Her", slug: "for-her" },
+      { name: "For Him", slug: "for-him" },
+      { name: "Birthday", slug: "birthday" },
+      { name: "Anniversary", slug: "anniversary" },
+      { name: "Housewarming", slug: "housewarming" },
+      { name: "Everything Under 999", slug: "everything-under-999" },
+    ],
+  },
+  {
+    name: "Decor Accents",
+    slug: "decor-accents",
+    children: [
+      { name: "Figurines", slug: "figurines" },
+      { name: "Frames", slug: "frames" },
+      { name: "Lamps", slug: "lamps" },
+      { name: "Wall Decor", slug: "wall-decor" },
+    ],
+  },
+  { name: "Wall Decor", slug: "wall-decor" },
+  { name: "Table Decor", slug: "table-decor" },
+  { name: "Luxury Home Collection", slug: "luxury-home-collection" },
+  { name: "Cake Stand", slug: "cake-stand" },
+  { name: "Cosmetic Organizer", slug: "cosmetic-organizer" },
+  { name: "Lanterns & Candle Holder", slug: "lanterns-candle-holder" },
+  { name: "Pots & Planters", slug: "pots-planters" },
 ];
 
 const accountMenuItems = [
@@ -87,23 +149,96 @@ function getFixedCategorySlug(item) {
   const nameSlug = slugifyCategory(item?.name);
 
   const slugFixMap = {
+    "table-decor": "table-decor",
     tabledecor: "table-decor",
+    "wall-decor": "wall-decor",
     walldecor: "wall-decor",
+    "decor-accents": "decor-accents",
     decoraccents: "decor-accents",
+    "trays-urlis": "trays-urlis",
     traysurlis: "trays-urlis",
     traysandurlis: "trays-urlis",
-    luxuryhome: "luxury-home",
+    "luxury-home": "luxury-home-collection",
+    luxuryhome: "luxury-home-collection",
+    plantersvases: "planters-vases",
+    "planters-and-vases": "planters-vases",
+    poojamandir: "pooja-mandir",
+    "pooja-and-mandir": "pooja-mandir",
+    candleholders: "candle-holders",
+    "candle-and-holders": "candle-holders",
+    "trays-and-urlis": "trays-urlis",
   };
 
   return slugFixMap[slug] || nameSlug || slug;
 }
 
+function formatCategoryName(value = "") {
+  const knownNames = {
+    plantersvases: "Planters & Vases",
+    poojamandir: "Pooja & Mandir Decor",
+    "pooja-mandir": "Pooja & Mandir Decor",
+    "pooja-mandir-decor": "Pooja & Mandir Decor",
+    candleholders: "Candle Holders",
+    decoraccents: "Decor Accents",
+    traysurlis: "Trays & Urlis",
+    seasonaldecor: "Seasonal Decor",
+    showpieces: "Showpieces",
+  };
 
+  const slug = slugifyCategory(value);
+  const compact = String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  if (knownNames[slug]) return knownNames[slug];
+  if (knownNames[compact]) return knownNames[compact];
+
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function getProductImage(product) {
+  return (
+    product?.thumbnail ||
+    product?.images?.find((image) => image?.isPrimary)?.url ||
+    product?.images?.[0]?.url ||
+    ""
+  );
+}
+
+function buildProductCategoryItems(products = [], existingSlugs = new Set()) {
+  const categoryMap = new Map();
+
+  products.forEach((product) => {
+    const rawCategory = String(product?.category || "").trim();
+    if (!rawCategory) return;
+
+    const slug = getFixedCategorySlug({ slug: rawCategory });
+    if (!slug || existingSlugs.has(slug) || categoryMap.has(slug)) return;
+
+    categoryMap.set(slug, {
+      name: formatCategoryName(rawCategory),
+      slug,
+      image: getProductImage(product),
+      iconAlt: `${formatCategoryName(rawCategory)} products`,
+      parentSlug: "",
+      children: [],
+      fromProducts: true,
+    });
+  });
+
+  return Array.from(categoryMap.values());
+}
 
 function getCategoryHref(item) {
   const slug = getFixedCategorySlug(item);
 
   if (!slug) return "/products";
+
+  if (slug === "top-picks") {
+    return "/products?featured=true";
+  }
 
   return `/products?category=${encodeURIComponent(slug)}`;
 }
@@ -182,8 +317,8 @@ export default function Navbar() {
     },
   ];
 
-  const visibleCategories = [];
-  const allSemiconductorCategories = categories;
+  const visibleCategories = categories.slice(0, 5);
+const allCategories = categories;
 
   const wishlistCount = (wishlistItems || []).length;
 
@@ -212,17 +347,22 @@ export default function Navbar() {
   useEffect(() => {
     const fetchNavbarCategories = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/categories/navbar`, {
-          cache: "no-store",
-        });
+const [categoryRes, productRes] = await Promise.all([
+  fetch(`${API_BASE}/api/categories`, {
+    cache: "no-store",
+  }),
+  fetch(`${API_BASE}/api/products?limit=500`, {
+    cache: "no-store",
+  }),
+]);
 
-        const data = await res.json();
+const categoryData = await categoryRes.json();
+const productData = await productRes.json();
 
-        if (!data?.success) return;
+if (!categoryData?.success) return;
 
-        const list = (data.categories || [])
+const list = (categoryData.categories || [])
           .filter((cat) => cat.isActive !== false)
-          .filter((cat) => cat.showInNavbar !== false)
           .sort(
             (a, b) =>
               Number(a.navbarOrder || 0) - Number(b.navbarOrder || 0) ||
@@ -231,20 +371,37 @@ export default function Navbar() {
 
         const mainCategories = list
           .filter((cat) => !cat.parentSlug)
-          .map((main) => ({
-            ...main,
-            slug: getFixedCategorySlug(main),
-            href: `/products?category=${encodeURIComponent(getFixedCategorySlug(main))}`,
-            children: list
-              .filter((child) => child.parentSlug === main.slug)
-              .map((child) => ({
-                ...child,
-                slug: getFixedCategorySlug(child),
-                href: getChildCategoryHref(main, child),
-              })),
-          }));
+          .map((main) => {
+            const mainSlug = getFixedCategorySlug(main);
 
-        setCategories(mainCategories);
+            return {
+              ...main,
+              slug: mainSlug,
+              href: `/products?category=${encodeURIComponent(mainSlug)}`,
+              children: list
+                .filter(
+                  (child) =>
+                    getFixedCategorySlug({ slug: child.parentSlug }) ===
+                    mainSlug,
+                )
+                .map((child) => ({
+                  ...child,
+                  slug: getFixedCategorySlug(child),
+                  href: getChildCategoryHref({ ...main, slug: mainSlug }, child),
+                })),
+            };
+          });
+
+       const existingSlugs = new Set(
+  mainCategories.map((item) => getFixedCategorySlug(item)),
+);
+
+const productCategories = buildProductCategoryItems(
+  productData?.products || [],
+  existingSlugs,
+);
+
+setCategories([...mainCategories, ...productCategories]);
 
       } catch (error) {
         console.error("Navbar category fetch error:", error);
@@ -380,7 +537,7 @@ export default function Navbar() {
                           Hi, {userName}
                         </p>
                         {userEmail ? (
-                          <p cclassName="mt-1 text-sm text-[#15803D]">
+                          <p className="mt-1 text-sm text-[#15803D]">
                             {userEmail}
                           </p>
                         ) : null}
@@ -458,113 +615,219 @@ export default function Navbar() {
             </div>
           </div>
 
-         <nav className="hidden border-t border-[#E5E7EB] bg-white lg:block">
-  <div className="mx-auto flex w-full max-w-[1500px] items-center gap-4 px-2 py-3">
-    <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-[#D6E4DA] scrollbar-track-transparent">
-      {categories.map((item) => {
-        const hasChildren = item.children?.length > 0;
-        const isActive = activeMegaMenu === item.slug;
+          <nav className="hidden border-t border-[#E5E7EB] bg-white lg:block">
+            <div className="mx-auto flex w-full max-w-[1500px] items-center gap-4 px-2 py-3">
+              <Link
+                href="/blog"
+                className="inline-flex h-[54px] shrink-0 items-center gap-2 rounded-2xl border border-[#D8E1EC] bg-white px-5 text-[15px] font-extrabold text-[#1F5C4A] shadow-sm transition hover:border-[#B38B2D] hover:bg-[#FFF8E8]"
+              >
+                <BookOpen size={17} />
+                Blogs
+              </Link>
 
-        return (
-          <div
-            key={item._id || item.slug}
-            className="group relative shrink-0"
-            onMouseEnter={() => setActiveMegaMenu(item.slug)}
-            onMouseLeave={() => setActiveMegaMenu(null)}
-          >
-            <Link
-              href={getCategoryHref(item)}
-              className={`relative inline-flex h-[58px] items-center gap-3 rounded-2xl border px-3.5 pr-4 text-[15px] font-extrabold transition-all duration-200 ${
-                isActive
-                  ? "border-[#B38B2D] bg-[#FFF8E8] text-[#1F5C4A] shadow-sm"
-                  : "border-[#E5E7EB] bg-[#FCFFFC] text-[#24364B] hover:border-[#B38B2D]/70 hover:bg-[#FFFDF5] hover:text-[#1F5C4A]"
-              }`}
-            >
-              {item.image ? (
-                <span className="relative h-10 w-10 overflow-hidden rounded-xl border border-[#E5E7EB] bg-white shadow-sm">
-                  <img
-                    src={resolveCategoryImage(item.image)}
-                    alt={item.iconAlt || item.name}
-                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                  />
-                </span>
-              ) : null}
-
-              <span className="max-w-[190px] truncate">{item.name}</span>
-
-              {hasChildren ? (
-                <span
-                  className={`ml-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border transition ${
-                    isActive
-                      ? "border-[#B38B2D] bg-white text-[#B38B2D]"
-                      : "border-[#D8E1EC] bg-white text-[#64748B] group-hover:border-[#B38B2D] group-hover:text-[#B38B2D]"
-                  }`}
-                  title="Sub categories"
-                >
+              <div
+                className="relative shrink-0"
+                onMouseEnter={() => setIsSemiconductorMenuOpen(true)}
+                onMouseLeave={() => setIsSemiconductorMenuOpen(false)}
+              >
+                <button className="inline-flex h-[54px] items-center gap-2 rounded-2xl border border-[#D8E1EC] bg-[#F8FAFC] px-5 text-[15px] font-extrabold text-[#1F5C4A] shadow-sm transition hover:border-[#B38B2D] hover:bg-[#FFF8E8]">
+                  <Grid3X3 size={18} />
+                  All Categories
                   <ChevronDown
-                    size={15}
+                    size={16}
                     className={`transition-transform duration-200 ${
-                      isActive ? "rotate-180" : ""
+                      isSemiconductorMenuOpen ? "rotate-180" : ""
                     }`}
                   />
-                </span>
-              ) : null}
-            </Link>
+                </button>
 
-            {hasChildren && isActive ? (
-              <div className="absolute left-0 top-[calc(100%+8px)] z-[999] w-[340px] overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.16)]">
-                <div className="border-b border-[#EEF2F7] bg-[#FAFBF8] px-5 py-4">
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-[#B38B2D]">
-                    Explore
-                  </p>
-                  <p className="mt-1 text-lg font-black text-[#1F5C4A]">
-                    {item.name}
-                  </p>
-                </div>
+                {isSemiconductorMenuOpen ? (
+                  <div className="absolute left-0 top-[64px] z-[999] w-[920px] overflow-hidden rounded-[24px] border border-[#E5E7EB] bg-white shadow-[0_28px_80px_rgba(15,23,42,0.18)]">
+                    <div className="flex items-center justify-between border-b border-[#EEF2F7] bg-[#FAFBF8] px-6 py-5">
+                      <div>
+                        <h2 className="text-[24px] font-black text-[#102033]">
+                          All Categories
+                        </h2>
+                        <p className="mt-1 text-[15px] font-medium text-[#52677d]">
+                          Browse main categories and sub categories.
+                        </p>
+                      </div>
 
-                <div className="max-h-[360px] overflow-y-auto py-2">
-                  {item.children.map((child) => (
-                    <Link
-                      key={child._id || child.slug}
-                      href={child.href}
-                      className="flex items-center gap-3 px-5 py-3.5 text-[15px] font-bold text-[#26364A] transition hover:bg-[#FFF8E8] hover:text-[#1F5C4A]"
-                    >
-                      {child.image ? (
-                        <span className="h-11 w-11 overflow-hidden rounded-xl border border-[#E5E7EB] bg-white">
-                          <img
-                            src={resolveCategoryImage(child.image)}
-                            alt={child.iconAlt || child.name}
-                            className="h-full w-full object-cover"
-                          />
-                        </span>
-                      ) : (
-                        <span className="h-2.5 w-2.5 rounded-full bg-[#B38B2D]" />
-                      )}
+                      <Link
+                        href="/products"
+                        className="inline-flex h-11 items-center rounded-full bg-[#1F5C4A] px-5 text-sm font-extrabold text-white shadow-sm transition hover:bg-[#18493B]"
+                      >
+                        View All
+                      </Link>
+                    </div>
 
-                      <span className="min-w-0 flex-1 truncate">
-                        {child.name}
-                      </span>
+                    <div className="max-h-[540px] overflow-y-auto p-6">
+                      <div className="grid grid-cols-3 gap-3">
+                        {allCategories.map((item) => {
+                          const children = item.children || [];
 
-                      <ChevronRight size={16} className="text-[#94A3B8]" />
-                    </Link>
-                  ))}
-                </div>
+                          return (
+                            <div
+                              key={item._id || item.slug}
+                              className="rounded-2xl border border-[#E5E7EB] bg-[#F8FAFC] p-3 transition hover:border-[#B38B2D]/70 hover:bg-[#FFFDF5]"
+                            >
+                              <Link
+                                href={getCategoryHref(item)}
+                                className="flex min-h-[64px] items-center gap-3"
+                              >
+                                {item.image ? (
+                                  <span className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#E5E7EB] bg-white">
+                                    <img
+                                      src={resolveCategoryImage(item.image)}
+                                      alt={item.iconAlt || item.name}
+                                      className="h-full w-full object-cover"
+                                    />
+                                  </span>
+                                ) : (
+                                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-[#1F5C4A]">
+                                    <Package size={20} />
+                                  </span>
+                                )}
+
+                                <span className="min-w-0 flex-1 text-[15px] font-black leading-5 text-[#102033]">
+                                  {item.name}
+                                </span>
+
+                                <ChevronRight
+                                  size={16}
+                                  className="shrink-0 text-[#94A3B8]"
+                                />
+                              </Link>
+
+                              {children.length > 0 ? (
+                                <div className="mt-3 space-y-1 border-t border-[#E5E7EB] pt-3">
+                                  {children.map((child) => (
+                                    <Link
+                                      key={child._id || child.slug}
+                                      href={
+                                        child.href || getChildCategoryHref(item, child)
+                                      }
+                                      className="flex items-center justify-between rounded-xl px-3 py-2 text-[13px] font-bold text-[#52677d] transition hover:bg-white hover:text-[#1F5C4A]"
+                                    >
+                                      <span className="truncate">{child.name}</span>
+                                      <ChevronRight size={14} />
+                                    </Link>
+                                  ))}
+                                </div>
+                              ) : null}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </div>
-            ) : null}
-          </div>
-        );
-      })}
-    </div>
 
-    <Link
-      href="/blog"
-      className="inline-flex h-[46px] shrink-0 items-center gap-2 rounded-full border border-[#D8E1EC] bg-white px-4 text-[14px] font-extrabold text-[#1F5C4A] shadow-sm transition hover:border-[#B38B2D] hover:bg-[#FFF8E8]"
-    >
-      <BookOpen size={16} />
-      Blogs
-    </Link>
-  </div>
-</nav>
+              <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
+                {visibleCategories.map((item) => {
+                  const hasChildren = item.children?.length > 0;
+                  const isActive = activeMegaMenu === item.slug;
+
+                  return (
+                    <div
+                      key={item._id || item.slug}
+                      className="group relative shrink-0"
+                      onMouseEnter={() => setActiveMegaMenu(item.slug)}
+                      onMouseLeave={() => setActiveMegaMenu(null)}
+                    >
+                      <Link
+                        href={getCategoryHref(item)}
+                        className={`relative inline-flex h-[54px] items-center gap-3 rounded-2xl border px-3.5 pr-4 text-[15px] font-extrabold transition-all duration-200 ${
+                          isActive
+                            ? "border-[#B38B2D] bg-[#FFF8E8] text-[#1F5C4A] shadow-sm"
+                            : "border-[#E5E7EB] bg-[#FCFFFC] text-[#24364B] hover:border-[#B38B2D]/70 hover:bg-[#FFFDF5] hover:text-[#1F5C4A]"
+                        }`}
+                      >
+                        {item.image ? (
+                          <span className="relative h-10 w-10 overflow-hidden rounded-xl border border-[#E5E7EB] bg-white shadow-sm">
+                            <img
+                              src={resolveCategoryImage(item.image)}
+                              alt={item.iconAlt || item.name}
+                              className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                            />
+                          </span>
+                        ) : null}
+
+                        <span className="max-w-[190px] truncate">
+                          {item.name}
+                        </span>
+
+                        {hasChildren ? (
+                          <span
+                            className={`ml-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border transition ${
+                              isActive
+                                ? "border-[#B38B2D] bg-white text-[#B38B2D]"
+                                : "border-[#D8E1EC] bg-white text-[#64748B] group-hover:border-[#B38B2D] group-hover:text-[#B38B2D]"
+                            }`}
+                            title="Sub categories"
+                          >
+                            <ChevronDown
+                              size={15}
+                              className={`transition-transform duration-200 ${
+                                isActive ? "rotate-180" : ""
+                              }`}
+                            />
+                          </span>
+                        ) : null}
+                      </Link>
+
+                      {hasChildren && isActive ? (
+                        <div className="absolute left-0 top-[calc(100%+8px)] z-[999] w-[340px] overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.16)]">
+                          <div className="border-b border-[#EEF2F7] bg-[#FAFBF8] px-5 py-4">
+                            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#B38B2D]">
+                              Explore
+                            </p>
+                            <p className="mt-1 text-lg font-black text-[#1F5C4A]">
+                              {item.name}
+                            </p>
+                          </div>
+
+                          <div className="max-h-[360px] overflow-y-auto py-2">
+                            {item.children.map((child) => (
+                              <Link
+                                key={child._id || child.slug}
+                                href={
+                                  child.href || getChildCategoryHref(item, child)
+                                }
+                                className="flex items-center gap-3 px-5 py-3.5 text-[15px] font-bold text-[#26364A] transition hover:bg-[#FFF8E8] hover:text-[#1F5C4A]"
+                              >
+                                {child.image ? (
+                                  <span className="h-11 w-11 overflow-hidden rounded-xl border border-[#E5E7EB] bg-white">
+                                    <img
+                                      src={resolveCategoryImage(child.image)}
+                                      alt={child.iconAlt || child.name}
+                                      className="h-full w-full object-cover"
+                                    />
+                                  </span>
+                                ) : (
+                                  <span className="h-2.5 w-2.5 rounded-full bg-[#B38B2D]" />
+                                )}
+
+                                <span className="min-w-0 flex-1 truncate">
+                                  {child.name}
+                                </span>
+
+                                <ChevronRight
+                                  size={16}
+                                  className="text-[#94A3B8]"
+                                />
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </nav>
         </div>
 
         {mobileOpen ? (
@@ -680,15 +943,35 @@ export default function Navbar() {
                     <ChevronRight size={17} />
                   </Link>
                   {categories.map((item) => (
-                    <Link
+                    <div
                       key={item._id || item.slug}
-                      href={getCategoryHref(item)}
-                      className="flex items-center justify-between rounded-xl border border-[#e6f1f8] bg-[#FCFAFE] px-4 py-3 text-sm font-semibold text-[#23435b] transition hover:border-[#b9e6fb] hover:bg-[#f2fbff] hover:text-[#0B2E59]"
-                      onClick={() => setMobileOpen(false)}
+                      className="overflow-hidden rounded-xl border border-[#e6f1f8] bg-[#FCFAFE]"
                     >
-                      <span>{item.name}</span>
-                      <ChevronRight size={17} />
-                    </Link>
+                      <Link
+                        href={getCategoryHref(item)}
+                        className="flex items-center justify-between px-4 py-3 text-sm font-semibold text-[#23435b] transition hover:bg-[#f2fbff] hover:text-[#0B2E59]"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <span>{item.name}</span>
+                        <ChevronRight size={17} />
+                      </Link>
+
+                      {item.children?.length > 0 ? (
+                        <div className="border-t border-[#e6f1f8] bg-white/70 px-3 py-2">
+                          {item.children.map((child) => (
+                            <Link
+                              key={child._id || child.slug}
+                              href={child.href || getChildCategoryHref(item, child)}
+                              className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold text-[#52677d] transition hover:bg-[#FFF8E8] hover:text-[#1F5C4A]"
+                              onClick={() => setMobileOpen(false)}
+                            >
+                              <span>{child.name}</span>
+                              <ChevronRight size={14} />
+                            </Link>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
                   ))}
 
                   <Link
