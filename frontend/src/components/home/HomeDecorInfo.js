@@ -14,6 +14,26 @@ import { useEffect, useState } from "react";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
+const getImageUrl = (value = "") => {
+    if (!value) return "";
+
+    const image = String(value)
+        .replace(/\/uploads\/uploads\//g, "/uploads/")
+        .replace(/\r/g, "")
+        .replace(/\n/g, "")
+        .trim();
+
+    if (/^https?:\/\//i.test(image)) {
+        return image;
+    }
+
+    if (!API) {
+        return image;
+    }
+
+    return `${API.replace(/\/$/, "")}/${image.replace(/^\//, "")}`;
+};
+
 const getProductHref = (item = {}) => {
     if (item.buttonLink) return item.buttonLink;
 
@@ -167,8 +187,8 @@ flex-col
                                             />
                                         </div>
                                         <img
-                                            src={item.image}
-                                            alt={item.title}
+    src={getImageUrl(item.image)}
+    alt={item.title}
                                             className="
     w-full
     h-full
@@ -183,8 +203,8 @@ flex-col
 
                                         {item.hoverImage && (
                                             <img
-                                                src={item.hoverImage}
-                                                alt={item.title}
+    src={getImageUrl(item.hoverImage)}
+    alt={item.title}
                                                 className="
     absolute inset-0
     w-full
