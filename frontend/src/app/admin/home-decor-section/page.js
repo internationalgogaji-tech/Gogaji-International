@@ -2,7 +2,23 @@
 
 import { useEffect, useState } from "react";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.NEXT_PUBLIC_API_URL || "";
+
+const getImageUrl = (value = "") => {
+  const image = String(value || "").trim();
+
+  if (!image) return "";
+
+  if (/^https?:\/\/localhost:5000/i.test(image)) {
+    return `${API}${image.replace(/^https?:\/\/localhost:5000/i, "")}`;
+  }
+
+  if (image.startsWith("/")) {
+    return `${API}${image}`;
+  }
+
+  return image;
+};
 
 export default function HomeDecorSectionPage() {
     const [form, setForm] = useState({

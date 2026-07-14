@@ -187,8 +187,8 @@ flex-col
                                             />
                                         </div>
                                         <img
-    src={getImageUrl(item.image)}
-    alt={item.title}
+                                            src={getImageUrl(item.image)}
+                                            alt={item.title}
                                             className="
     w-full
     h-full
@@ -203,8 +203,8 @@ flex-col
 
                                         {item.hoverImage && (
                                             <img
-    src={getImageUrl(item.hoverImage)}
-    alt={item.title}
+                                                src={getImageUrl(item.hoverImage)}
+                                                alt={item.title}
                                                 className="
     absolute inset-0
     w-full

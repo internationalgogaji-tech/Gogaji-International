@@ -11,14 +11,10 @@ router.post("/", upload.single("image"), (req, res) => {
     });
   }
 
-  const BASE_URL =
-    process.env.NODE_ENV === "production"
-      ? "https://gogaji-international.onrender.com"
-      : "http://localhost:5000";
+  // Database mein only relative path save hoga
+  const url = `/${req.file.path.replace(/\\/g, "/")}`;
 
-  const url = `${BASE_URL}/${req.file.path.replace(/\\/g, "/")}`;
-
-  return res.json({
+  return res.status(201).json({
     success: true,
     url,
   });
