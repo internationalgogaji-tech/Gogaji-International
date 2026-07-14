@@ -13,6 +13,7 @@ const SecurityAlert = require("../models/SecurityAlert");
 const AdminActivity = require("../models/AdminActivity");
 const AdminSession = require("../models/AdminSession");
 const logAdminActivity = require("../utils/logAdminActivity");
+const ReturnReason = require("../models/ReturnReason");
 
 let notificationService = {};
 try {
@@ -130,7 +131,7 @@ const serializeOrder = (orderDoc) => {
       lineTotal:
         item.lineTotal ||
         Number(item.price || item.priceSnapshot || 0) *
-          Number(item.quantity || item.qty || 1),
+        Number(item.quantity || item.qty || 1),
       itemStatus: item.itemStatus || order.orderStatus || "Order Placed",
       itemStatusHistory: item.itemStatusHistory || [],
     })),
@@ -210,6 +211,8 @@ exports.getCounts = async (req, res) => {
       outForDeliveryCount,
       deliveredCount,
       cancelledCount,
+      returnRequestCount,
+      exchangeRequestCount,
     ] = await Promise.all([
       Order.aggregate([
         {
@@ -267,6 +270,18 @@ exports.getCounts = async (req, res) => {
       Order.countDocuments({
         orderStatus: "Cancelled",
       }),
+
+      Order.countDocuments({
+        "returnRequest.status": {
+          $ne: "Not Requested",
+        },
+      }),
+
+      Order.countDocuments({
+        "exchange.status": {
+          $ne: "Not Requested",
+        },
+      }),
     ]);
 
     res.json({
@@ -283,6 +298,8 @@ exports.getCounts = async (req, res) => {
       outForDeliveryCount,
       deliveredCount,
       cancelledCount,
+      returnRequestCount,
+      exchangeRequestCount,
       recentOrders: recentOrdersRaw.map((o) => ({
         id: o._id,
         orderNumber: o.orderNumber,
@@ -526,6 +543,8 @@ exports.createProduct = async (req, res) => {
       },
     });
 
+
+
     res.status(201).json({
       success: true,
       message: "Product created successfully",
@@ -579,15 +598,21 @@ exports.updateProduct = async (req, res) => {
     }
 
     if (data.stock !== undefined || data.stockStatus !== undefined) {
+
       const stockQty = Number(data.stock || 0);
 
       if (stockQty <= 0) {
+
         data.stockStatus = "out_of_stock";
         data.isOutOfStock = true;
+
       } else if (stockQty <= 5) {
+
         data.stockStatus = "low_stock";
         data.isOutOfStock = false;
+
       } else {
+
         data.stockStatus = "in_stock";
         data.isOutOfStock = false;
       }
@@ -1010,17 +1035,6 @@ exports.createCategory = async (req, res) => {
       countText: req.body.countText || "",
       order: Number(req.body.order || 0),
       isActive: req.body.isActive !== false && req.body.isActive !== "false",
-
-      showInNavbar:
-        req.body.showInNavbar === true || req.body.showInNavbar === "true",
-
-      navbarOrder: Number(req.body.navbarOrder || 0),
-
-      menuType: req.body.menuType || "main",
-
-      showInHomeSlider:
-        req.body.showInHomeSlider === true ||
-        req.body.showInHomeSlider === "true",
       seo: {
         metaTitle: req.body.metaTitle || "",
         metaDescription: req.body.metaDescription || "",
@@ -1057,17 +1071,6 @@ exports.updateCategory = async (req, res) => {
     if (data.group !== undefined)
       data.group = data.group ? slugify(data.group) : "";
     if (data.order !== undefined) data.order = Number(data.order);
-
-    if (data.navbarOrder !== undefined)
-      data.navbarOrder = Number(data.navbarOrder);
-
-    if (data.showInNavbar !== undefined)
-      data.showInNavbar =
-        data.showInNavbar === true || data.showInNavbar === "true";
-
-    if (data.showInHomeSlider !== undefined)
-      data.showInHomeSlider =
-        data.showInHomeSlider === true || data.showInHomeSlider === "true";
 
     if (data.metaTitle || data.metaDescription || data.metaKeywords) {
       data.seo = {
@@ -1912,42 +1915,22 @@ exports.updateChatStatus = async (req, res) => {
 exports.getNavbarCategories = async (req, res) => {
   try {
     const categories = await Category.find({
-      showInNavbar: true,
+      parentSlug: "semiconductors",
       isActive: true,
     }).sort({
       navbarOrder: 1,
       order: 1,
+      createdAt: -1,
     });
 
-    res.json({
+    return res.json({
       success: true,
       categories,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: error.message,
-    });
-  }
-};
-
-exports.getHomeSliderCategories = async (req, res) => {
-  try {
-    const categories = await Category.find({
-      showInHomeSlider: true,
-      isActive: true,
-    }).sort({
-      order: 1,
-    });
-
-    res.json({
-      success: true,
-      categories,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
+      message: error.message || "Navbar categories fetch failed",
     });
   }
 };
@@ -2228,9 +2211,9 @@ const makePolicyPayload = (body = {}) => {
       metaTitle: String(body.seo?.metaTitle || body.metaTitle || title).trim(),
       metaDescription: String(
         body.seo?.metaDescription ||
-          body.metaDescription ||
-          body.shortDescription ||
-          "",
+        body.metaDescription ||
+        body.shortDescription ||
+        "",
       ).trim(),
       metaKeywords: parsePolicyArray(
         body.seo?.metaKeywords || body.metaKeywords,
@@ -2432,7 +2415,10 @@ exports.getActiveSessions = async (req, res) => {
     const sessions = await AdminSession.find({
       isActive: true,
     })
-      .populate("adminId", "name email")
+      .populate(
+        "adminId",
+        "name email"
+      )
       .sort({
         lastSeenAt: -1,
       })
@@ -2452,7 +2438,10 @@ exports.getActiveSessions = async (req, res) => {
 
 exports.logoutSession = async (req, res) => {
   try {
-    const session = await AdminSession.findById(req.params.id);
+
+    const session = await AdminSession.findById(
+      req.params.id
+    );
 
     if (!session) {
       return res.status(404).json({
@@ -2468,11 +2457,14 @@ exports.logoutSession = async (req, res) => {
 
     const User = require("../models/User");
 
-    await User.findByIdAndUpdate(session.adminId, {
-      $inc: {
-        tokenVersion: 1,
-      },
-    });
+    await User.findByIdAndUpdate(
+      session.adminId,
+      {
+        $inc: {
+          tokenVersion: 1,
+        },
+      }
+    );
 
     await logAdminActivity({
       req,
@@ -2490,11 +2482,14 @@ exports.logoutSession = async (req, res) => {
       success: true,
       message: "Session terminated",
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
+
   }
 };
 
@@ -2510,14 +2505,17 @@ exports.logoutAllSessions = async (req, res) => {
           isActive: false,
           logoutAt: new Date(),
         },
-      },
+      }
     );
 
-    await User.findByIdAndUpdate(req.user._id, {
-      $inc: {
-        tokenVersion: 1,
-      },
-    });
+    await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $inc: {
+          tokenVersion: 1,
+        },
+      }
+    );
 
     await logAdminActivity({
       req,
@@ -2539,23 +2537,31 @@ exports.logoutAllSessions = async (req, res) => {
       message: "Admin logged out from all active devices.",
 
       ipAddress:
-        req.headers["x-forwarded-for"] || req.socket.remoteAddress || "",
+        req.headers["x-forwarded-for"] ||
+        req.socket.remoteAddress ||
+        "",
     });
 
     res.json({
       success: true,
       message: "All devices logged out successfully",
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
+
   }
 };
 
+
+
 exports.getSecurityAlerts = async (req, res) => {
   try {
+
     const alerts = await SecurityAlert.find({
       adminId: req.user._id,
     })
@@ -2566,42 +2572,59 @@ exports.getSecurityAlerts = async (req, res) => {
       success: true,
       alerts,
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
+
   }
 };
 
 exports.markAlertRead = async (req, res) => {
   try {
-    await SecurityAlert.findByIdAndUpdate(req.params.id, {
-      isRead: true,
-      readAt: new Date(),
-    });
+
+    await SecurityAlert.findByIdAndUpdate(
+      req.params.id,
+      {
+        isRead: true,
+        readAt: new Date(),
+      }
+    );
 
     res.json({
       success: true,
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
+
   }
 };
 
 exports.trackPageView = async (req, res) => {
   try {
-    const { page, sessionId, browser, os, adminEmail } = req.body;
+    const {
+      page,
+      sessionId,
+      browser,
+      os,
+      adminEmail,
+    } = req.body;
 
     await AdminActivity.create({
       adminId: req.user._id,
 
       adminName: req.user.name,
 
-      adminEmail: adminEmail || req.user.email || "",
+      adminEmail:
+        adminEmail || req.user.email || "",
 
       action: "VIEW",
 
@@ -2620,7 +2643,9 @@ exports.trackPageView = async (req, res) => {
       },
 
       ipAddress:
-        req.headers["x-forwarded-for"] || req.socket.remoteAddress || "",
+        req.headers["x-forwarded-for"] ||
+        req.socket.remoteAddress ||
+        "",
     });
 
     res.json({

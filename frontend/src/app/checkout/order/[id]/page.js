@@ -37,6 +37,10 @@ import Footer from "@/components/Footer";
 import { API_BASE } from "@/lib/api";
 import { useOrders } from "@/context/OrderContext";
 import AddressFormModal from "@/components/address/AddressFormModal";
+import ReturnModal from "@/components/orders/ReturnModal";
+import ExchangeModal from "@/components/orders/ExchangeModal";
+import ReturnExchangeTimeline from "@/components/orders/ReturnExchangeTimeline";
+import UserReturnExchangeStatusPanel from "@/components/orders/UserReturnExchangeStatusPanel";
 
 function formatCurrency(value) {
   return `₹ ${Number(value || 0).toLocaleString("en-IN", {
@@ -174,6 +178,7 @@ export default function CheckoutOrderDetailPage() {
     phone: "",
     email: "",
     companyName: "",
+    gstNumber: "",
     addressLine1: "",
     addressLine2: "",
     city: "",
@@ -182,38 +187,91 @@ export default function CheckoutOrderDetailPage() {
     country: "India",
   });
   const [addressLoading, setAddressLoading] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [paymentLoading, setPaymentLoading] = useState(false);
-  const [paymentFile, setPaymentFile] = useState(null);
-  const [paymentUtr, setPaymentUtr] = useState("");
-  const [paymentNote, setPaymentNote] = useState("");
+
+
 
   const [showRefundModal, setShowRefundModal] = useState(false);
+
+  const [showExchangeModal, setShowExchangeModal] =
+    useState(false);
+
+  const [showReturnModal, setShowReturnModal] =
+    useState(false);
+
+  const [showReturnPolicy, setShowReturnPolicy] = useState(false);
+
+  const [showExchangePolicy, setShowExchangePolicy] = useState(false);
+
+  const [policyAccepted, setPolicyAccepted] = useState(false);
+
+  const [returnReason, setReturnReason] =
+    useState("");
+
+  const [returnSubReason, setReturnSubReason] =
+    useState("");
+
+  const [selectedReasonObj, setSelectedReasonObj] =
+    useState(null);
+
+  const [returnComment, setReturnComment] =
+    useState("");
+
+  const [returnImages, setReturnImages] = useState([]);
+  const [returnVideo, setReturnVideo] = useState(null);
+
+  const [returnLoading, setReturnLoading] =
+    useState(false);
+
+  const [returnReasons, setReturnReasons] =
+    useState([]);
+
+  const [exchangeReasons, setExchangeReasons] =
+    useState([]);
+
+  const [exchangeReason, setExchangeReason] =
+    useState("");
+
+  const [exchangeComment, setExchangeComment] =
+    useState("");
+
+  const [exchangeLoading, setExchangeLoading] =
+    useState(false);
+
+  const [exchangeImages, setExchangeImages] =
+    useState([]);
+
+  const [exchangeVideo, setExchangeVideo] =
+    useState(null);
+
   const [refundLoading, setRefundLoading] = useState(false);
 
   useEffect(() => {
-    if (showCancelModal) {
-      document.body.style.overflow = "hidden";
-      document.body.style.position = "fixed";
-      document.body.style.width = "100%";
+    const modalOpen =
+      showCancelModal ||
+      showReturnModal ||
+      showExchangeModal ||
+      showRefundModal ||
+      showAddressModal;
 
+    if (modalOpen) {
+      document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
-
       document.documentElement.style.overflow = "";
     }
 
     return () => {
       document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
-
       document.documentElement.style.overflow = "";
     };
-  }, [showCancelModal]);
+  }, [
+    showCancelModal,
+    showReturnModal,
+    showExchangeModal,
+    showRefundModal,
+    showAddressModal,
+  ]);
 
   const [refundForm, setRefundForm] = useState({
     reason: "",
@@ -229,6 +287,57 @@ export default function CheckoutOrderDetailPage() {
     cardTransactionId: "",
   });
 
+  const loadReturnReasons = async () => {
+
+
+
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/return-reasons?type=RETURN`
+      );
+
+      const data = await res.json();
+
+      console.log(
+        "RETURN API RESPONSE =>",
+        data
+      );
+
+      if (data?.success) {
+        setReturnReasons(
+          data.reasons || []
+        );
+
+        console.log(
+          "REASONS COUNT =>",
+          data.reasons?.length
+        );
+
+      }
+    } catch (err) {
+      console.log(
+        "Return Reasons Error",
+        err
+      );
+    }
+  };
+
+  const loadExchangeReasons = async () => {
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/return-reasons?type=EXCHANGE`
+      );
+
+      const data = await res.json();
+
+      if (data?.success) {
+        setExchangeReasons(data.reasons || []);
+      }
+    } catch (err) {
+      console.log("Exchange Reasons Error", err);
+    }
+  };
+
   const loadOrder = async () => {
     try {
       setLoading(true);
@@ -242,6 +351,7 @@ export default function CheckoutOrderDetailPage() {
         phone: userInfo.phone || "",
         email: userInfo.email || "",
         companyName: userInfo.companyName || "",
+        gstNumber: userInfo.gstNumber || "",
         addressLine1: userInfo.addressLine1 || "",
         addressLine2: userInfo.addressLine2 || "",
         city: userInfo.city || "",
@@ -258,7 +368,18 @@ export default function CheckoutOrderDetailPage() {
   };
 
   useEffect(() => {
-    if (id) loadOrder();
+    if (id) {
+      loadOrder();
+      loadReturnReasons();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      loadOrder();
+      loadReturnReasons();
+      loadExchangeReasons();
+    }
   }, [id]);
 
   const items = useMemo(() => {
@@ -291,19 +412,250 @@ export default function CheckoutOrderDetailPage() {
     order?.payment?.method || order?.paymentMethod || "bank-transfer";
 
   const paymentStatus = order?.payment?.status || "Pending";
-  const canUploadPaymentProof = ["Pending", "Failed"].includes(paymentStatus);
+
 
   const refundStatus = order?.refund?.status || "Not Requested";
 
-  const canRequestRefund = (() => {
-    const status = String(getStatus(order)).toLowerCase();
-    const refund = String(refundStatus).toLowerCase();
+  const orderStatus =
+    String(getStatus(order)).toLowerCase();
 
-    return (
-      (status.includes("delivered") || status.includes("cancel")) &&
-      !["requested", "approved", "processing", "refunded"].includes(refund)
-    );
-  })();
+  const canCancel =
+    [
+      "order placed",
+      "processing",
+      "packed",
+    ].includes(orderStatus);
+
+  const canReturnExchange =
+    orderStatus === "delivered" &&
+    (!order?.returnRequest?.status ||
+      order?.returnRequest?.status === "Not Requested") &&
+    (!order?.exchange?.status ||
+      order?.exchange?.status === "Not Requested");
+
+  const canRequestRefund =
+    orderStatus === "cancelled" &&
+    paymentStatus === "Paid" &&
+    refundStatus === "Not Requested";
+
+  console.log({
+    orderStatus,
+    paymentStatus,
+    refundStatus,
+    canCancel,
+    canReturnExchange,
+    canRequestRefund,
+  });
+
+  const handleReturnRequest = async (refundData = {}, returnItem = null) => {
+    if (!returnReason) {
+      toast.error("Please select return reason");
+      return;
+    }
+
+    if (!returnSubReason) {
+      toast.error("Please select issue");
+      return;
+    }
+
+    if (!returnComment?.trim() || returnComment.trim().length < 15) {
+      toast.error("Please describe the issue in at least 15 characters");
+      return;
+    }
+
+    if (!returnImages?.length) {
+      toast.error("Please upload at least one product image");
+      return;
+    }
+
+    if (!refundData?.refundMethod) {
+      toast.error("Please select refund method");
+      return;
+    }
+
+    if (refundData.refundMethod === "BANK") {
+      if (
+        !refundData.accountHolder?.trim() ||
+        !refundData.bankName?.trim() ||
+        !refundData.accountNumber?.trim() ||
+        !refundData.confirmAccountNumber?.trim() ||
+        !refundData.ifsc?.trim()
+      ) {
+        toast.error("Please fill all bank account details");
+        return;
+      }
+
+      if (refundData.accountNumber !== refundData.confirmAccountNumber) {
+        toast.error("Account number and confirm account number do not match");
+        return;
+      }
+
+      if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(refundData.ifsc)) {
+        toast.error("Please enter a valid IFSC code");
+        return;
+      }
+    }
+
+    try {
+      setReturnLoading(true);
+
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const token = user?.token;
+
+      if (!token) {
+        toast.error("Please login again");
+        return;
+      }
+
+      const formData = new FormData();
+
+      formData.append("itemId", returnItem?._id || itemId || "");
+      formData.append("reasonId", selectedReasonObj?._id || "");
+      formData.append("reasonTitle", returnReason);
+      formData.append("subReason", returnSubReason || "");
+      formData.append("description", returnComment.trim());
+      formData.append("comment", returnComment.trim());
+      formData.append("refundData", JSON.stringify(refundData || {}));
+
+      returnImages.forEach((file) => {
+        formData.append("photos", file);
+      });
+
+      if (returnVideo) {
+        formData.append("videos", returnVideo);
+      }
+
+      const res = await fetch(`${API_BASE}/api/orders/return/${id}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data?.success === false) {
+        throw new Error(data?.message || "Return request failed");
+      }
+
+      toast.success(data?.message || "Return request submitted successfully");
+
+      setShowReturnModal(false);
+      setReturnReason("");
+      setSelectedReasonObj(null);
+      setReturnSubReason("");
+      setReturnComment("");
+      setReturnImages([]);
+      setReturnVideo(null);
+
+      await loadOrder();
+    } catch (error) {
+      toast.error(error.message || "Return request failed");
+    } finally {
+      setReturnLoading(false);
+    }
+  };
+
+  const handleExchangeRequest = async () => {
+    if (!exchangeReason) {
+      toast.error("Please select exchange reason");
+      return;
+    }
+
+    try {
+      setExchangeLoading(true);
+
+      const user = JSON.parse(
+        localStorage.getItem("user") || "{}"
+      );
+
+      const token = user?.token;
+
+      const formData = new FormData();
+
+      const selectedExchangeReasonObj = exchangeReasons.find(
+        (item) => item.title === exchangeReason
+      );
+
+      formData.append("itemId", itemId || "");
+      formData.append("reasonId", selectedExchangeReasonObj?._id || "");
+      formData.append("reasonTitle", selectedExchangeReasonObj?.title || exchangeReason);
+      formData.append("subReason", selectedExchangeReasonObj?.subReasons?.[0]?.title || "");
+      formData.append("description", exchangeComment || "");
+      formData.append("comment", exchangeComment || "");
+
+      formData.append(
+        "pickupAddress",
+        JSON.stringify({
+          name: order?.userInfo?.name || "",
+          phone: order?.userInfo?.phone || "",
+          addressLine1: order?.userInfo?.addressLine1 || "",
+          addressLine2: order?.userInfo?.addressLine2 || "",
+          city: order?.userInfo?.city || "",
+          state: order?.userInfo?.state || "",
+          pincode: order?.userInfo?.pincode || "",
+          country: order?.userInfo?.country || "India",
+        })
+      );
+
+      exchangeImages.forEach((file) => {
+        formData.append(
+          "photos",
+          file
+        );
+      });
+
+      if (exchangeVideo) {
+        formData.append(
+          "videos",
+          exchangeVideo
+        );
+      }
+
+      const res = await fetch(
+        `${API_BASE}/api/orders/exchange/${id}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(
+          data.message ||
+          "Exchange request failed"
+        );
+      }
+
+      toast.success(
+        "Exchange request submitted successfully"
+      );
+
+      setShowExchangeModal(false);
+
+      setExchangeReason("");
+      setExchangeComment("");
+
+      setExchangeImages([]);
+      setExchangeVideo(null);
+
+      await loadOrder();
+    } catch (err) {
+      toast.error(
+        err.message ||
+        "Exchange request failed"
+      );
+    } finally {
+      setExchangeLoading(false);
+    }
+  };
+
   const handleStartOrderChat = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -476,54 +828,6 @@ export default function CheckoutOrderDetailPage() {
     }
   };
 
-  const handlePaymentProofSubmit = async () => {
-    if (!paymentUtr.trim() && !paymentFile) {
-      toast.error("Please upload screenshot or enter UTR / transaction ID");
-      return;
-    }
-
-    try {
-      setPaymentLoading(true);
-
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      const token = user?.token;
-
-      if (!token) {
-        toast.error("Please login again");
-        return;
-      }
-
-      const formData = new FormData();
-      if (paymentFile) formData.append("image", paymentFile);
-      formData.append("utr", paymentUtr);
-      formData.append("note", paymentNote);
-
-      const res = await fetch(`${API_BASE}/api/orders/payment-proof/${id}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || data?.success === false) {
-        throw new Error(data?.message || "Payment proof submit failed");
-      }
-
-      toast.success("Payment proof submitted successfully");
-      setShowPaymentModal(false);
-      setPaymentFile(null);
-      setPaymentUtr("");
-      setPaymentNote("");
-      await loadOrder();
-    } catch (error) {
-      toast.error(error.message || "Payment proof submit failed");
-    } finally {
-      setPaymentLoading(false);
-    }
-  };
 
   const handleUpdateAddress = async () => {
     if (
@@ -639,8 +943,8 @@ export default function CheckoutOrderDetailPage() {
 
         <section className="mb-6 overflow-hidden rounded-[28px] border border-[#dbe5f0] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
           <div className="bg-gradient-to-r from-[#eaf4ff] via-[#f8fbff] to-[#edf7ff] px-6 py-8 md:px-9">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-center gap-8">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+              <div className="flex flex-1 items-center gap-8">
                 <div className="flex h-[380px] w-[380px] items-center justify-center overflow-hidden rounded-[24px] border border-[#dbe5f0] bg-white p-8 shadow-sm">
                   {heroImage ? (
                     <img
@@ -684,49 +988,157 @@ export default function CheckoutOrderDetailPage() {
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-[#dbe5f0] bg-white p-5 shadow-sm">
-                <p className="text-sm font-bold text-[#607287]">Item Total</p>
+              <div
+                className="w-full max-w-[420px] rounded-[20px] border border-[#dbe5f0] bg-white p-4 shadow-md"
+              >
+                <div className="rounded-[20px] border border-[#dbe5f0] bg-gradient-to-r from-[#f8fbff] to-[#eef6ff] p-4 shadow-sm">
 
-                <p className="mt-1 text-3xl font-black text-[#102033]">
-                  {formatCurrency(selectedItemSubtotal)}
-                </p>
+                  <p className="text-sm font-bold uppercase tracking-wider text-[#64748b]">
+                    Item Total
+                  </p>
 
-                <div className="mt-3 rounded-2xl border border-[#bae6fd] bg-[#f0f9ff] p-4">
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-[#0284c7]">
-                    Payment Status
-                  </p>
-                  <p className="mt-1 text-lg font-black text-[#102033]">
-                    {paymentStatus}
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Method: {formatPaymentMethod(paymentMethod)}
-                  </p>
+                  <div className="mt-3 flex items-end justify-between">
+
+                    <div>
+                      <p className="text-[34px] leading-none font-black text-[#102033]">
+                        {formatCurrency(itemTotal)}
+                      </p>
+
+                      <p className="mt-2 text-sm text-[#64748b]">
+                        Total amount paid for this item
+                      </p>
+                    </div>
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2454b5]/10">
+                      <ReceiptText
+                        size={22}
+                        className="text-[#2454b5]"
+                      />
+                    </div>
+
+                  </div>
+
                 </div>
 
-                {canUploadPaymentProof ? (
-                  <button
-                    onClick={() => setShowPaymentModal(true)}
-                    className="mt-3 inline-flex h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[#0284c7] px-4 font-extrabold text-white transition hover:bg-[#0369a1]"
-                  >
-                    <UploadCloud size={17} />
-                    Upload Payment Proof
-                  </button>
-                ) : null}
+                <div className="my-3 h-[1px] bg-[#e5edf5]" />
 
-                {orderCanCancel ? (
+                <div className="space-y-2.5">
+
+                  {/* ORDER STATUS */}
+                  <div className="flex items-center gap-4 rounded-2xl border border-green-200 bg-green-50 p-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                      <Truck size={28} className="text-green-600" />
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-bold text-slate-500">
+                        Order Status
+                      </p>
+
+                      <p className="text-3xl font-black text-green-600">
+                        {heroItem?.itemStatus || getStatus(order)}
+                      </p>
+
+                      <p className="text-sm text-slate-500">
+                        Ordered on {formatDate(order?.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* PAYMENT */}
+                  <div className="flex items-center gap-4 rounded-3xl border border-blue-200 bg-blue-50 p-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                      <CreditCard size={28} className="text-blue-600" />
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-bold text-slate-500">
+                        Payment Method
+                      </p>
+
+                      <p className="text-2xl font-black text-[#102033]">
+                        {formatPaymentMethod(paymentMethod)}
+                      </p>
+
+                      <p className="text-sm">
+                        Payment Status :
+                        <span className="ml-1 font-bold text-green-600">
+                          {paymentStatus}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+                {canCancel ? (
                   <button
+                    type="button"
                     onClick={() => setShowCancelModal(true)}
-                    className="mt-4 inline-flex h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-[#ef4444] bg-white px-4 font-extrabold text-[#ef4444] transition hover:bg-[#fff1f1]"
+                    className="mt-3 flex h-[48px] w-full items-center justify-center gap-3 rounded-2xl border border-green-600 bg-green-600 text-base font-black text-white transition-all duration-300 hover:bg-green-700 hover:border-green-700 hover:shadow-md"
                   >
-                    <Ban size={17} />
+                    <Ban size={22} />
                     Cancel Order
                   </button>
                 ) : null}
 
+
+
+                {canRequestRefund ? (
+                  <button>
+                    Request Refund
+                  </button>
+                ) : null}
+
+
+
+
+
+                {canReturnExchange && (
+                  <div className="mt-6 flex flex-col gap-5">
+
+                    <button
+                      onClick={() => {
+                        setShowReturnModal(true);
+                      }}
+                      className="flex h-[58px] w-full items-center justify-center gap-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-lg font-black text-orange-600 transition hover:bg-orange-100">                      <RefreshCcw size={22} />
+                      Return Product
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setShowExchangeModal(true);
+                      }}
+                      className="flex h-[58px] w-full items-center justify-center gap-3 rounded-2xl border-2 border-green-500 bg-green-50 text-lg font-black text-green-600 transition hover:bg-green-100">                      <RefreshCcw size={22} />
+                      Exchange Product
+                    </button>
+
+                  </div>
+                )}
+
+                <div className="mt-3 space-y-2">
+
+                  <button
+                    onClick={handleStartOrderChat}
+                    className="flex h-[48px] w-full items-center justify-center gap-3 rounded-2xl border border-red-300 bg-white text-base font-black text-red-500 transition hover:bg-red-50"
+                  >
+                    <CircleHelp size={22} />
+                    Need Help?
+                  </button>
+
+                  <a
+                    href="tel:+919871147666"
+                    className="flex h-[48px] w-full items-center justify-center gap-3 rounded-2xl border border-[#2454b5] bg-white text-base font-black text-[#2454b5] transition hover:bg-[#eaf3ff]"
+                  >
+                    <Phone size={22} />
+                    Contact Support
+                  </a>
+
+                </div>
+
                 {canRequestRefund ? (
                   <button
                     onClick={() => setShowRefundModal(true)}
-                    className="mt-3 inline-flex h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[#0284c7] px-4 font-extrabold text-white transition hover:bg-[#0369a1]"
+                    className="mt-3 inline-flex h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 font-extrabold text-white hover:bg-green-700"
                   >
                     <RefreshCcw size={17} />
                     Request Refund
@@ -752,9 +1164,9 @@ export default function CheckoutOrderDetailPage() {
           </div>
         </section>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
-          <div className="space-y-6">
-            <section className="rounded-[24px] border border-[#dbe5f0] bg-white p-5 shadow-sm md:p-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
+            <section className="rounded-[24px] border border-[#dbe5f0] bg-white p-4 shadow-sm md:p-6">
               <div className="mb-6 flex items-center gap-3">
                 <div className="rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
                   <Truck size={24} />
@@ -817,160 +1229,125 @@ export default function CheckoutOrderDetailPage() {
               ) : null}
             </section>
 
-            <section className="rounded-[24px] border border-[#dbe5f0] bg-white p-5 shadow-sm md:p-6">
-              <div className="mb-5 flex items-center gap-3">
-                <div className="rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
-                  <ClipboardList size={24} />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-black text-[#102033]">
-                    Items in this order
-                  </h2>
-                  <p className="text-sm text-[#607287]">
-                    {items.length} product(s) included in this order.
-                  </p>
-                </div>
-              </div>
-
-              {items.length === 0 ? (
-                <p className="text-[#607287]">
-                  Item details are not available.
-                </p>
-              ) : (
-                <div className="space-y-4">
-                  {items.map((item, index) => {
-                    const image = getItemImage(item);
-                    const qty = item?.quantity || item?.qty || 1;
-
-                    const price =
-                      item?.lineTotal ||
-                      item?.total ||
-                      item?.lineSubtotal ||
-                      item?.price ||
-                      item?.sellingPrice ||
-                      0;
-
-                    return (
-                      <div
-                        key={item?._id || item?.id || index}
-                        className="grid gap-6 rounded-2xl border border-[#dbe5f0] bg-[#fbfdff] p-6 transition hover:border-[#bcd5f5] hover:bg-white md:grid-cols-[180px_1fr_180px]"
-                      >
-                        <div className="flex h-[80px] w-[80px] items-center justify-center rounded-2xl bg-[#eaf3ff]">
-                          <Boxes className="text-[#2454b5]" size={40} />
-                        </div>
-
-                        <div>
-                          <h3 className="text-3xl font-black text-[#102033] leading-tight">
-                            {getItemName(item)}
-                          </h3>
-
-                          <div className="mt-2 flex flex-wrap gap-2 text-sm text-[#607287]">
-                            {item?.brand ? (
-                              <span>Brand: {item.brand}</span>
-                            ) : null}
-                            {item?.sku ? <span>SKU: {item.sku}</span> : null}
-                            {item?.mpn ? <span>MPN: {item.mpn}</span> : null}
-                            <span>Qty: {qty}</span>
-                          </div>
-
-                          <p
-                            className={`mt-3 w-fit rounded-full px-3 py-1 text-sm font-extrabold
-                             ${item?.itemStatus === "Cancelled"
-                                ? "bg-red-100 text-red-600"
-                                : item?.itemStatus === "Delivered"
-                                  ? "bg-green-100 text-green-600"
-                                  : "bg-blue-100 text-blue-600"
-                              }`}
-                          >
-                            {item?.itemStatus || getStatus(order)}
-                          </p>
-                        </div>
-
-                        <div className="text-left md:text-right">
-                          <p className="text-sm font-bold text-[#607287]">
-                            Line Total
-                          </p>
-                          <p className="mt-1 text-2xl font-black text-[#102033]">
-                            {formatCurrency(price)}
-                          </p>
-
-                          <div className="mt-4 flex flex-wrap gap-2 justify-end">
-                            <button className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-bold text-white">
-                              Track Item
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+            {order?.returnRequest?.status &&
+              order?.returnRequest?.status !==
+              "Not Requested" && (
+                <ReturnExchangeTimeline
+                  type="RETURN"
+                  status={
+                    order.returnRequest.status
+                  }
+                  requestedAt={
+                    order.returnRequest.requestedAt
+                  }
+                  approvedAt={
+                    order.returnRequest.approvedAt
+                  }
+                  pickupAt={
+                    order.returnRequest.pickupAt
+                  }
+                  completedAt={
+                    order.returnRequest.completedAt
+                  }
+                  reason={
+                    order.returnRequest.reason
+                  }
+                  description={
+                    order.returnRequest.comment
+                  }
+                  adminNote={
+                    order?.returnRequest
+                      ?.adminReview?.reviewNote
+                  }
+                  photos={
+                    order?.returnRequest
+                      ?.evidence?.photos || []
+                  }
+                  videos={
+                    order?.returnRequest
+                      ?.evidence?.videos || []
+                  }
+                />
               )}
-            </section>
 
-            <section className="rounded-[24px] border border-[#dbe5f0] bg-white p-5 shadow-sm md:p-6">
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-                <div>
-                  <h2 className="text-2xl font-black text-[#102033]">
-                    Need help with this order?
-                  </h2>
-                  <p className="mt-2 max-w-3xl text-[#607287]">
-                    Ask about dispatch timeline, GST invoice, alternate part,
-                    bulk quotation, delivery update or product technical
-                    details.
-                  </p>
+            {order?.exchange?.status &&
+              order?.exchange?.status !==
+              "Not Requested" && (
+                <ReturnExchangeTimeline
+                  type="EXCHANGE"
+                  status={order.exchange.status}
+                  requestedAt={
+                    order.exchange.requestedAt
+                  }
+                  approvedAt={
+                    order.exchange.approvedAt
+                  }
+                  completedAt={
+                    order.exchange.completedAt
+                  }
+                  reason={
+                    order.exchange.reason
+                  }
+                  description={
+                    order.exchange.comment
+                  }
+                  adminNote={
+                    order?.exchange?.adminReview
+                      ?.reviewNote
+                  }
+                  photos={
+                    order?.exchange?.evidence
+                      ?.photos || []
+                  }
+                  videos={
+                    order?.exchange?.evidence
+                      ?.videos || []
+                  }
+                />
+              )}
+
+            {order?.timeline?.length > 0 && (
+              <section className="rounded-[24px] border border-[#dbe5f0] bg-white p-6 shadow-sm">
+
+                <h2 className="mb-5 text-2xl font-black text-[#102033]">
+                  Order Timeline
+                </h2>
+
+                <div className="space-y-4">
+
+                  {[...order.timeline]
+                    .reverse()
+                    .map((item, index) => (
+                      <div
+                        key={index}
+                        className="rounded-xl border border-[#dbe5f0] p-4"
+                      >
+                        <p className="font-bold text-[#102033]">
+                          {item.status}
+                        </p>
+
+                        <p className="mt-1 text-sm text-slate-600">
+                          {item.message}
+                        </p>
+
+                        <p className="mt-1 text-xs text-slate-500">
+                          {formatDate(item.time)}
+                        </p>
+                      </div>
+                    ))}
                 </div>
 
-                <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-[420px]">
-                  <button
-                    type="button"
-                    onClick={handleStartOrderChat}
-                    className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl bg-[#2454b5] px-5 font-black text-white shadow-sm hover:bg-[#1e4695]"
-                  >
-                    <MessageCircle size={18} />
-                    Chat Support
-                  </button>
+              </section>
+            )}
 
-                  <a
-                    href="tel:+919871147666"
-                    className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl border border-[#2454b5] bg-white px-5 font-black text-[#2454b5] hover:bg-[#eaf3ff]"
-                  >
-                    <Phone size={18} />
-                    Call Support
-                  </a>
-                </div>
-              </div>
 
-              <div className="mt-6 grid gap-4 md:grid-cols-3">
-                <div className="rounded-2xl border border-[#e0eaf5] bg-[#f8fbff] p-5">
-                  <CircleHelp className="mb-3 text-[#2454b5]" size={26} />
-                  <p className="font-extrabold text-[#102033]">Order Support</p>
-                  <p className="mt-1 text-sm text-[#607287]">
-                    Dispatch, delivery and tracking help.
-                  </p>
-                </div>
 
-                <div className="rounded-2xl border border-[#e0eaf5] bg-[#f8fbff] p-5">
-                  <ShieldCheck className="mb-3 text-[#2454b5]" size={26} />
-                  <p className="font-extrabold text-[#102033]">GST Invoice</p>
-                  <p className="mt-1 text-sm text-[#607287]">
-                    Business billing and tax invoice support.
-                  </p>
-                </div>
 
-                <div className="rounded-2xl border border-[#e0eaf5] bg-[#f8fbff] p-5">
-                  <Clock3 className="mb-3 text-[#2454b5]" size={26} />
-                  <p className="font-extrabold text-[#102033]">
-                    Procurement Timeline
-                  </p>
-                  <p className="mt-1 text-sm text-[#607287]">
-                    Stock verification and dispatch confirmation.
-                  </p>
-                </div>
-              </div>
-            </section>
           </div>
 
-          <aside className="space-y-5 lg:sticky lg:top-4 lg:self-start">
+
+
+          <aside className="space-y-5 lg:col-span-1">
             <section className="rounded-[24px] border border-[#dbe5f0] bg-white p-5 shadow-sm">
               <h2 className="mb-5 text-2xl font-black text-[#102033]">
                 Buyer Details
@@ -984,6 +1361,16 @@ export default function CheckoutOrderDetailPage() {
                     {companyName || "Company not added"}
                   </span>
                 </p>
+
+                {order?.userInfo?.gstNumber && (
+                  <p className="flex gap-3">
+                    <ReceiptText
+                      className="shrink-0 text-[#2454b5]"
+                      size={20}
+                    />
+                    GST: {order.userInfo.gstNumber}
+                  </p>
+                )}
 
                 <p className="flex gap-3">
                   <Phone className="shrink-0 text-[#2454b5]" size={20} />
@@ -1086,6 +1473,162 @@ export default function CheckoutOrderDetailPage() {
               </div>
             </section>
 
+            <section className="rounded-[24px] border border-[#dbe5f0] bg-white p-4 shadow-sm md:p-6">
+              <div className="mb-5 flex items-center gap-3">
+                <div className="rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+                  <ClipboardList size={24} />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black text-[#102033]">
+                    Items in this order
+                  </h2>
+                  <p className="text-sm text-[#607287]">
+                    {items.length} product(s) included in this order.
+                  </p>
+                </div>
+              </div>
+
+
+
+              {items.length === 0 ? (
+                <p className="text-[#607287]">
+                  Item details are not available.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {items.map((item, index) => {
+                    const image = getItemImage(item);
+                    const qty = item?.quantity || item?.qty || 1;
+
+                    const price =
+                      item?.lineTotal ||
+                      item?.total ||
+                      item?.lineSubtotal ||
+                      item?.price ||
+                      item?.sellingPrice ||
+                      0;
+
+                    return (
+                      <div
+                        key={item?._id || item?.id || index}
+                        className="grid grid-cols-1 gap-5 rounded-2xl border border-[#dbe5f0] bg-[#fbfdff] p-5 transition hover:border-[#bcd5f5] hover:bg-white lg:grid-cols-[90px_minmax(0,1fr)]"                      >
+                        <div className="flex h-[80px] w-[80px] items-center justify-center rounded-2xl bg-[#eaf3ff]">
+                          <Boxes className="text-[#2454b5]" size={40} />
+                        </div>
+
+                        <div>
+                          <h3 className="break-words text-xl font-black leading-tight text-[#102033] lg:text-2xl">
+                            {getItemName(item)}
+                          </h3>
+
+                          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#607287] break-all">
+                            {item?.brand ? (
+                              <span>Brand: {item.brand}</span>
+                            ) : null}
+                            {item?.sku ? <span>SKU: {item.sku}</span> : null}
+                            {item?.mpn ? <span>MPN: {item.mpn}</span> : null}
+                            <span>Qty: {qty}</span>
+                          </div>
+
+                          <p
+                            className={`mt-3 w-fit rounded-full px-3 py-1 text-sm font-extrabold
+                              ${item?.itemStatus === "Cancelled"
+                                ? "bg-red-100 text-red-600"
+                                : item?.itemStatus === "Delivered"
+                                  ? "bg-green-100 text-green-600"
+                                  : "bg-blue-100 text-blue-600"
+                              }`}
+                          >
+                            {item?.itemStatus || getStatus(order)}
+                          </p>
+                        </div>
+
+                        <div className="mt-3 flex items-center justify-between border-t border-[#e5edf5] pt-3 lg:mt-0 lg:block lg:border-0 lg:pt-0">
+                          <p className="text-sm font-bold text-[#607287]">
+                            Line Total
+                          </p>
+                          <p className="mt-1 text-2xl font-black text-[#102033]">
+                            {formatCurrency(price)}
+                          </p>
+
+                          <div className="mt-4 flex flex-wrap gap-2 justify-end">
+                            <button className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-bold text-white">
+                              Track Item
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+
+
+            <section className="rounded-[24px] border border-[#dbe5f0] bg-white p-5 shadow-sm md:p-6">
+              <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px] xl:items-start">
+                <div className="min-w-0">
+                  <h2 className="text-2xl font-black text-[#102033]">
+                    Need help with this order?
+                  </h2>
+                  <p className="mt-2 max-w-3xl text-[#607287]">
+                    Ask about dispatch timeline, GST invoice, alternate part,
+                    bulk quotation, delivery update or product technical
+                    details.
+                  </p>
+                </div>
+
+                <div className="w-full xl:w-[340px]">
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={handleStartOrderChat}
+                      className="flex h-[54px] items-center justify-center gap-2 rounded-xl bg-[#2454b5] px-4 text-[15px] font-bold text-white shadow hover:bg-[#1e4695]"
+                    >
+                      <MessageCircle size={18} className="shrink-0" />
+                      <span>Chat Support</span>
+                    </button>
+
+                    <a
+                      href="tel:+919871147666"
+                      className="flex h-[54px] items-center justify-center gap-2 rounded-xl border border-[#2454b5] bg-white px-4 text-[15px] font-bold text-[#2454b5] hover:bg-[#eef5ff]"
+                    >
+                      <Phone size={18} className="shrink-0" />
+                      <span>Call Support</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-4 md:grid-cols-3">
+                <div className="rounded-2xl border border-[#e0eaf5] bg-[#f8fbff] p-5">
+                  <CircleHelp className="mb-3 text-[#2454b5]" size={26} />
+                  <p className="font-extrabold text-[#102033]">Order Support</p>
+                  <p className="mt-1 text-sm text-[#607287]">
+                    Dispatch, delivery and tracking help.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#e0eaf5] bg-[#f8fbff] p-5">
+                  <ShieldCheck className="mb-3 text-[#2454b5]" size={26} />
+                  <p className="font-extrabold text-[#102033]">GST Invoice</p>
+                  <p className="mt-1 text-sm text-[#607287]">
+                    Business billing and tax invoice support.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#e0eaf5] bg-[#f8fbff] p-5">
+                  <Clock3 className="mb-3 text-[#2454b5]" size={26} />
+                  <p className="font-extrabold text-[#102033]">
+                    Procurement Timeline
+                  </p>
+                  <p className="mt-1 text-sm text-[#607287]">
+                    Stock verification and dispatch confirmation.
+                  </p>
+                </div>
+              </div>
+            </section>
+
             {orderCanCancel ? (
               <button
                 onClick={() => setShowCancelModal(true)}
@@ -1107,110 +1650,8 @@ export default function CheckoutOrderDetailPage() {
         </div>
       </main>
 
-      {showPaymentModal ? (
-        <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-[rgba(15,23,42,0.45)] px-4 py-10 backdrop-blur-sm">
-          <div className="my-8 w-full max-w-[620px] rounded-[28px] bg-white p-6 shadow-2xl">
-            <div className="mb-5 flex items-start justify-between gap-4 border-b pb-4">
-              <div>
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#e0f5ff] text-[#0284c7]">
-                  <UploadCloud size={24} />
-                </div>
 
-                <h2 className="text-2xl font-black text-[#102033]">
-                  Upload Payment Proof
-                </h2>
-
-                <p className="mt-2 text-sm leading-6 text-[#607287]">
-                  Payment karne ke baad UTR / transaction ID ya payment
-                  screenshot upload karein. Admin verify karne ke baad payment
-                  status Paid ho jayega.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setShowPaymentModal(false)}
-                className="rounded-full bg-[#f3f7fb] p-2 text-[#607287]"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div className="rounded-2xl border border-[#bae6fd] bg-[#f0f9ff] p-4">
-                <p className="text-sm font-black text-[#102033]">
-                  Order Amount: {formatCurrency(getTotal(order))}
-                </p>
-                <p className="mt-1 text-sm text-[#075985]">
-                  Method: {formatPaymentMethod(paymentMethod)}
-                </p>
-              </div>
-
-              <label className="block">
-                <span className="mb-2 block text-sm font-black text-[#102033]">
-                  Payment Screenshot
-                </span>
-                <input
-                  type="file"
-                  accept="image/*,.pdf"
-                  onChange={(e) => setPaymentFile(e.target.files?.[0] || null)}
-                  className="w-full rounded-xl border border-[#cbd5e1] bg-[#f8fbff] px-4 py-3 text-sm font-bold outline-none focus:border-[#0284c7]"
-                />
-              </label>
-
-              <label className="block">
-                <span className="mb-2 block text-sm font-black text-[#102033]">
-                  UTR / Transaction ID
-                </span>
-                <input
-                  value={paymentUtr}
-                  onChange={(e) => setPaymentUtr(e.target.value)}
-                  placeholder="Enter UTR / transaction reference"
-                  className="h-12 w-full rounded-xl border border-[#cbd5e1] bg-[#f8fbff] px-4 font-bold outline-none focus:border-[#0284c7]"
-                />
-              </label>
-
-              <label className="block">
-                <span className="mb-2 block text-sm font-black text-[#102033]">
-                  Payment Note
-                </span>
-                <textarea
-                  rows={4}
-                  value={paymentNote}
-                  onChange={(e) => setPaymentNote(e.target.value)}
-                  placeholder="Example: Paid from SBI UPI at 11:30 AM"
-                  className="w-full rounded-xl border border-[#cbd5e1] bg-[#f8fbff] px-4 py-3 text-sm font-semibold outline-none focus:border-[#0284c7]"
-                />
-              </label>
-
-              <div className="rounded-2xl border border-[#bae6fd] bg-[#f0f9ff] p-4 text-sm leading-7 text-[#075985]">
-                Proof submit hone ke baad payment status “Awaiting Verification”
-                ho jayega. Royal Component team manually verify karegi.
-              </div>
-
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowPaymentModal(false)}
-                  className="h-[50px] flex-1 rounded-xl border border-[#dbe5f0] bg-white font-black text-[#334155]"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handlePaymentProofSubmit}
-                  disabled={paymentLoading}
-                  className="h-[50px] flex-1 rounded-xl bg-[#0284c7] font-black text-white hover:bg-[#0369a1] disabled:opacity-60"
-                >
-                  {paymentLoading ? "Submitting..." : "Submit Proof"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
-
+      <UserReturnExchangeStatusPanel order={order} />
       {showRefundModal ? (
         <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-[rgba(15,23,42,0.45)] px-4 py-10 backdrop-blur-sm">
           <div className="my-8 w-full max-w-[760px] rounded-[28px] bg-white p-6 shadow-2xl">
@@ -1238,7 +1679,7 @@ export default function CheckoutOrderDetailPage() {
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               <select
                 value={refundForm.reason}
                 onChange={(e) =>
@@ -1414,6 +1855,8 @@ export default function CheckoutOrderDetailPage() {
                 className="w-full rounded-xl border border-[#cbd5e1] bg-[#f8fbff] px-4 py-3 text-sm font-semibold outline-none focus:border-[#0284c7]"
               />
 
+
+
               <button
                 type="button"
                 onClick={handleRefundRequest}
@@ -1426,6 +1869,61 @@ export default function CheckoutOrderDetailPage() {
           </div>
         </div>
       ) : null}
+
+      <ReturnModal
+        open={showReturnModal}
+        onClose={() => setShowReturnModal(false)}
+        item={heroItem}
+        order={order}
+        paymentMethod={order?.payment?.method}
+
+        returnReason={returnReason}
+        setReturnReason={setReturnReason}
+
+        selectedReasonObj={selectedReasonObj}
+        setSelectedReasonObj={setSelectedReasonObj}
+
+        returnSubReason={returnSubReason}
+        setReturnSubReason={setReturnSubReason}
+
+        returnComment={returnComment}
+        setReturnComment={setReturnComment}
+
+        returnImages={returnImages}
+        setReturnImages={setReturnImages}
+
+        returnVideo={returnVideo}
+        setReturnVideo={setReturnVideo}
+
+        returnLoading={returnLoading}
+        handleReturnRequest={handleReturnRequest}
+
+        reasons={returnReasons}
+      />
+
+      <ExchangeModal
+        open={showExchangeModal}
+        onClose={() => setShowExchangeModal(false)}
+        item={heroItem}
+        order={order}
+
+        exchangeReason={exchangeReason}
+        setExchangeReason={setExchangeReason}
+
+        exchangeComment={exchangeComment}
+        setExchangeComment={setExchangeComment}
+
+        exchangeImages={exchangeImages}
+        setExchangeImages={setExchangeImages}
+
+        exchangeVideo={exchangeVideo}
+        setExchangeVideo={setExchangeVideo}
+
+        exchangeLoading={exchangeLoading}
+        handleExchangeRequest={handleExchangeRequest}
+
+        reasons={exchangeReasons}
+      />
 
       {showAddressModal ? (
         <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-hidden bg-[rgba(15,23,42,0.45)] px-4 py-10 backdrop-blur-sm">
@@ -1455,6 +1953,7 @@ export default function CheckoutOrderDetailPage() {
                 ["phone", "Phone *"],
                 ["email", "Email"],
                 ["companyName", "Company Name"],
+                ["gstNumber", "GST Number"],
                 ["city", "City *"],
                 ["state", "State *"],
                 ["pincode", "Pincode *"],
@@ -1469,7 +1968,10 @@ export default function CheckoutOrderDetailPage() {
                     onChange={(e) =>
                       setAddressForm((prev) => ({
                         ...prev,
-                        [key]: e.target.value,
+                        [key]:
+                          key === "gstNumber"
+                            ? e.target.value.toUpperCase()
+                            : e.target.value,
                       }))
                     }
                     className="h-12 w-full rounded-xl border border-[#cbd5e1] px-4 outline-none focus:border-[#2454b5]"

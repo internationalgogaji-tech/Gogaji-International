@@ -2,23 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "";
-
-const getImageUrl = (value = "") => {
-  const image = String(value || "").trim();
-
-  if (!image) return "";
-
-  if (/^https?:\/\/localhost:5000/i.test(image)) {
-    return `${API}${image.replace(/^https?:\/\/localhost:5000/i, "")}`;
-  }
-
-  if (image.startsWith("/")) {
-    return `${API}${image}`;
-  }
-
-  return image;
-};
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function HomeDecorSectionPage() {
     const [form, setForm] = useState({
@@ -40,7 +24,7 @@ export default function HomeDecorSectionPage() {
 
         const data = await res.json();
 
-
+        
 
         if (data) {
             setForm(data);
@@ -119,37 +103,79 @@ export default function HomeDecorSectionPage() {
         }
     };
 
-   const saveData = async () => {
-  try {
-    const res = await fetch(`${API}/api/home-decor-info`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    const saveData = async () => {
+        try {
+            const updatedProducts = await Promise.all(
+                form.products.map(async (item) => {
+                    if (!item.sku) return item;
 
-    const data = await res.json();
+                    try {
+                        const res = await fetch(
+                            `${API}/api/products?limit=5000`
+                        );
 
-    if (res.ok) {
-      setForm({
-        ...data,
-        products: (data.products || []).map((p) => ({
-          ...p,
-          isEditing: false,
-        })),
-      });
+                        const data = await res.json();
 
-      setShowSuccess(true);
+                        const product = data?.products?.find(
+                            (p) =>
+                                p.sku?.trim()?.toLowerCase() ===
+                                item.sku?.trim()?.toLowerCase()
+                        );
 
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 3000);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
+                        console.log("PRODUCT ID =", product?._id);
+console.log("PRODUCT SLUG =", product?.slug);
+
+                        if (product?.slug) {
+                            return {
+                                ...item,
+
+                                productId: product._id,
+
+                                slug: product.slug,
+
+                                buttonLink: `/product/${product.slug}`,
+                            };
+                        }
+                        return item;
+                    } catch {
+                        return item;
+                    }
+                })
+            );
+
+            const res = await fetch(
+                `${API}/api/home-decor-info`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ...form,
+                        products: updatedProducts,
+                    }),
+                }
+            );
+
+            if (res.ok) {
+                setForm({
+                    ...form,
+                    products: updatedProducts.map((p) => ({
+                        ...p,
+                        isEditing: false,
+                    })),
+                });
+
+                setShowSuccess(true);
+
+                setTimeout(() => {
+                    setShowSuccess(false);
+                }, 3000);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <>
@@ -394,7 +420,7 @@ export default function HomeDecorSectionPage() {
                                                 </div>
 
                                                 <img
-                                                    src={getImageUrl(item.image)}
+                                                    src={item.image}
                                                     alt="Product"
                                                     onError={(e) => {
                                                         e.target.style.display = "none";

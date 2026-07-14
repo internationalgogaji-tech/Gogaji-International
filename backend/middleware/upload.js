@@ -9,29 +9,47 @@ const ensureDir = (folder) => {
 };
 
 const storage = multer.diskStorage({
- destination(req, file, cb) {
-  const type = req.body.type || req.query.type || "products";
+  destination(req, file, cb) {
+    const type = req.body.type || req.query.type || "products";
 
-  const folders = {
-    products: "uploads/products",
-    categories: "uploads/categories",
-    documents: "uploads/documents",
+    let folder = "uploads/products";
 
-    // Trending & New Launches ke liye
-    "home-decor": "uploads/trending-new-launches",
+    if (type === "categories") {
+      folder = "uploads/categories";
+    }
 
-    // Promo Banners ke liye
-    "promo-banner": "uploads/promo-banners",
+    if (type === "requests") {
+  folder = "uploads/requests";
+}
 
-    "homepage-builder": "uploads/homepage-builder",
-    "landing-pages": "uploads/landing-pages",
-  };
+    if (type === "documents") {
+  folder = "uploads/documents";
+}
 
-  const folder = folders[type] || "uploads/products";
+if (type === "home-decor") {
+  folder = "uploads/home-decor";
+}
 
-  ensureDir(folder);
-  cb(null, folder);
-},
+if (type === "promo-banner") {
+  folder = "uploads/promo-banners";
+}
+
+if (type === "homepage-builder") {
+  folder = "uploads/homepage-builder";
+}
+
+if (type === "landing-pages") {
+  folder = "uploads/landing-pages";
+
+    }
+
+    if (type === "landing-pages") {
+  folder = "uploads/landing-pages";
+}
+
+    ensureDir(folder);
+    cb(null, folder);
+  },
 
   filename(req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase();
