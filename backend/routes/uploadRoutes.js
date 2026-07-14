@@ -11,7 +11,7 @@ router.post("/", upload.single("image"), (req, res) => {
     });
   }
 
-  // Database mein only relative path save hoga
+  // Database mein localhost nahi, sirf relative path save hoga.
   const url = `/${req.file.path.replace(/\\/g, "/")}`;
 
   return res.status(201).json({

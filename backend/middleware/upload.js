@@ -9,42 +9,29 @@ const ensureDir = (folder) => {
 };
 
 const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    const type = req.body.type || req.query.type || "products";
+ destination(req, file, cb) {
+  const type = req.body.type || req.query.type || "products";
 
-    let folder = "uploads/products";
+  const folders = {
+    products: "uploads/products",
+    categories: "uploads/categories",
+    documents: "uploads/documents",
 
-    if (type === "categories") {
-      folder = "uploads/categories";
-    }
+    // Trending & New Launches ke liye
+    "home-decor": "uploads/trending-new-launches",
 
-    if (type === "documents") {
-      folder = "uploads/documents";
-    }
+    // Promo Banners ke liye
+    "promo-banner": "uploads/promo-banners",
 
-   if (type === "documents") {
-  folder = "uploads/documents";
-}
+    "homepage-builder": "uploads/homepage-builder",
+    "landing-pages": "uploads/landing-pages",
+  };
 
-if (type === "home-decor") {
-  folder = "uploads/home-decor";
-}
+  const folder = folders[type] || "uploads/products";
 
-if (type === "promo-banner") {
-  folder = "uploads/promo-banners";
-}
-
-if (type === "homepage-builder") {
-  folder = "uploads/homepage-builder";
-}
-
-if (type === "landing-pages") {
-  folder = "uploads/landing-pages";
-}
-
-    ensureDir(folder);
-    cb(null, folder);
-  },
+  ensureDir(folder);
+  cb(null, folder);
+},
 
   filename(req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase();
