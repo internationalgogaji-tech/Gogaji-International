@@ -4,45 +4,44 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import {
-  CheckCircle2,
-  PackageCheck,
-  ReceiptText,
-  Truck,
-  ShoppingBag,
-  ShieldCheck,
-  ClipboardList,
-  Building2,
-  Mail,
-  Phone,
-  MapPin,
-  Clock3,
-  CreditCard,
   ArrowRight,
-  CircleHelp,
+  Check,
+  CreditCard,
+  Flower2,
+  Gem,
+  Home,
+  Mail,
+  MapPin,
+  PackageCheck,
+  Phone,
+  ReceiptText,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
 } from "lucide-react";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useOrders } from "@/context/OrderContext";
 
-function formatCurrency(value) {
-  return `₹ ${Number(value || 0).toLocaleString("en-IN", {
+const formatCurrency = (value) =>
+  `₹ ${Number(value || 0).toLocaleString("en-IN", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
-}
 
-function formatPaymentMethod(method) {
-  if (!method) return "Commercial Payment";
+const formatPaymentMethod = (method) => {
+  if (!method) return "Payment confirmation pending";
+
   return String(method)
     .replaceAll("-", " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
-}
+};
 
-function getAddressText(order) {
+const getAddressText = (order) => {
   const address = order?.shippingAddress || order?.address || {};
 
-  const parts = [
+  return [
     address.address,
     address.addressLine,
     address.addressLine2,
@@ -51,10 +50,10 @@ function getAddressText(order) {
     address.state,
     address.pincode,
     address.country,
-  ].filter(Boolean);
-
-  return parts.join(", ");
-}
+  ]
+    .filter(Boolean)
+    .join(", ");
+};
 
 export default function CheckoutSuccessPage() {
   const { id } = useParams();
@@ -72,14 +71,19 @@ export default function CheckoutSuccessPage() {
 
         const data = await fetchOrderById(id);
 
-        if (!active) return;
-
-        setOrder(data?.order || data || null);
+        if (active) {
+          setOrder(data?.order || data || null);
+        }
       } catch (error) {
         console.error("Order success fetch error:", error);
-        if (active) setOrder(null);
+
+        if (active) {
+          setOrder(null);
+        }
       } finally {
-        if (active) setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     };
 
@@ -94,7 +98,7 @@ export default function CheckoutSuccessPage() {
     order?.buyer?.fullName ||
     order?.user?.name ||
     order?.userInfo?.name ||
-    "Customer";
+    "Valued Customer";
 
   const buyerPhone =
     order?.buyer?.phone || order?.user?.phone || order?.userInfo?.phone || "";
@@ -107,11 +111,10 @@ export default function CheckoutSuccessPage() {
   const orderNumber =
     order?.orderNumber || order?.orderId || order?._id || id || "Loading...";
 
-  const orderStatus =
-    order?.orderStatus || order?.status || "Order Request Placed";
+  const orderStatus = order?.orderStatus || order?.status || "Order Placed";
 
   const paymentMethod =
-    order?.payment?.method || order?.paymentMethod || "bank-transfer";
+    order?.payment?.method || order?.paymentMethod || "";
 
   const totalAmount =
     order?.pricing?.totalAmount ||
@@ -126,193 +129,193 @@ export default function CheckoutSuccessPage() {
     return order?.items || order?.products || [];
   }, [order]);
 
+  const nextSteps = [
+    [
+      "Order review",
+      "We are carefully checking your selected decor pieces.",
+    ],
+    [
+      "Quality packing",
+      "Each item is prepared with secure, thoughtful packaging.",
+    ],
+    [
+      "Delivery update",
+      "You will receive an update as soon as your order is dispatched.",
+    ],
+  ];
+
   return (
-    <div className="min-h-screen bg-[#f3f7fb] text-[#1f2937]">
+    <div className="min-h-screen bg-[#fbf8f2] text-[#173f35] selection:bg-[#d7b15b]/40">
       <Navbar />
 
-      <main className="mx-auto max-w-[1180px] px-4 py-8 md:py-12">
-        <section className="overflow-hidden rounded-[24px] border border-[#dbe5f0] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
-          <div className="bg-gradient-to-r from-[#eaf4ff] via-[#f8fbff] to-[#edf7ff] px-5 py-8 text-center md:px-10 md:py-12">
-            <div className="mx-auto flex h-[92px] w-[92px] items-center justify-center rounded-full bg-[#16a34a] shadow-[0_12px_30px_rgba(22,163,74,0.28)]">
-              <CheckCircle2 size={58} className="text-white" />
+      <main className="mx-auto max-w-[1240px] px-4 py-8 md:px-6 md:py-12">
+        <section className="overflow-hidden rounded-[30px] border border-[#e8dcc4] bg-[#fffdf9] shadow-[0_20px_60px_rgba(41,74,59,0.10)]">
+          <div className="relative overflow-hidden border-b border-[#eadfc9] bg-[#f4eee3] px-5 py-10 text-center md:px-12 md:py-14">
+            <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-[#d7b15b]/15" />
+            <div className="absolute -bottom-36 -right-20 h-80 w-80 rounded-full bg-[#236553]/10" />
+
+            <Flower2
+              className="absolute left-[8%] top-10 hidden text-[#b88d2b]/25 md:block"
+              size={52}
+            />
+            <Sparkles
+              className="absolute right-[10%] top-16 hidden text-[#b88d2b]/35 md:block"
+              size={40}
+            />
+
+            <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full border-[7px] border-[#fffaf0] bg-[#1f6552] shadow-[0_12px_30px_rgba(31,101,82,0.25)]">
+              <Check size={42} strokeWidth={3} className="text-white" />
             </div>
 
-            <p className="mt-5 text-sm font-bold uppercase tracking-[0.22em] text-[#2454b5]">
-              Royal Component
+            <p className="relative mt-5 flex items-center justify-center gap-2 text-xs font-extrabold uppercase tracking-[0.24em] text-[#af8123]">
+              <Sparkles size={15} />
+              Gogaji International
             </p>
 
-            <h1 className="mt-3 text-[34px] font-extrabold leading-tight text-[#102033] md:text-[46px]">
-              Order Request Placed Successfully
+            <h1 className="relative mt-3 font-serif text-[36px] font-bold leading-tight text-[#1f5445] md:text-[52px]">
+              Your home is about to glow.
             </h1>
 
-            <p className="mx-auto mt-4 max-w-3xl text-[16px] leading-7 text-[#607287] md:text-[18px]">
-              Your industrial procurement request has been received. Our team
-              will verify stock, quantity, GST details and delivery timeline
-              before final confirmation.
+            <p className="relative mx-auto mt-4 max-w-2xl text-[16px] leading-7 text-[#617269] md:text-[18px]">
+              Thank you for choosing Gogaji International. Your decor order has
+              been received and our team will soon begin preparing it with care.
             </p>
 
-            <div className="mx-auto mt-7 grid max-w-4xl gap-4 md:grid-cols-3">
-              <div className="rounded-2xl border border-[#dbe5f0] bg-white p-5 shadow-sm">
-                <ReceiptText className="mx-auto mb-3 text-[#2454b5]" size={28} />
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#607287]">
-                  Order No.
-                </p>
-                <p className="mt-2 break-words text-[17px] font-extrabold text-[#102033]">
-                  {loading ? "Loading..." : orderNumber}
-                </p>
-              </div>
+            <div className="relative mx-auto mt-8 grid max-w-4xl gap-3 sm:grid-cols-3 md:gap-5">
+              {[
+                [
+                  ReceiptText,
+                  "Order number",
+                  loading ? "Loading..." : orderNumber,
+                ],
+                [
+                  PackageCheck,
+                  "Order status",
+                  loading ? "Loading..." : orderStatus,
+                ],
+                [
+                  CreditCard,
+                  "Total paid",
+                  loading ? "Loading..." : formatCurrency(totalAmount),
+                ],
+              ].map(([Icon, label, value]) => (
+                <div
+                  key={label}
+                  className="rounded-2xl border border-[#e8dcc4] bg-[#fffdf9]/95 px-4 py-5 shadow-sm"
+                >
+                  <Icon className="mx-auto text-[#b88d2b]" size={25} />
 
-              <div className="rounded-2xl border border-[#dbe5f0] bg-white p-5 shadow-sm">
-                <PackageCheck className="mx-auto mb-3 text-[#2454b5]" size={28} />
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#607287]">
-                  Status
-                </p>
-                <p className="mt-2 text-[17px] font-extrabold capitalize text-[#102033]">
-                  {loading ? "Loading..." : orderStatus}
-                </p>
-              </div>
+                  <p className="mt-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#7c8377]">
+                    {label}
+                  </p>
 
-              <div className="rounded-2xl border border-[#dbe5f0] bg-white p-5 shadow-sm">
-                <CreditCard className="mx-auto mb-3 text-[#2454b5]" size={28} />
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#607287]">
-                  Total Amount
-                </p>
-                <p className="mt-2 text-[17px] font-extrabold text-[#102033]">
-                  {loading ? "Loading..." : formatCurrency(totalAmount)}
-                </p>
-              </div>
+                  <p className="mt-2 break-words text-[16px] font-extrabold text-[#173f35]">
+                    {value}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="grid gap-6 p-5 md:p-8 lg:grid-cols-[1fr_380px]">
+          <div className="grid gap-6 p-5 md:p-8 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="space-y-6">
-              <section className="rounded-[18px] border border-[#dbe5f0] bg-[#fbfdff] p-5 md:p-6">
-                <div className="flex items-start gap-4">
-                  <div className="rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
-                    <Truck size={24} />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <h2 className="text-[22px] font-extrabold text-[#102033]">
-                      Delivery & Buyer Details
-                    </h2>
-
-                    {loading ? (
-                      <p className="mt-3 text-[#607287]">Loading delivery details...</p>
-                    ) : order ? (
-                      <div className="mt-5 grid gap-4 md:grid-cols-2">
-                        <div className="rounded-xl border border-[#dbe5f0] bg-white p-4">
-                          <p className="flex items-center gap-2 text-sm font-bold text-[#102033]">
-                            <Building2 size={17} className="text-[#2454b5]" />
-                            Buyer
-                          </p>
-                          <p className="mt-2 font-semibold text-[#334155]">
-                            {buyerName}
-                          </p>
-                          {companyName ? (
-                            <p className="mt-1 text-sm text-[#607287]">
-                              {companyName}
-                            </p>
-                          ) : null}
-                        </div>
-
-                        <div className="rounded-xl border border-[#dbe5f0] bg-white p-4">
-                          <p className="flex items-center gap-2 text-sm font-bold text-[#102033]">
-                            <Phone size={17} className="text-[#2454b5]" />
-                            Contact
-                          </p>
-                          <p className="mt-2 text-sm text-[#607287]">
-                            {buyerPhone || "Phone not available"}
-                          </p>
-                          <p className="mt-1 flex items-center gap-2 text-sm text-[#607287]">
-                            <Mail size={15} />
-                            {buyerEmail || "Email not available"}
-                          </p>
-                        </div>
-
-                        <div className="rounded-xl border border-[#dbe5f0] bg-white p-4 md:col-span-2">
-                          <p className="flex items-center gap-2 text-sm font-bold text-[#102033]">
-                            <MapPin size={17} className="text-[#2454b5]" />
-                            Delivering To
-                          </p>
-                          <p className="mt-2 text-sm leading-7 text-[#607287]">
-                            {addressText || "Address details not available"}
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="mt-3 text-[#ef4444]">
-                        Order details could not be loaded.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </section>
-
-              <section className="rounded-[18px] border border-[#dbe5f0] bg-white p-5 md:p-6">
-                <div className="flex items-start gap-4">
-                  <div className="rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
-                    <ClipboardList size={24} />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <h2 className="text-[22px] font-extrabold text-[#102033]">
-                      What happens next?
-                    </h2>
-
-                    <div className="mt-5 space-y-4">
-                      {[
-                        {
-                          title: "Stock verification",
-                          desc: "Our team checks current product availability and requested quantity.",
-                        },
-                        {
-                          title: "Commercial confirmation",
-                          desc: "GST, payment mode, invoice and business order details are reviewed.",
-                        },
-                        {
-                          title: "Dispatch timeline",
-                          desc: "Delivery estimate is confirmed based on product stock and location.",
-                        },
-                      ].map((item, index) => (
-                        <div
-                          key={item.title}
-                          className="flex gap-4 rounded-xl border border-[#e4edf8] bg-[#f8fbff] p-4"
-                        >
-                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2454b5] text-sm font-extrabold text-white">
-                            {index + 1}
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-[#102033]">
-                              {item.title}
-                            </h3>
-                            <p className="mt-1 text-sm leading-6 text-[#607287]">
-                              {item.desc}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <section className="rounded-[18px] border border-[#dbe5f0] bg-white p-5 md:p-6">
-                <h2 className="text-[22px] font-extrabold text-[#102033]">
-                  Order Items
-                </h2>
+              <section className="rounded-2xl border border-[#eadfc9] bg-[#fffdf9] p-5 md:p-6">
+                <SectionTitle
+                  icon={Home}
+                  eyebrow="Delivery details"
+                  title="Bringing beauty to your doorstep"
+                />
 
                 {loading ? (
-                  <p className="mt-4 text-[#607287]">Loading items...</p>
-                ) : orderItems.length > 0 ? (
-                  <div className="mt-5 space-y-3">
+                  <p className="mt-5 text-[#6d7c73]">
+                    Loading delivery details...
+                  </p>
+                ) : order ? (
+                  <div className="mt-5 grid gap-4 md:grid-cols-2">
+                    <InfoCard icon={Gem} label="Ordered by">
+                      <p className="font-bold text-[#173f35]">{buyerName}</p>
+
+                      {companyName ? (
+                        <p className="mt-1 text-sm text-[#6d7c73]">
+                          {companyName}
+                        </p>
+                      ) : null}
+                    </InfoCard>
+
+                    <InfoCard icon={Phone} label="Contact">
+                      <p>{buyerPhone || "Phone not available"}</p>
+
+                      <p className="mt-1 flex items-center gap-1.5">
+                        <Mail size={14} />
+                        {buyerEmail || "Email not available"}
+                      </p>
+                    </InfoCard>
+
+                    <InfoCard
+                      icon={MapPin}
+                      label="Delivery address"
+                      className="md:col-span-2"
+                    >
+                      <p className="leading-6">
+                        {addressText || "Address details not available"}
+                      </p>
+                    </InfoCard>
+                  </div>
+                ) : (
+                  <p className="mt-5 text-[#b74d3d]">
+                    We could not load your order details. Please try again
+                    shortly.
+                  </p>
+                )}
+              </section>
+
+              <section className="rounded-2xl border border-[#eadfc9] bg-[#f8f4eb] p-5 md:p-6">
+                <SectionTitle
+                  icon={Sparkles}
+                  eyebrow="A little journey"
+                  title="What happens next?"
+                />
+
+                <div className="mt-6 grid gap-4 md:grid-cols-3">
+                  {nextSteps.map(([title, description], index) => (
+                    <div
+                      key={title}
+                      className="rounded-2xl border border-[#e7dbc4] bg-[#fffdf9] p-5"
+                    >
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1f6552] text-sm font-extrabold text-white">
+                        0{index + 1}
+                      </span>
+
+                      <h3 className="mt-4 font-bold text-[#173f35]">
+                        {title}
+                      </h3>
+
+                      <p className="mt-1.5 text-sm leading-6 text-[#6d7c73]">
+                        {description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="rounded-2xl border border-[#eadfc9] bg-[#fffdf9] p-5 md:p-6">
+                <SectionTitle
+                  icon={ShoppingBag}
+                  eyebrow="Your selection"
+                  title="Pieces chosen for your space"
+                />
+
+                {loading ? (
+                  <p className="mt-5 text-[#6d7c73]">Loading items...</p>
+                ) : orderItems.length ? (
+                  <div className="mt-5 divide-y divide-[#eee3d1] rounded-2xl border border-[#eee3d1] px-4">
                     {orderItems.slice(0, 4).map((item, index) => {
                       const name =
                         item.name ||
                         item.productName ||
                         item.title ||
                         item.product?.name ||
-                        "Product";
+                        "Home decor piece";
 
                       const qty = item.quantity || item.qty || 1;
 
@@ -326,18 +329,19 @@ export default function CheckoutSuccessPage() {
                       return (
                         <div
                           key={item._id || item.id || index}
-                          className="flex items-center justify-between gap-4 rounded-xl border border-[#e4edf8] bg-[#f8fbff] p-4"
+                          className="flex items-center justify-between gap-4 py-4"
                         >
                           <div className="min-w-0">
-                            <h3 className="line-clamp-2 font-bold text-[#102033]">
+                            <p className="line-clamp-2 font-bold text-[#173f35]">
                               {name}
-                            </h3>
-                            <p className="mt-1 text-sm text-[#607287]">
-                              Qty: {qty}
+                            </p>
+
+                            <p className="mt-1 text-sm text-[#78857d]">
+                              Quantity: {qty}
                             </p>
                           </div>
 
-                          <p className="shrink-0 font-extrabold text-[#102033]">
+                          <p className="shrink-0 font-extrabold text-[#1f6552]">
                             {formatCurrency(price)}
                           </p>
                         </div>
@@ -345,96 +349,86 @@ export default function CheckoutSuccessPage() {
                     })}
 
                     {orderItems.length > 4 ? (
-                      <p className="text-sm font-semibold text-[#607287]">
-                        + {orderItems.length - 4} more item(s)
+                      <p className="py-3 text-sm font-semibold text-[#8a6a25]">
+                        + {orderItems.length - 4} more beautiful piece(s)
                       </p>
                     ) : null}
                   </div>
                 ) : (
-                  <p className="mt-4 text-[#607287]">
-                    Item details will appear in order details page.
+                  <p className="mt-5 text-[#6d7c73]">
+                    Your item details will appear on the order details page.
                   </p>
                 )}
               </section>
             </div>
 
             <aside className="space-y-5">
-              <section className="rounded-[18px] border border-[#dbe5f0] bg-white p-5 shadow-sm">
-                <h2 className="text-[22px] font-extrabold text-[#102033]">
-                  Order Summary
+              <section className="rounded-2xl border border-[#d7c49b] bg-[#1f6552] p-6 text-white shadow-[0_12px_28px_rgba(31,101,82,0.18)]">
+                <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#ecd28d]">
+                  Order summary
+                </p>
+
+                <h2 className="mt-2 font-serif text-3xl font-bold">
+                  A thoughtful choice
                 </h2>
 
-                <div className="mt-5 space-y-4 text-[15px] text-[#334155]">
-                  <div className="flex justify-between gap-4">
-                    <span>Payment Method</span>
-                    <b className="text-right text-[#102033]">
-                      {formatPaymentMethod(paymentMethod)}
-                    </b>
-                  </div>
+                <div className="mt-6 space-y-4 text-sm text-[#e4f0e9]">
+                  <SummaryRow
+                    label="Payment"
+                    value={formatPaymentMethod(paymentMethod)}
+                  />
 
-                  <div className="flex justify-between gap-4">
-                    <span>Order Status</span>
-                    <b className="text-right capitalize text-[#102033]">
-                      {loading ? "Loading..." : orderStatus}
-                    </b>
-                  </div>
+                  <SummaryRow
+                    label="Status"
+                    value={loading ? "Loading..." : orderStatus}
+                  />
 
-                  <div className="flex justify-between gap-4 border-t border-[#e5e7eb] pt-4 text-[18px]">
-                    <span className="font-bold">Grand Total</span>
-                    <b className="text-[#102033]">
+                  <div className="flex items-end justify-between gap-4 border-t border-white/20 pt-4">
+                    <span className="font-bold">Grand total</span>
+
+                    <b className="text-xl text-[#ffe5a0]">
                       {loading ? "Loading..." : formatCurrency(totalAmount)}
                     </b>
                   </div>
                 </div>
               </section>
 
-              <section className="rounded-[18px] border border-[#dbe5f0] bg-[#f8fcff] p-5">
-                <h3 className="text-[20px] font-extrabold text-[#102033]">
-                  Business Order Protection
+              <section className="rounded-2xl border border-[#eadfc9] bg-[#fffaf0] p-5">
+                <ShieldCheck className="text-[#b88d2b]" size={27} />
+
+                <h3 className="mt-3 text-lg font-extrabold text-[#173f35]">
+                  Gogaji Care Promise
                 </h3>
 
-                <div className="mt-4 space-y-4 text-sm leading-6 text-[#4f6478]">
-                  <p className="flex gap-3">
-                    <ShieldCheck className="shrink-0 text-[#2454b5]" size={20} />
-                    GST-ready commercial order review.
-                  </p>
-                  <p className="flex gap-3">
-                    <PackageCheck className="shrink-0 text-[#2454b5]" size={20} />
-                    Bulk quantity and MOQ verification.
-                  </p>
-                  <p className="flex gap-3">
-                    <Clock3 className="shrink-0 text-[#2454b5]" size={20} />
-                    Delivery timeline confirmation before dispatch.
-                  </p>
-                  <p className="flex gap-3">
-                    <CircleHelp className="shrink-0 text-[#2454b5]" size={20} />
-                    Support for alternate part or quote request.
-                  </p>
-                </div>
+                <ul className="mt-3 space-y-2.5 text-sm leading-6 text-[#68776e]">
+                  <li>• Quality-checked home decor</li>
+                  <li>• Secure, careful packaging</li>
+                  <li>• Dedicated support for your order</li>
+                </ul>
               </section>
 
               <div className="grid gap-3">
                 <Link
                   href={`/checkout/order/${id}`}
-                  className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl bg-[#2454b5] px-5 text-[15px] font-extrabold text-white transition hover:bg-[#1e4695]"
+                  className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl bg-[#b98b26] px-5 font-extrabold text-white transition hover:bg-[#9f741b]"
                 >
-                  View Order Details
+                  View order details
                   <ArrowRight size={18} />
                 </Link>
 
                 <Link
                   href="/checkout/order"
-                  className="inline-flex h-[52px] items-center justify-center rounded-xl border border-[#2454b5] bg-white px-5 text-[15px] font-extrabold text-[#2454b5] transition hover:bg-[#f3f8ff]"
+                  className="inline-flex h-[52px] items-center justify-center rounded-xl border border-[#1f6552] bg-white px-5 font-extrabold text-[#1f6552] transition hover:bg-[#f2f8f4]"
                 >
-                  My Orders
+                  My orders
                 </Link>
 
                 <Link
                   href="/products"
-                  className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl border border-[#dbe5f0] bg-white px-5 text-[15px] font-extrabold text-[#334155] transition hover:bg-[#f8fbff]"
+                  className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl px-5 font-extrabold text-[#52655b] transition hover:bg-[#f8f4eb]"
                 >
                   <ShoppingBag size={18} />
-                  Continue Shopping
+                  Continue shopping
                 </Link>
               </div>
             </aside>
@@ -443,6 +437,50 @@ export default function CheckoutSuccessPage() {
       </main>
 
       <Footer />
+    </div>
+  );
+}
+
+function SectionTitle({ icon: Icon, eyebrow, title }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="rounded-xl bg-[#e5efe9] p-2.5 text-[#1f6552]">
+        <Icon size={22} />
+      </span>
+
+      <div>
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#b88d2b]">
+          {eyebrow}
+        </p>
+
+        <h2 className="mt-0.5 text-xl font-extrabold text-[#173f35]">
+          {title}
+        </h2>
+      </div>
+    </div>
+  );
+}
+
+function InfoCard({ icon: Icon, label, className = "", children }) {
+  return (
+    <div
+      className={`rounded-xl border border-[#eee3d1] bg-[#fffefa] p-4 text-sm text-[#6d7c73] ${className}`}
+    >
+      <p className="mb-2 flex items-center gap-2 font-bold text-[#173f35]">
+        <Icon size={17} className="text-[#b88d2b]" />
+        {label}
+      </p>
+
+      {children}
+    </div>
+  );
+}
+
+function SummaryRow({ label, value }) {
+  return (
+    <div className="flex justify-between gap-4">
+      <span>{label}</span>
+      <b className="max-w-[58%] text-right text-white">{value}</b>
     </div>
   );
 }

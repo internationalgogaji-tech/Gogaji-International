@@ -2,14 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  CheckCircle2,
   MapPin,
-  Pencil,
   Plus,
-  Search,
+  Pencil,
   Trash2,
+  CheckCircle2,
+  Search,
 } from "lucide-react";
-
 import { useAddress } from "@/context/AddressContext";
 import AddressFormModal from "./AddressFormModal";
 
@@ -34,136 +33,116 @@ export default function AddressSelector() {
   }, [fetchAddresses]);
 
   const filteredAddresses = useMemo(() => {
-    const query = search.toLowerCase().trim();
+    const q = search.toLowerCase().trim();
+    if (!q) return addresses;
 
-    if (!query) return addresses;
-
-    return addresses.filter((address) =>
+    return addresses.filter((addr) =>
       [
-        address.fullName,
-        address.phone,
-        address.addressLine,
-        address.landmark,
-        address.city,
-        address.state,
-        address.pincode,
-        address.addressType,
+        addr.fullName,
+        addr.phone,
+        addr.addressLine,
+        addr.landmark,
+        addr.city,
+        addr.state,
+        addr.pincode,
+        addr.addressType,
       ]
         .filter(Boolean)
         .join(" ")
         .toLowerCase()
-        .includes(query)
+        .includes(q),
     );
   }, [addresses, search]);
 
-  const openAddModal = () => {
+  const handleAdd = () => {
     setEditingAddress(null);
     setModalOpen(true);
   };
 
-  const openEditModal = (address) => {
+  const handleEdit = (address) => {
     setEditingAddress(address);
     setModalOpen(true);
   };
 
   return (
-    <section className="rounded-[24px] border border-[#eadfc8] bg-white p-5 shadow-[0_10px_32px_rgba(46,59,50,0.07)] md:p-7">
-      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <section className="rounded-[14px] border border-[#dbe5f0] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.04)] md:p-6">
+      <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-start gap-3">
-          <div className="rounded-2xl bg-[#e8f2ed] p-3 text-[#176451]">
-            <MapPin size={24} />
+          <div className="rounded-full bg-[#eaf3ff] p-3 text-[#2454b5]">
+            <MapPin size={22} />
           </div>
 
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#bd9226]">
-              Delivery Details
-            </p>
-
-            <h2 className="mt-1 text-2xl font-extrabold text-[#176451]">
-              Choose Delivery Address
+            <h2 className="text-[24px] font-extrabold text-[#102033]">
+              Delivery Address
             </h2>
-
-            <p className="mt-1 text-sm text-[#66756f]">
-              Select a saved address or add a new one for your order.
+            <p className="mt-1 text-sm text-[#607287]">
+              Select saved address or add a new address for this wholesale
+              order.
             </p>
           </div>
         </div>
 
         <button
           type="button"
-          onClick={openAddModal}
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#176451] px-5 text-sm font-bold text-white transition hover:bg-[#104b3d]"
+          onClick={handleAdd}
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#2454b5] px-5 text-sm font-bold text-white hover:bg-[#1e4695]"
         >
           <Plus size={18} />
-          Add New Address
+          Add Address
         </button>
       </div>
 
-      {addresses.length > 0 && (
-        <div className="mb-5">
+      {addresses.length > 0 ? (
+        <div className="mb-4">
           <div className="relative">
             <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#a99468]"
+              className="absolute left-3 top-3 text-[#94a3b8]"
               size={18}
             />
-
             <input
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              className="h-12 w-full rounded-xl border border-[#eadfc8] bg-[#fffcf6] pl-11 pr-4 text-sm outline-none transition focus:border-[#176451] focus:ring-2 focus:ring-[#176451]/10"
-              placeholder="Search by name, phone, city or pincode..."
+              onChange={(e) => setSearch(e.target.value)}
+              className="h-11 w-full rounded-lg border border-[#cbd5e1] pl-10 pr-4 text-sm outline-none focus:border-[#2454b5]"
+              placeholder="Search by name, phone, city, pincode..."
             />
           </div>
         </div>
-      )}
+      ) : null}
 
       {loading ? (
-        <div className="rounded-2xl border border-[#eee3ce] bg-[#fffcf6] p-7 text-center text-sm font-semibold text-[#66756f]">
-          Loading your saved addresses...
+        <div className="rounded-lg border border-[#e5edf5] bg-[#f8fbff] p-6 text-center text-[#607287]">
+          Loading addresses...
         </div>
       ) : filteredAddresses.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#d9c99f] bg-[#fffcf6] px-6 py-10 text-center">
-          <div className="mx-auto w-fit rounded-full bg-[#e8f2ed] p-4 text-[#176451]">
-            <MapPin size={34} />
-          </div>
-
-          <h3 className="mt-4 text-xl font-extrabold text-[#176451]">
-            No delivery address found
-          </h3>
-
-          <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#66756f]">
-            Add your home, office or preferred delivery address to continue.
+        <div className="rounded-lg border border-dashed border-[#bfd7f5] bg-[#f8fbff] p-8 text-center">
+          <MapPin className="mx-auto mb-3 text-[#2454b5]" size={40} />
+          <h3 className="text-lg font-bold text-[#102033]">No address found</h3>
+          <p className="mt-1 text-sm text-[#607287]">
+            Add your delivery address to continue checkout.
           </p>
-
           <button
             type="button"
-            onClick={openAddModal}
-            className="mt-5 rounded-full bg-[#bd9226] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#a87d18]"
+            onClick={handleAdd}
+            className="mt-5 rounded-lg bg-[#2454b5] px-5 py-3 text-sm font-bold text-white hover:bg-[#1e4695]"
           >
             Add Delivery Address
           </button>
         </div>
       ) : (
         <div className="space-y-3">
-          {filteredAddresses.map((address) => {
-            const id = String(address._id);
+          {filteredAddresses.map((addr) => {
+            const id = String(addr._id);
             const selected = String(selectedAddressId) === id;
 
             return (
               <div
                 key={id}
-                role="button"
-                tabIndex={0}
                 onClick={() => setSelectedAddressId(id)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    setSelectedAddressId(id);
-                  }
-                }}
-                className={`cursor-pointer rounded-2xl border p-4 transition ${
+                className={`cursor-pointer rounded-xl border p-4 transition ${
                   selected
-                    ? "border-[#176451] bg-[#f0f7f3] shadow-[0_7px_20px_rgba(23,100,81,0.10)]"
-                    : "border-[#eadfc8] bg-white hover:border-[#bd9226]"
+                    ? "border-[#2454b5] bg-[#edf3ff]"
+                    : "border-[#dbe5f0] bg-white hover:border-[#8bb7ee]"
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -171,74 +150,86 @@ export default function AddressSelector() {
                     type="radio"
                     checked={selected}
                     onChange={() => setSelectedAddressId(id)}
-                    className="mt-1 h-4 w-4 accent-[#176451]"
+                    className="mt-1 h-4 w-4 accent-[#2454b5]"
                   />
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-extrabold text-[#176451]">
-                        {address.fullName}
+                      <h3 className="font-extrabold text-[#102033]">
+                        {addr.fullName}
                       </h3>
 
-                      <span className="rounded-full bg-[#f7f0df] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#94701a]">
-                        {address.addressType || "Address"}
+                      <span className="rounded-full border border-[#2454b5] bg-white px-2 py-0.5 text-[10px] font-extrabold text-[#2454b5]">
+                        {addr.addressType || "ADDRESS"}
                       </span>
 
-                      {address.isDefault && (
-                        <span className="rounded-full bg-[#e8f2ed] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#176451]">
-                          Default
+                      {addr.isDefault ? (
+                        <span className="rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-extrabold text-green-700">
+                          DEFAULT
                         </span>
-                      )}
+                      ) : null}
 
-                      {selected && (
-                        <CheckCircle2 size={18} className="text-[#176451]" />
-                      )}
+                      {selected ? (
+                        <CheckCircle2 size={17} className="text-[#2454b5]" />
+                      ) : null}
                     </div>
 
-                    <p className="mt-2 text-sm leading-6 text-[#66756f]">
-                      {address.addressLine}
-                      {address.landmark ? `, ${address.landmark}` : ""},{" "}
-                      {address.city}, {address.state} - {address.pincode}
+                    <p className="mt-2 text-sm leading-6 text-[#607287]">
+                      {addr.addressLine}
+                      {addr.landmark ? `, ${addr.landmark}` : ""}, {addr.city},{" "}
+                      {addr.state} - {addr.pincode}
                     </p>
 
-                    <p className="mt-1 text-sm font-bold text-[#44534d]">
-                      Mobile: {address.phone}
-                      {address.altPhone ? ` / ${address.altPhone}` : ""}
+                    <p className="mt-1 text-sm font-bold text-[#334155]">
+                      Mobile: {addr.phone}
+                      {addr.altPhone ? ` / ${addr.altPhone}` : ""}
                     </p>
+
+                    {addr.companyName && (
+                      <p className="mt-1 text-sm font-semibold text-[#102033]">
+                        Company: {addr.companyName}
+                      </p>
+                    )}
+
+                    {addr.gstNumber && (
+                      <p className="mt-1 text-sm font-semibold text-[#2454b5]">
+                        GST: {addr.gstNumber}
+                      </p>
+                    )}
 
                     <div className="mt-4 flex flex-wrap gap-2">
                       <button
                         type="button"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          openEditModal(address);
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(addr);
                         }}
-                        className="inline-flex h-9 items-center gap-2 rounded-full border border-[#d8c9a6] bg-white px-4 text-xs font-bold text-[#176451] transition hover:border-[#176451]"
+                        className="inline-flex h-9 items-center gap-2 rounded-lg border border-[#cbd5e1] bg-white px-4 text-xs font-bold text-[#334155] hover:border-[#2454b5] hover:text-[#2454b5]"
                       >
                         <Pencil size={14} />
                         Edit
                       </button>
 
-                      {!address.isDefault && (
+                      {!addr.isDefault ? (
                         <button
                           type="button"
-                          onClick={(event) => {
-                            event.stopPropagation();
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setDefaultAddress(id);
                           }}
-                          className="h-9 rounded-full border border-[#d8c9a6] bg-white px-4 text-xs font-bold text-[#176451] transition hover:border-[#176451]"
+                          className="h-9 rounded-lg border border-[#cbd5e1] bg-white px-4 text-xs font-bold text-[#334155] hover:border-[#2454b5] hover:text-[#2454b5]"
                         >
                           Make Default
                         </button>
-                      )}
+                      ) : null}
 
                       <button
                         type="button"
-                        onClick={(event) => {
-                          event.stopPropagation();
+                        onClick={(e) => {
+                          e.stopPropagation();
                           deleteAddress(id);
                         }}
-                        className="inline-flex h-9 items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 text-xs font-bold text-red-700 transition hover:bg-red-100"
+                        className="inline-flex h-9 items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 text-xs font-bold text-red-700 hover:bg-red-100"
                       >
                         <Trash2 size={14} />
                         Remove
@@ -252,19 +243,22 @@ export default function AddressSelector() {
         </div>
       )}
 
-      {selectedAddress && (
-        <div className="mt-5 rounded-2xl border border-[#d9c99f] bg-[#fffcf6] p-4">
-          <p className="text-sm font-extrabold text-[#176451]">
+      {selectedAddress ? (
+        <div className="mt-5 rounded-xl border border-[#bfd7f5] bg-[#f8fbff] p-4">
+          <p className="text-sm font-bold text-[#2454b5]">
             Selected delivery address
           </p>
-
-          <p className="mt-1 text-sm leading-6 text-[#66756f]">
-            {selectedAddress.fullName}, {selectedAddress.phone} —{" "}
+          <p className="mt-1 text-sm text-[#334155]">
+            {selectedAddress.fullName}
+            {selectedAddress.companyName
+              ? ` (${selectedAddress.companyName})`
+              : ""}
+            , {selectedAddress.phone}
             {selectedAddress.addressLine}, {selectedAddress.city},{" "}
             {selectedAddress.state} - {selectedAddress.pincode}
           </p>
         </div>
-      )}
+      ) : null}
 
       <AddressFormModal
         open={modalOpen}
