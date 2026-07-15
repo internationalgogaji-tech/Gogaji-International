@@ -2,55 +2,69 @@
 
 import Link from "next/link";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
 
-export default function PromoBannerSection({
-  banners = [],
-}) {
-  if (!banners?.length) return null;
+function getImageUrl(imagePath) {
+  if (!imagePath) return "";
 
-  const count = banners.length;
-
-  let gridClass = "grid-cols-1";
-
-  if (count === 2) {
-    gridClass = "md:grid-cols-2";
+  if (/^https?:\/\//i.test(imagePath)) {
+    return imagePath;
   }
 
-  if (count === 3) {
-    gridClass = "md:grid-cols-3";
+  if (!API_BASE) {
+    console.error(
+      "NEXT_PUBLIC_API_URL is missing. Add it in Vercel Environment Variables.",
+    );
+    return imagePath;
   }
 
-  if (count >= 4) {
-    gridClass = "md:grid-cols-4";
-  }
+  return `${API_BASE}/${String(imagePath).replace(/^\/+/, "")}`;
+}
+
+export default function PromoBannerSection({ banners = [] }) {
+  const activeBanners = banners.filter(
+    (banner) => banner?.active !== false && banner?.desktopImage,
+  );
+
+  if (!activeBanners.length) return null;
+
+  const count = activeBanners.length;
+
+  const gridClass =
+    count === 1
+      ? "grid-cols-1"
+      : count === 2
+        ? "grid-cols-1 md:grid-cols-2"
+        : count === 3
+          ? "grid-cols-1 md:grid-cols-3"
+          : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
 
   return (
-    <section className="w-full py-0 -mb-2">
-      <div className="w-full">
-        <div className={`grid gap-0 ${gridClass}`}>
-          {banners.map((banner, index) => (
+    <section className="w-full py-0">
+      <div className={`grid gap-0 ${gridClass}`}>
+        {activeBanners.map((banner, index) => {
+          const imageUrl = getImageUrl(
+            banner.desktopImage || banner.image,
+          );
+
+          return (
             <Link
               key={banner._id || index}
               href={banner.buttonLink || "/products"}
               className="block overflow-hidden"
             >
               <img
-                src={
-                  banner.desktopImage
-                    ? `${API}${banner.desktopImage}`
-                    : `${API}${banner.image}`
-                }
-                alt={banner.title || "Banner"}
-                className="
-                  w-full
-                  block
-                  object-cover
-                "
+                src={imageUrl}
+                alt={banner.title || "Gogaji International home decor banner"}
+                className="block h-auto w-full object-cover"
+                onError={(event) => {
+                  console.error("Banner failed to load:", imageUrl);
+                  event.currentTarget.style.display = "none";
+                }}
               />
             </Link>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </section>
   );

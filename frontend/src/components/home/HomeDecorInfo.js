@@ -11,7 +11,19 @@ import "swiper/css/navigation";
 
 import { useEffect, useState } from "react";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
+
+function getImageUrl(imagePath) {
+  if (!imagePath) return "";
+
+  if (/^https?:\/\//i.test(imagePath)) {
+    return imagePath;
+  }
+
+  return API
+    ? `${API}/${String(imagePath).replace(/^\/+/, "")}`
+    : imagePath;
+}
 
 export default function HomeDecorInfo() {
     const [data, setData] = useState(null);
@@ -265,11 +277,7 @@ cursor-pointer
                                             </span>
 
                                             <img
-                                                src={
-                                                    item.image?.startsWith("http")
-                                                        ? item.image
-                                                        : `${API}${item.image}`
-                                                }
+                                               src={getImageUrl(item.image)}
                                                 alt={item.title}
                                                 className="
         absolute
@@ -287,11 +295,7 @@ cursor-pointer
 
                                             {item.hoverImage && (
                                                 <img
-                                                    src={
-                                                        item.hoverImage?.startsWith("http")
-                                                            ? item.hoverImage
-                                                            : `${API}${item.hoverImage}`
-                                                    }
+                                                   src={getImageUrl(item.hoverImage)}
                                                     alt={item.title}
                                                     className="
             absolute
