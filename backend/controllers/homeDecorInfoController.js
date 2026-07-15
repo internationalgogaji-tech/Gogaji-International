@@ -7,7 +7,7 @@ exports.getHomeDecorInfo = async (req, res) => {
 
     if (!data) {
       data = await HomeDecorInfo.create({
-        sectionTitle: "Trending & New Launches",
+        sectionTitle: "Trending & ",
         products: [],
       });
     }

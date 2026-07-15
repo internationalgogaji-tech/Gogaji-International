@@ -6,7 +6,7 @@ const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function HomeDecorSectionPage() {
     const [form, setForm] = useState({
-        sectionTitle: "Trending & New Launches",
+        sectionTitle: "Trending &",
         products: [],
     });
 

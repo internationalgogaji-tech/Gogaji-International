@@ -55,7 +55,7 @@ const homeDecorInfoSchema = new mongoose.Schema(
   {
     sectionTitle: {
       type: String,
-      default: "Trending & New Launches",
+      default: "Trending & ",
     },
 
     viewAllText: {
