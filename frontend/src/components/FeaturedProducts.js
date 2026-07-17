@@ -54,7 +54,7 @@ export default function FeaturedProducts() {
         const activeSection = await fetchSection();
 
         const category = activeSection?.categorySlug || "semiconductors";
-        const limit = activeSection?.limit || 8;
+        const limit = activeSection?.limit || 12;
 
         const res = await fetch(
           `${API_BASE}/api/products?category=${encodeURIComponent(
