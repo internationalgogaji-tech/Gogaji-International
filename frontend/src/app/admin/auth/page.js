@@ -166,7 +166,7 @@ export default function AdminAuthPage() {
           </div>
 
           <h1 className="text-lg font-bold">
-            {adminName || "Royal Trading Component"}
+            {adminName || "Gogaji International"}
           </h1>
 
           <p className="text-xs text-slate-300">
