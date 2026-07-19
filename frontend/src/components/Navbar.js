@@ -133,8 +133,6 @@ function resolveCategoryImage(src) {
   return `${API_BASE}${src}`;
 }
 
-
-
 function slugifyCategory(value) {
   return String(value || "")
     .trim()
@@ -186,7 +184,9 @@ function formatCategoryName(value = "") {
   };
 
   const slug = slugifyCategory(value);
-  const compact = String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const compact = String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
 
   if (knownNames[slug]) return knownNames[slug];
   if (knownNames[compact]) return knownNames[compact];
@@ -318,7 +318,7 @@ export default function Navbar() {
   ];
 
   const visibleCategories = categories.slice(0, 5);
-const allCategories = categories;
+  const allCategories = categories;
 
   const wishlistCount = (wishlistItems || []).length;
 
@@ -347,21 +347,21 @@ const allCategories = categories;
   useEffect(() => {
     const fetchNavbarCategories = async () => {
       try {
-const [categoryRes, productRes] = await Promise.all([
-  fetch(`${API_BASE}/api/categories`, {
-    cache: "no-store",
-  }),
-  fetch(`${API_BASE}/api/products?limit=500`, {
-    cache: "no-store",
-  }),
-]);
+        const [categoryRes, productRes] = await Promise.all([
+          fetch(`${API_BASE}/api/categories`, {
+            cache: "no-store",
+          }),
+          fetch(`${API_BASE}/api/products?limit=500`, {
+            cache: "no-store",
+          }),
+        ]);
 
-const categoryData = await categoryRes.json();
-const productData = await productRes.json();
+        const categoryData = await categoryRes.json();
+        const productData = await productRes.json();
 
-if (!categoryData?.success) return;
+        if (!categoryData?.success) return;
 
-const list = (categoryData.categories || [])
+        const list = (categoryData.categories || [])
           .filter((cat) => cat.isActive !== false)
           .sort(
             (a, b) =>
@@ -387,22 +387,24 @@ const list = (categoryData.categories || [])
                 .map((child) => ({
                   ...child,
                   slug: getFixedCategorySlug(child),
-                  href: getChildCategoryHref({ ...main, slug: mainSlug }, child),
+                  href: getChildCategoryHref(
+                    { ...main, slug: mainSlug },
+                    child,
+                  ),
                 })),
             };
           });
 
-       const existingSlugs = new Set(
-  mainCategories.map((item) => getFixedCategorySlug(item)),
-);
+        const existingSlugs = new Set(
+          mainCategories.map((item) => getFixedCategorySlug(item)),
+        );
 
-const productCategories = buildProductCategoryItems(
-  productData?.products || [],
-  existingSlugs,
-);
+        const productCategories = buildProductCategoryItems(
+          productData?.products || [],
+          existingSlugs,
+        );
 
-setCategories([...mainCategories, ...productCategories]);
-
+        setCategories([...mainCategories, ...productCategories]);
       } catch (error) {
         console.error("Navbar category fetch error:", error);
       }
@@ -435,8 +437,8 @@ setCategories([...mainCategories, ...productCategories]);
     <>
       <header className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
         <div className="bg-[#1F5C4A] text-white px-4 py-3 text-center text-sm font-semibold shadow-sm">
-          <span className="text-[#B38B2D]">🚚</span>{" "}
-          Free Shipping on Bulk Orders Above ₹10,000
+          <span className="text-[#B38B2D]">🚚</span> Free Shipping on Bulk
+          Orders Above ₹10,000
         </div>
 
         <div className="mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-8">
@@ -520,13 +522,15 @@ setCategories([...mainCategories, ...productCategories]);
                   <button
                     type="button"
                     onClick={() => setIsAccountMenuOpen((prev) => !prev)}
-                    className="flex h-[46px] items-center gap-2 rounded-full border border-[#BBF7D0] bg-white px-4 text-sm font-semibold text-[#166534] transition hover:border-[#25D366] hover:bg-[#F0FDF4]"                  >
+                    className="flex h-[46px] items-center gap-2 rounded-full border border-[#BBF7D0] bg-white px-4 text-sm font-semibold text-[#166534] transition hover:border-[#25D366] hover:bg-[#F0FDF4]"
+                  >
                     <User size={18} />
                     <span>{shortUserName}</span>
                     <ChevronDown
                       size={16}
-                      className={`transition-transform duration-200 ${isAccountMenuOpen ? "rotate-180" : ""
-                        }`}
+                      className={`transition-transform duration-200 ${
+                        isAccountMenuOpen ? "rotate-180" : ""
+                      }`}
                     />
                   </button>
 
@@ -552,7 +556,8 @@ setCategories([...mainCategories, ...productCategories]);
                               key={item.label}
                               href={item.href}
                               onClick={() => setIsAccountMenuOpen(false)}
-                              className="flex items-center gap-3 px-6 py-3 text-[15px] font-medium text-[#1F2937] transition hover:bg-[#F0FDF4] hover:text-[#16A34A]"                            >
+                              className="flex items-center gap-3 px-6 py-3 text-[15px] font-medium text-[#1F2937] transition hover:bg-[#F0FDF4] hover:text-[#16A34A]"
+                            >
                               <Icon size={18} />
                               <span>{item.label}</span>
                             </Link>
@@ -564,7 +569,8 @@ setCategories([...mainCategories, ...productCategories]);
                         <button
                           type="button"
                           onClick={handleLogout}
-                          className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-[15px] font-semibold text-[#DC2626] transition hover:bg-[#FEF2F2]"                        >
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-[15px] font-semibold text-[#DC2626] transition hover:bg-[#FEF2F2]"
+                        >
                           <LogOut size={18} />
                           Logout
                         </button>
@@ -641,87 +647,104 @@ setCategories([...mainCategories, ...productCategories]);
                   />
                 </button>
 
-                {isSemiconductorMenuOpen ? (
-                  <div className="absolute left-0 top-[64px] z-[999] w-[920px] overflow-hidden rounded-[24px] border border-[#E5E7EB] bg-white shadow-[0_28px_80px_rgba(15,23,42,0.18)]">
-                    <div className="flex items-center justify-between border-b border-[#EEF2F7] bg-[#FAFBF8] px-6 py-5">
-                      <div>
-                        <h2 className="text-[24px] font-black text-[#102033]">
-                          All Categories
-                        </h2>
-                        <p className="mt-1 text-[15px] font-medium text-[#52677d]">
-                          Browse main categories and sub categories.
-                        </p>
-                      </div>
+              {isSemiconductorMenuOpen ? (
+  <div className="absolute left-0 top-[64px] z-[999] w-[min(1120px,calc(100vw-48px))] overflow-hidden rounded-b-2xl border border-[#D7B45B] border-t-4 border-t-[#B38B2D] bg-white shadow-[0_28px_70px_rgba(16,32,51,0.24)]">
+    <div className="flex items-center justify-between bg-gradient-to-r from-[#123E35] via-[#1F5C4A] to-[#2B7861] px-7 py-5">
+      <div>
+        <p className="text-base font-black tracking-[0.08em] text-[#F7D77C]">
+          SHOP BY CATEGORY
+        </p>
+        <p className="mt-1 text-sm font-medium text-white/85">
+          Premium home decor, thoughtfully curated for every space.
+        </p>
+      </div>
 
-                      <Link
-                        href="/products"
-                        className="inline-flex h-11 items-center rounded-full bg-[#1F5C4A] px-5 text-sm font-extrabold text-white shadow-sm transition hover:bg-[#18493B]"
-                      >
-                        View All
-                      </Link>
-                    </div>
+      <Link
+        href="/products"
+        className="rounded-full border border-[#F7D77C]/60 bg-white px-5 py-2.5 text-sm font-extrabold text-[#1F5C4A] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#FFF4D5]"
+      >
+        View all products <span aria-hidden="true">→</span>
+      </Link>
+    </div>
 
-                    <div className="max-h-[540px] overflow-y-auto p-6">
-                      <div className="grid grid-cols-3 gap-3">
-                        {allCategories.map((item) => {
-                          const children = item.children || [];
+    <div className="grid max-h-[520px] grid-cols-2 overflow-y-auto p-4 sm:grid-cols-3 lg:grid-cols-5">
+      {allCategories.map((item, index) => {
+        const children = item.children || [];
+        const hasChildren = children.length > 0;
+        const colourThemes = [
+          { accent: "#1F5C4A", soft: "#EEF8F3", hover: "#DDF1E8" },
+          { accent: "#B7791F", soft: "#FFF8E7", hover: "#FFF0C2" },
+          { accent: "#A74B77", soft: "#FDF0F5", hover: "#F9DCE8" },
+          { accent: "#147D8B", soft: "#ECFAFB", hover: "#D7F1F3" },
+          { accent: "#805A9F", soft: "#F6F0FA", hover: "#ECDDFA" },
+        ];
+        const theme = colourThemes[index % colourThemes.length];
 
-                          return (
-                            <div
-                              key={item._id || item.slug}
-                              className="rounded-2xl border border-[#E5E7EB] bg-[#F8FAFC] p-3 transition hover:border-[#B38B2D]/70 hover:bg-[#FFFDF5]"
-                            >
-                              <Link
-                                href={getCategoryHref(item)}
-                                className="flex min-h-[64px] items-center gap-3"
-                              >
-                                {item.image ? (
-                                  <span className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#E5E7EB] bg-white">
-                                    <img
-                                      src={resolveCategoryImage(item.image)}
-                                      alt={item.iconAlt || item.name}
-                                      className="h-full w-full object-cover"
-                                    />
-                                  </span>
-                                ) : (
-                                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-[#1F5C4A]">
-                                    <Package size={20} />
-                                  </span>
-                                )}
+        return (
+          <div
+            key={item._id || item.slug}
+            className="m-1 min-w-0 rounded-xl border border-transparent px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            style={{ backgroundColor: theme.soft }}
+            onMouseEnter={(event) => {
+              event.currentTarget.style.backgroundColor = theme.hover;
+              event.currentTarget.style.borderColor = `${theme.accent}35`;
+            }}
+            onMouseLeave={(event) => {
+              event.currentTarget.style.backgroundColor = theme.soft;
+              event.currentTarget.style.borderColor = "transparent";
+            }}
+          >
+            <Link
+              href={getCategoryHref(item)}
+              className="group flex items-center gap-1.5 text-[14px] font-black uppercase tracking-[0.025em] transition"
+              style={{ color: theme.accent }}
+            >
+              <span className="truncate">{item.name}</span>
+              <ChevronRight
+                size={14}
+                className="shrink-0 transition-transform group-hover:translate-x-0.5"
+              />
+            </Link>
 
-                                <span className="min-w-0 flex-1 text-[15px] font-black leading-5 text-[#102033]">
-                                  {item.name}
-                                </span>
+            {hasChildren ? (
+              <div className="mt-3 space-y-2">
+                {children.map((child) => (
+                  <Link
+                    key={child._id || child.slug}
+                    href={child.href || getChildCategoryHref(item, child)}
+                    className="block truncate text-[14px] font-semibold leading-5 text-[#334155] transition hover:translate-x-0.5"
+                    onMouseEnter={(event) => {
+                      event.currentTarget.style.color = theme.accent;
+                    }}
+                    onMouseLeave={(event) => {
+                      event.currentTarget.style.color = "#334155";
+                    }}
+                  >
+                    {child.name}
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <Link
+                href={getCategoryHref(item)}
+                className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-[#475569] transition hover:translate-x-0.5"
+                onMouseEnter={(event) => {
+                  event.currentTarget.style.color = theme.accent;
+                }}
+                onMouseLeave={(event) => {
+                  event.currentTarget.style.color = "#475569";
+                }}
+              >
+                Explore collection <ChevronRight size={14} />
+              </Link>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+) : null}
 
-                                <ChevronRight
-                                  size={16}
-                                  className="shrink-0 text-[#94A3B8]"
-                                />
-                              </Link>
-
-                              {children.length > 0 ? (
-                                <div className="mt-3 space-y-1 border-t border-[#E5E7EB] pt-3">
-                                  {children.map((child) => (
-                                    <Link
-                                      key={child._id || child.slug}
-                                      href={
-                                        child.href || getChildCategoryHref(item, child)
-                                      }
-                                      className="flex items-center justify-between rounded-xl px-3 py-2 text-[13px] font-bold text-[#52677d] transition hover:bg-white hover:text-[#1F5C4A]"
-                                    >
-                                      <span className="truncate">{child.name}</span>
-                                      <ChevronRight size={14} />
-                                    </Link>
-                                  ))}
-                                </div>
-                              ) : null}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
               </div>
 
               <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
@@ -793,7 +816,8 @@ setCategories([...mainCategories, ...productCategories]);
                               <Link
                                 key={child._id || child.slug}
                                 href={
-                                  child.href || getChildCategoryHref(item, child)
+                                  child.href ||
+                                  getChildCategoryHref(item, child)
                                 }
                                 className="flex items-center gap-3 px-5 py-3.5 text-[15px] font-bold text-[#26364A] transition hover:bg-[#FFF8E8] hover:text-[#1F5C4A]"
                               >
@@ -961,7 +985,9 @@ setCategories([...mainCategories, ...productCategories]);
                           {item.children.map((child) => (
                             <Link
                               key={child._id || child.slug}
-                              href={child.href || getChildCategoryHref(item, child)}
+                              href={
+                                child.href || getChildCategoryHref(item, child)
+                              }
                               className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold text-[#52677d] transition hover:bg-[#FFF8E8] hover:text-[#1F5C4A]"
                               onClick={() => setMobileOpen(false)}
                             >
