@@ -241,88 +241,8 @@
 
         </div>
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard
-            title="Total Requests"
-            value={quotationStats.totalRequests || 0}
-            icon={FileText}
-            note="BOM quotation requests"
-            onClick={() =>
-              router.push("/admin/total-requests")
-            }
-          />
 
-          <StatCard
-            title="Available Quotations"
-            value={quotationStats.availableRequests || 0}
-            icon={ClipboardCheck}
-            note="Available quotations"
-            onClick={() =>
-              router.push("/admin/available-quotations")
-            }
-          />
-
-          <StatCard
-            title="Quoted Requests"
-            value={quotationStats.quotedRequests || 0}
-            icon={CheckCircle}
-            note="Quoted BOM requests"
-            onClick={() =>
-              router.push("/admin/quoted-requests")
-            }
-          />
-
-          <StatCard
-            title="Closed Orders"
-            value={quotationStats.closedRequests || 0}
-            icon={Clock3}
-            note="Completed requests"
-            onClick={() =>
-              router.push("/admin/closed-orders")
-            }
-          />
-
-          <StatCard
-            title="Today's Requests"
-            value={quotationStats.todayRequests || 0}
-            icon={FileText}
-            note="Today's BOM requests"
-            onClick={() =>
-              router.push("/admin/today-requests")
-            }
-          />
-
-          <StatCard
-            title="Request Calendar"
-            value="Open"
-            icon={BarChart3}
-            note="Month wise request tracking"
-            onClick={() =>
-              router.push("/admin/request-calendar")
-            }
-          />
-
-          <StatCard
-            title="Quotation Revenue"
-            value={`₹ ${Number(
-              quotationStats.totalRevenue || 0
-            ).toLocaleString("en-IN")}`}
-            icon={IndianRupee}
-            note="Total quotation revenue"
-            onClick={() =>
-              router.push("/admin/quotation-revenue")
-            }
-          />
-          <StatCard
-            title="Total Sales"
-            value={`₹ ${Number(stats.totalSales || 0).toLocaleString("en-IN")}`}
-            icon={IndianRupee}
-            note="All order revenue"
-            onClick={() =>
-              router.push("/admin/total-sales")
-            }
-          />
-
-          <StatCard
+           <StatCard
             title="Total Orders"
             value={stats.totalOrders || 0}
             icon={ShoppingCart}
@@ -448,6 +368,88 @@
               router.push("/admin/order-status/cancelled")
             }
           />
+          <StatCard
+            title="Total Requests"
+            value={quotationStats.totalRequests || 0}
+            icon={FileText}
+            note="BOM quotation requests"
+            onClick={() =>
+              router.push("/admin/total-requests")
+            }
+          />
+
+          <StatCard
+            title="Available Quotations"
+            value={quotationStats.availableRequests || 0}
+            icon={ClipboardCheck}
+            note="Available quotations"
+            onClick={() =>
+              router.push("/admin/available-quotations")
+            }
+          />
+
+          <StatCard
+            title="Quoted Requests"
+            value={quotationStats.quotedRequests || 0}
+            icon={CheckCircle}
+            note="Quoted BOM requests"
+            onClick={() =>
+              router.push("/admin/quoted-requests")
+            }
+          />
+
+          <StatCard
+            title="Closed Orders"
+            value={quotationStats.closedRequests || 0}
+            icon={Clock3}
+            note="Completed requests"
+            onClick={() =>
+              router.push("/admin/closed-orders")
+            }
+          />
+
+          <StatCard
+            title="Today's Requests"
+            value={quotationStats.todayRequests || 0}
+            icon={FileText}
+            note="Today's BOM requests"
+            onClick={() =>
+              router.push("/admin/today-requests")
+            }
+          />
+
+          <StatCard
+            title="Request Calendar"
+            value="Open"
+            icon={BarChart3}
+            note="Month wise request tracking"
+            onClick={() =>
+              router.push("/admin/request-calendar")
+            }
+          />
+
+          <StatCard
+            title="Quotation Revenue"
+            value={`₹ ${Number(
+              quotationStats.totalRevenue || 0
+            ).toLocaleString("en-IN")}`}
+            icon={IndianRupee}
+            note="Total quotation revenue"
+            onClick={() =>
+              router.push("/admin/quotation-revenue")
+            }
+          />
+          <StatCard
+            title="Total Sales"
+            value={`₹ ${Number(stats.totalSales || 0).toLocaleString("en-IN")}`}
+            icon={IndianRupee}
+            note="All order revenue"
+            onClick={() =>
+              router.push("/admin/total-sales")
+            }
+          />
+
+         
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
