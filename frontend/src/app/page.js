@@ -9,17 +9,20 @@ import ServiceLinks from "@/components/ServiceLinks";
 import Footer from "@/components/Footer";
 import HomepageBuilderRenderer from "@/components/HomepageBuilderRenderer";
 import TrustBadges from "@/components/home/TrustBadges";
-import SeoIntroSection from "@/components/home/SeoIntroSection";
+
 import BulkOrderCTA from "@/components/home/BulkOrderCTA";
-import IndustriesServed from "@/components/home/IndustriesServed";
+
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import StatsSection from "@/components/home/StatsSection";
 import Testimonials from "@/components/home/Testimonials";
 import LatestBlogs from "@/components/home/LatestBlogs";
 import NewsletterCTA from "@/components/home/NewsletterCTA";
+import HomeSeoFaq from "@/components/HomeSeoFaq";
 
 import PromoBannerSection from "@/components/PromoBannerSection";
 import { getPromoBanners } from "@/lib/promoBannerApi";
+import SignatureCategoryCircles from "@/components/SignatureCategoryCircles";
+
 
 export const metadata = {
   title:
@@ -225,6 +228,9 @@ export default async function HomePage() {
       <HomepageBuilderRenderer />
 
       <FeaturedProducts />
+
+      <SignatureCategoryCircles />
+
       <PromoBannerSection
         banners={afterTrendingProducts}
       />
@@ -236,18 +242,19 @@ export default async function HomePage() {
 
 
 
-      <SeoIntroSection />
+      
       <BulkOrderCTA />
-      <IndustriesServed />
+      <WhyChooseUs />
+     
       <ServiceLinks />
       {/* <BrandStrip /> */}
       <StatsSection />
       <Testimonials />
       <LatestBlogs />
-      <WhyChooseUs />
+      
       <NewsletterCTA />
 
-     <section className="bg-white border-t border-[#B38B2D]/15 py-16">
+     {/* <section className="bg-white border-t border-[#B38B2D]/15 py-16">
   <div className="container-royal">
   <div className="max-w-7xl mx-auto prose prose-lg max-w-none text-[#5A6464]">
 
@@ -514,7 +521,9 @@ hover:shadow-lg
     </div>
 
   </div>
-</section>
+</section> */}
+
+<HomeSeoFaq />
       <PromoBannerSection
         banners={beforeFooter}
       />
