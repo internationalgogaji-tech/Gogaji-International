@@ -23,6 +23,7 @@ import PromoBannerSection from "@/components/PromoBannerSection";
 import { getPromoBanners } from "@/lib/promoBannerApi";
 import SignatureCategoryCircles from "@/components/SignatureCategoryCircles";
 import ClientFeedSection from "@/components/ClientFeedSection";
+import HomeEnquiryWidget from "@/components/HomeEnquiryWidget";
 
 
 export const metadata = {
@@ -529,6 +530,7 @@ hover:shadow-lg
       <PromoBannerSection
         banners={beforeFooter}
       />
+      <HomeEnquiryWidget />
 
       <Footer />
     </div>
