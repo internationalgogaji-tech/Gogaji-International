@@ -624,31 +624,7 @@ export default async function ProductDetailPage({ params }) {
                 </div>
               </div>
 
-              <div className="mt-6">
-                <h3 className="text-[18px] font-extrabold text-[#2452c6]">
-                  Documents & resources
-                </h3>
-
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {technicalDocs.slice(0, 4).map((doc, index) => (
-                    <a
-                      key={`${doc?.label}-${index}`}
-                      href={doc?.url || "#"}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-between rounded-sm border border-slate-200 bg-white px-4 py-4 text-[15px] font-medium text-[#2452c6] transition hover:bg-slate-50"
-                    >
-                      <span className="flex items-center gap-3">
-                        <Download size={18} />
-                        {doc?.label || "Technical Document"}
-                      </span>
-                      <span className="text-xs uppercase text-slate-400">
-                        {doc?.type || "file"}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
+             
             </section>
           </div>
 
@@ -669,24 +645,13 @@ export default async function ProductDetailPage({ params }) {
                     <span className="text-[30px] font-black text-[#1F5C4A]">
                       {formatCurrency(packPriceExGst)}
                     </span>
-                    <span className="text-[15px] text-[#111827]">
-                      {formatCurrency(unitPriceExGst)} Each (In a Pack of{" "}
-                      {product?.moq || 1}) (Exc. GST)
-                    </span>
+                    
                   </div>
                 </div>
 
-                <div>
-                  <div className="flex flex-wrap items-baseline gap-3">
-                    <span className="text-[28px] font-bold text-slate-500">
-                      {formatCurrency(packPriceIncGst)}
-                    </span>
-                    <span className="text-[15px] text-[#111827]">
-                      {formatCurrency(unitPriceIncGst)} Each (In a Pack of{" "}
-                      {product?.moq || 1}) (Inc. GST)
-                    </span>
-                  </div>
-                </div>
+               
+
+
               </div>
 
               <div className="mb-4 rounded-lg border border-green-200 bg-green-50 p-3">
@@ -760,16 +725,7 @@ export default async function ProductDetailPage({ params }) {
                 </div>
               </div>
 
-              <div className="mt-6 border-t border-slate-200 pt-5 text-[15px] leading-7 text-[#111827]">
-                <p>
-                  <span className="font-semibold">Imported by:</span>{" "}
-                  Royal Trading Component Industrial Supplies Pvt. Ltd
-                </p>
-                <p className="mt-1 text-slate-700">
-                  Distribution hub - L63, Office No.IO, 4th Floor, Ansari Road, Darya ganj, delhi Gate,
-                  Delhi, India
-                </p>
-              </div>
+
             </div>
 
             <div className="rounded-[24px] border border-[#B38B2D]/20 bg-white p-6 shadow-md">
@@ -832,243 +788,11 @@ export default async function ProductDetailPage({ params }) {
 
             </div>
 
-            <div className="rounded-sm bg-white p-5 shadow-sm">
-              <h3 className="mb-4 text-[20px] font-extrabold text-[#111827]">
-                Bulk pricing
-              </h3>
-
-              <div className="overflow-hidden rounded-sm border border-slate-200">
-                <table className="w-full text-left">
-                  <thead className="bg-[#fafafa]">
-                    <tr className="text-[17px] font-bold text-[#111827]">
-                      <th className="px-5 py-4">Quantity</th>
-                      <th className="px-5 py-4">Unit price</th>
-                      <th className="px-5 py-4">Per Pack</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bulkRows.map((row, index) => (
-                      <tr
-                        key={index}
-                        className="border-t border-slate-200 text-[16px] text-[#111827]"
-                      >
-                        <td className="px-5 py-4 font-semibold">{row.qty}</td>
-                        <td className="px-5 py-4 font-semibold">
-                          {formatCurrency(row.unitPrice)}
-                        </td>
-                        <td className="px-5 py-4 font-semibold">
-                          {formatCurrency(row.packPrice)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <button
-                type="button"
-                className="inline-flex h-[56px] items-center justify-center border-2 border-[#B38B2D] bg-white px-5 text-[18px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]"
-              >
-                View all in this category
-              </button>
-
-              <button
-                type="button"
-                className="inline-flex h-[56px] items-center justify-center border-2 border-[#B38B2D] bg-white px-5 text-[18px] font-bold text-[#1F5C4A] transition hover:bg-[#FFF8E8]"
-              >
-                Search for similar products
-              </button>
-            </div>
+           
           </div>
         </div>
 
-        <div className="mt-8">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-            <div className="space-y-6">
-              <section className="rounded-sm bg-white p-6 shadow-sm">
-                <h2 className="text-[22px] font-extrabold text-[#111827]">
-                  Technical Document
-                </h2>
-
-                <div className="mt-5 grid gap-3">
-                  {technicalDocs.map((doc, index) => (
-                    <a
-                      key={`${doc?.label}-${index}`}
-                      href={doc?.url || "#"}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-between rounded-sm border border-slate-200 px-4 py-4 text-[16px] font-medium text-[#2452c6] transition hover:bg-slate-50"
-                    >
-                      <span className="flex items-center gap-3">
-                        <Download size={18} />
-                        {doc?.label || "Technical Document"}
-                      </span>
-                      <span className="text-sm uppercase text-slate-400">
-                        {doc?.type || "file"}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </section>
-
-              <section className="rounded-sm bg-white p-6 shadow-sm">
-                <h2 className="text-[22px] font-extrabold text-[#111827]">
-                  Specifications
-                </h2>
-
-                <div className="mt-5 overflow-hidden rounded-sm border border-slate-200">
-                  {specifications.map((item, index) => (
-                    <div
-                      key={`${item?.key}-${index}`}
-                      className="grid grid-cols-2 border-t border-slate-200 first:border-t-0"
-                    >
-                      <div className="bg-white px-5 py-4 text-[17px] text-[#111827]">
-                        {item?.key}
-                      </div>
-                      <div className="bg-white px-5 py-4 text-[17px] text-[#111827]">
-                        {item?.value}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section className="rounded-sm bg-white p-6 shadow-sm">
-                <h2 className="text-[22px] font-extrabold text-[#111827]">
-                  Product details
-                </h2>
-
-                <div className="mt-5 text-[17px] leading-9 text-[#111827]">
-                  <p className="font-bold">{product?.name}</p>
-
-                  <p className="mt-3">
-                    {product?.description ||
-                      product?.shortDescription ||
-                      "Reliable electronic component suitable for industrial, repair, wholesale and project procurement requirements."}
-                  </p>
-
-                  <div className="mt-5 space-y-2">
-                    <p>• Suitable for wholesale and repeat procurement.</p>
-                    <p>• Can be used in industrial, PCB and electronics projects.</p>
-                    <p>• Available in bulk quantity packs.</p>
-                    <p>• Technical sourcing support available on request.</p>
-                  </div>
-                </div>
-              </section>
-
-              {product?.customSections
-                ?.filter((section) => section.isActive !== false)
-                ?.sort((a, b) => Number(a.order || 0) - Number(b.order || 0))
-                ?.map((section, index) => (
-                  <section
-                    key={`${section.title}-${index}`}
-                    className="rounded-sm bg-white p-6 shadow-sm"
-                  >
-                    <h2 className="text-[22px] font-extrabold text-[#111827]">
-                      {section.title}
-                    </h2>
-
-                    {section.image ? (
-                      <img
-                        src={getImageUrl(section.image)}
-                        alt={section.title}
-                        className="mt-5 max-h-[360px] w-full rounded-sm object-contain"
-                      />
-                    ) : null}
-
-                    {section.content ? (
-                      <p className="mt-5 whitespace-pre-line text-[17px] leading-9 text-[#111827]">
-                        {section.content}
-                      </p>
-                    ) : null}
-
-                    {section.buttonText && section.buttonLink ? (
-                      <Link
-                        href={section.buttonLink}
-                        className="mt-5 inline-flex rounded-full bg-[#1F5C4A] px-6 py-3 font-bold text-white transition hover:bg-[#164638]"
-                      >
-                        {section.buttonText}
-                      </Link>
-                    ) : null}
-                  </section>
-                ))}
-
-            </div>
-
-            {similarProducts.length > 0 ? (
-              <section className="lg:col-span-2 rounded-sm bg-white p-6 shadow-sm">
-                <div className="mb-6 flex items-end justify-between gap-4">
-                  <div>
-                    <h2 className="text-[22px] font-extrabold text-[#111827]">
-                      Similar products
-                    </h2>
-                    <p className="mt-2 text-[16px] text-slate-600">
-                      You may also be interested in these related items.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                  {similarProducts.slice(0, 10).map((item) => (
-                    <ProductCard
-                      key={item?._id || item?.slug}
-                      product={item}
-                    />
-                  ))}
-                </div>
-              </section>
-            ) : null}
-          </div>
-
-          <div className="space-y-6">
-            <div className="rounded-sm bg-[#7f0c19] p-6 text-white shadow-sm">
-              <h3 className="text-[18px] font-extrabold uppercase tracking-wide">
-                Royal Procurement Plus
-              </h3>
-
-              <p className="mt-4 text-[30px] font-extrabold leading-tight">
-                Bulk sourcing support
-              </p>
-
-              <p className="mt-3 text-[16px] leading-8 text-white/95">
-                Get quotation, BOM support, technical sourcing assistance and
-                procurement help for semiconductors, connectors, modules and
-                industrial components.
-              </p>
-
-              <ul className="mt-5 space-y-3 text-[16px] leading-7">
-                <li>• Bulk pricing for repeat buyers</li>
-                <li>• Technical document support</li>
-                <li>• Fast quotation for urgent requirements</li>
-              </ul>
-
-              <button
-                type="button"
-                className="mt-6 inline-flex h-[54px] w-full items-center justify-center bg-white px-5 text-[18px] font-bold text-[#111827] transition hover:bg-slate-100"
-              >
-                Click here to find out more
-              </button>
-            </div>
-
-            <div className="rounded-sm bg-white p-6 shadow-sm">
-              <h3 className="text-[20px] font-extrabold text-[#111827]">
-                Need a custom quote?
-              </h3>
-              <p className="mt-3 text-[16px] leading-8 text-slate-600">
-                For OEM, reseller, institution and distributor requirements,
-                request custom pricing based on quantity and delivery schedule.
-              </p>
-
-              <button
-                type="button"
-                className="mt-5 inline-flex h-[52px] w-full items-center justify-center rounded-full bg-[#1F5C4A] px-5 text-[18px] font-bold text-white transition hover:bg-[#164638]"                >
-                Request bulk quotation
-              </button>
-            </div>
-          </div>
-        </div>
+       
       </section>
 
       <section className="rounded-sm bg-white p-8 shadow-sm mt-8">

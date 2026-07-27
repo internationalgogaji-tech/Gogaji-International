@@ -22,6 +22,7 @@ import HomeSeoFaq from "@/components/HomeSeoFaq";
 import PromoBannerSection from "@/components/PromoBannerSection";
 import { getPromoBanners } from "@/lib/promoBannerApi";
 import SignatureCategoryCircles from "@/components/SignatureCategoryCircles";
+import ClientFeedSection from "@/components/ClientFeedSection";
 
 
 export const metadata = {
@@ -239,6 +240,7 @@ export default async function HomePage() {
         banners={afterProducts}
       />
 
+<ClientFeedSection limit={20} />
 
 
 

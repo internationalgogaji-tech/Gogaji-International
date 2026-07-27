@@ -29,6 +29,7 @@ import {
   Truck,
   X,
   ShieldCheck,
+  Video,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -103,6 +104,11 @@ const navItems = [
     href: "/admin/hero-banners",
     icon: ImagePlus,
   },
+  {
+  title: "Client Feed",
+  href: "/admin/client-feed",
+  icon: Video,
+},
 
   { title: "Inventory", href: "/admin/inventory", icon: Boxes },
   {

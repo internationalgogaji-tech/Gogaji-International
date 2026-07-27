@@ -104,7 +104,7 @@ export default function SignatureCategoryCircles() {
               {visibleCategories.map((category) => (
                 <Link
                   key={category._id || category.slug}
-                  href={`/category/${category.slug}`}
+                  href={`/products?category=${encodeURIComponent(category.slug)}`}
                   style={{ "--desktop-circle-width": desktopCircleWidth }}
                   className="group w-[160px] shrink-0 snap-start text-center sm:w-[185px] md:w-[215px] lg:w-[var(--desktop-circle-width)]"
                 >

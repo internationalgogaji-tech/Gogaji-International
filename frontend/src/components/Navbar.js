@@ -22,6 +22,8 @@ import {
   BookOpen,
   FileText,
   Grid3X3,
+
+  Video,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LoginModal from "@/app/authPage/LoginModel";
@@ -252,6 +254,19 @@ function getChildCategoryHref(parent, child) {
   )}&subCategory=${encodeURIComponent(childSlug)}`;
 }
 
+const socialLinks = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/gogaji_international?igsh=MTZqZHl5eWkzaXhwcw%3D%3D&utm_source=qr",
+    icon: "📸",
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/share/1D94PEoY4j/?mibextid=wwXIfr",
+    icon: "f",
+  },
+];
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -436,9 +451,54 @@ export default function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
-        <div className="bg-[#1F5C4A] text-white px-4 py-3 text-center text-sm font-semibold shadow-sm">
-          <span className="text-[#B38B2D]">🚚</span> Free Shipping on Bulk
-          Orders Above ₹10,000
+
+
+
+        <div className="bg-[#1F5C4A] text-white shadow-sm">
+          <div className="relative mx-auto w-full max-w-[1500px] px-4 py-3 sm:px-6 lg:px-8">
+            {/* Exact center */}
+            <p className="w-full text-center text-xs font-bold sm:text-sm">
+              <span className="mr-1 text-[#F7D77C]" aria-hidden="true">🚚</span>
+              Free Shipping on Bulk Orders Above ₹10,000
+            </p>
+
+            {/* Right-side links */}
+            <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-2 text-xs font-bold sm:right-6 sm:gap-4 sm:text-sm lg:right-8">
+              {socialLinks.map(({ label, href, icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={label}
+                  aria-label={`Visit Gogaji on ${label}`}
+                  className="inline-flex h-7 w-7 items-center justify-center rounded-full text-base transition hover:bg-white/15"
+                >
+                  <span className={label === "Facebook" ? "font-black" : ""}>
+                    {icon}
+                  </span>
+                </a>
+              ))}
+
+              <span className="hidden h-4 w-px bg-white/35 sm:block" />
+
+              <Link
+                href="/client-feed"
+                className="inline-flex items-center gap-1.5 transition hover:text-[#F7D77C]"
+              >
+                <Video size={16} />
+                <span className="hidden sm:inline">Client Feed</span>
+              </Link>
+
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-1.5 transition hover:text-[#F7D77C]"
+              >
+                <Phone size={16} />
+                <span className="hidden sm:inline">Contact Us</span>
+              </Link>
+            </div>
+          </div>
         </div>
 
         <div className="mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-8">
@@ -528,9 +588,8 @@ export default function Navbar() {
                     <span>{shortUserName}</span>
                     <ChevronDown
                       size={16}
-                      className={`transition-transform duration-200 ${
-                        isAccountMenuOpen ? "rotate-180" : ""
-                      }`}
+                      className={`transition-transform duration-200 ${isAccountMenuOpen ? "rotate-180" : ""
+                        }`}
                     />
                   </button>
 
@@ -641,109 +700,108 @@ export default function Navbar() {
                   All Categories
                   <ChevronDown
                     size={16}
-                    className={`transition-transform duration-200 ${
-                      isSemiconductorMenuOpen ? "rotate-180" : ""
-                    }`}
+                    className={`transition-transform duration-200 ${isSemiconductorMenuOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
-              {isSemiconductorMenuOpen ? (
-  <div className="absolute left-0 top-[64px] z-[999] w-[min(1120px,calc(100vw-48px))] overflow-hidden rounded-b-2xl border border-[#D7B45B] border-t-4 border-t-[#B38B2D] bg-white shadow-[0_28px_70px_rgba(16,32,51,0.24)]">
-    <div className="flex items-center justify-between bg-gradient-to-r from-[#123E35] via-[#1F5C4A] to-[#2B7861] px-7 py-5">
-      <div>
-        <p className="text-base font-black tracking-[0.08em] text-[#F7D77C]">
-          SHOP BY CATEGORY
-        </p>
-        <p className="mt-1 text-sm font-medium text-white/85">
-          Premium home decor, thoughtfully curated for every space.
-        </p>
-      </div>
+                {isSemiconductorMenuOpen ? (
+                  <div className="absolute left-0 top-[64px] z-[999] w-[min(1120px,calc(100vw-48px))] overflow-hidden rounded-b-2xl border border-[#D7B45B] border-t-4 border-t-[#B38B2D] bg-white shadow-[0_28px_70px_rgba(16,32,51,0.24)]">
+                    <div className="flex items-center justify-between bg-gradient-to-r from-[#123E35] via-[#1F5C4A] to-[#2B7861] px-7 py-5">
+                      <div>
+                        <p className="text-base font-black tracking-[0.08em] text-[#F7D77C]">
+                          SHOP BY CATEGORY
+                        </p>
+                        <p className="mt-1 text-sm font-medium text-white/85">
+                          Premium home decor, thoughtfully curated for every space.
+                        </p>
+                      </div>
 
-      <Link
-        href="/products"
-        className="rounded-full border border-[#F7D77C]/60 bg-white px-5 py-2.5 text-sm font-extrabold text-[#1F5C4A] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#FFF4D5]"
-      >
-        View all products <span aria-hidden="true">→</span>
-      </Link>
-    </div>
+                      <Link
+                        href="/products"
+                        className="rounded-full border border-[#F7D77C]/60 bg-white px-5 py-2.5 text-sm font-extrabold text-[#1F5C4A] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#FFF4D5]"
+                      >
+                        View all products <span aria-hidden="true">→</span>
+                      </Link>
+                    </div>
 
-    <div className="grid max-h-[520px] grid-cols-2 overflow-y-auto p-4 sm:grid-cols-3 lg:grid-cols-5">
-      {allCategories.map((item, index) => {
-        const children = item.children || [];
-        const hasChildren = children.length > 0;
-        const colourThemes = [
-          { accent: "#1F5C4A", soft: "#EEF8F3", hover: "#DDF1E8" },
-          { accent: "#B7791F", soft: "#FFF8E7", hover: "#FFF0C2" },
-          { accent: "#A74B77", soft: "#FDF0F5", hover: "#F9DCE8" },
-          { accent: "#147D8B", soft: "#ECFAFB", hover: "#D7F1F3" },
-          { accent: "#805A9F", soft: "#F6F0FA", hover: "#ECDDFA" },
-        ];
-        const theme = colourThemes[index % colourThemes.length];
+                    <div className="grid max-h-[520px] grid-cols-2 overflow-y-auto p-4 sm:grid-cols-3 lg:grid-cols-5">
+                      {allCategories.map((item, index) => {
+                        const children = item.children || [];
+                        const hasChildren = children.length > 0;
+                        const colourThemes = [
+                          { accent: "#1F5C4A", soft: "#EEF8F3", hover: "#DDF1E8" },
+                          { accent: "#B7791F", soft: "#FFF8E7", hover: "#FFF0C2" },
+                          { accent: "#A74B77", soft: "#FDF0F5", hover: "#F9DCE8" },
+                          { accent: "#147D8B", soft: "#ECFAFB", hover: "#D7F1F3" },
+                          { accent: "#805A9F", soft: "#F6F0FA", hover: "#ECDDFA" },
+                        ];
+                        const theme = colourThemes[index % colourThemes.length];
 
-        return (
-          <div
-            key={item._id || item.slug}
-            className="m-1 min-w-0 rounded-xl border border-transparent px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
-            style={{ backgroundColor: theme.soft }}
-            onMouseEnter={(event) => {
-              event.currentTarget.style.backgroundColor = theme.hover;
-              event.currentTarget.style.borderColor = `${theme.accent}35`;
-            }}
-            onMouseLeave={(event) => {
-              event.currentTarget.style.backgroundColor = theme.soft;
-              event.currentTarget.style.borderColor = "transparent";
-            }}
-          >
-            <Link
-              href={getCategoryHref(item)}
-              className="group flex items-center gap-1.5 text-[14px] font-black uppercase tracking-[0.025em] transition"
-              style={{ color: theme.accent }}
-            >
-              <span className="truncate">{item.name}</span>
-              <ChevronRight
-                size={14}
-                className="shrink-0 transition-transform group-hover:translate-x-0.5"
-              />
-            </Link>
+                        return (
+                          <div
+                            key={item._id || item.slug}
+                            className="m-1 min-w-0 rounded-xl border border-transparent px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                            style={{ backgroundColor: theme.soft }}
+                            onMouseEnter={(event) => {
+                              event.currentTarget.style.backgroundColor = theme.hover;
+                              event.currentTarget.style.borderColor = `${theme.accent}35`;
+                            }}
+                            onMouseLeave={(event) => {
+                              event.currentTarget.style.backgroundColor = theme.soft;
+                              event.currentTarget.style.borderColor = "transparent";
+                            }}
+                          >
+                            <Link
+                              href={getCategoryHref(item)}
+                              className="group flex items-center gap-1.5 text-[14px] font-black uppercase tracking-[0.025em] transition"
+                              style={{ color: theme.accent }}
+                            >
+                              <span className="truncate">{item.name}</span>
+                              <ChevronRight
+                                size={14}
+                                className="shrink-0 transition-transform group-hover:translate-x-0.5"
+                              />
+                            </Link>
 
-            {hasChildren ? (
-              <div className="mt-3 space-y-2">
-                {children.map((child) => (
-                  <Link
-                    key={child._id || child.slug}
-                    href={child.href || getChildCategoryHref(item, child)}
-                    className="block truncate text-[14px] font-semibold leading-5 text-[#334155] transition hover:translate-x-0.5"
-                    onMouseEnter={(event) => {
-                      event.currentTarget.style.color = theme.accent;
-                    }}
-                    onMouseLeave={(event) => {
-                      event.currentTarget.style.color = "#334155";
-                    }}
-                  >
-                    {child.name}
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <Link
-                href={getCategoryHref(item)}
-                className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-[#475569] transition hover:translate-x-0.5"
-                onMouseEnter={(event) => {
-                  event.currentTarget.style.color = theme.accent;
-                }}
-                onMouseLeave={(event) => {
-                  event.currentTarget.style.color = "#475569";
-                }}
-              >
-                Explore collection <ChevronRight size={14} />
-              </Link>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  </div>
-) : null}
+                            {hasChildren ? (
+                              <div className="mt-3 space-y-2">
+                                {children.map((child) => (
+                                  <Link
+                                    key={child._id || child.slug}
+                                    href={child.href || getChildCategoryHref(item, child)}
+                                    className="block truncate text-[14px] font-semibold leading-5 text-[#334155] transition hover:translate-x-0.5"
+                                    onMouseEnter={(event) => {
+                                      event.currentTarget.style.color = theme.accent;
+                                    }}
+                                    onMouseLeave={(event) => {
+                                      event.currentTarget.style.color = "#334155";
+                                    }}
+                                  >
+                                    {child.name}
+                                  </Link>
+                                ))}
+                              </div>
+                            ) : (
+                              <Link
+                                href={getCategoryHref(item)}
+                                className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-[#475569] transition hover:translate-x-0.5"
+                                onMouseEnter={(event) => {
+                                  event.currentTarget.style.color = theme.accent;
+                                }}
+                                onMouseLeave={(event) => {
+                                  event.currentTarget.style.color = "#475569";
+                                }}
+                              >
+                                Explore collection <ChevronRight size={14} />
+                              </Link>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
 
               </div>
 
@@ -761,11 +819,10 @@ export default function Navbar() {
                     >
                       <Link
                         href={getCategoryHref(item)}
-                        className={`relative inline-flex h-[54px] items-center gap-3 rounded-2xl border px-3.5 pr-4 text-[15px] font-extrabold transition-all duration-200 ${
-                          isActive
+                        className={`relative inline-flex h-[54px] items-center gap-3 rounded-2xl border px-3.5 pr-4 text-[15px] font-extrabold transition-all duration-200 ${isActive
                             ? "border-[#B38B2D] bg-[#FFF8E8] text-[#1F5C4A] shadow-sm"
                             : "border-[#E5E7EB] bg-[#FCFFFC] text-[#24364B] hover:border-[#B38B2D]/70 hover:bg-[#FFFDF5] hover:text-[#1F5C4A]"
-                        }`}
+                          }`}
                       >
                         {item.image ? (
                           <span className="relative h-10 w-10 overflow-hidden rounded-xl border border-[#E5E7EB] bg-white shadow-sm">
@@ -783,18 +840,16 @@ export default function Navbar() {
 
                         {hasChildren ? (
                           <span
-                            className={`ml-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border transition ${
-                              isActive
+                            className={`ml-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border transition ${isActive
                                 ? "border-[#B38B2D] bg-white text-[#B38B2D]"
                                 : "border-[#D8E1EC] bg-white text-[#64748B] group-hover:border-[#B38B2D] group-hover:text-[#B38B2D]"
-                            }`}
+                              }`}
                             title="Sub categories"
                           >
                             <ChevronDown
                               size={15}
-                              className={`transition-transform duration-200 ${
-                                isActive ? "rotate-180" : ""
-                              }`}
+                              className={`transition-transform duration-200 ${isActive ? "rotate-180" : ""
+                                }`}
                             />
                           </span>
                         ) : null}

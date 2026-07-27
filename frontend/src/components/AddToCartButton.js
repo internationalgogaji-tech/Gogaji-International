@@ -213,9 +213,7 @@ Agar aapko aur quantity chahiye to BOM Request bhejna chahenge?`
         </button>
       </div>
 
-      <p className="mt-2 text-sm font-medium text-[#607287]">
-        Tip: 500+ qty par coupon apply ho sakta hai
-      </p>
+     
     </div>
   );
 }

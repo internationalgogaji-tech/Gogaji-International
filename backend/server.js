@@ -19,6 +19,8 @@ const blogUploadRoutes = require("./routes/blogUploadRoutes");
 const blogPageSettingRoutes = require("./routes/blogPageSettingRoutes");
 const homeDecorInfoRoutes = require("./routes/homeDecorInfoRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
+const clientFeedRoutes = require("./routes/clientFeedRoutes");
+
 
 dotenv.config();
 
@@ -173,6 +175,7 @@ app.use("/api/blog-upload", blogUploadRoutes);
 app.use("/api/blog-page-setting", blogPageSettingRoutes);
 app.use("/api/promo-banners", require("./routes/promoBannerRoutes"));
 app.use("/api/homepage-builder", require("./routes/homepageBuilderRoutes"));
+app.use("/api/client-feed", clientFeedRoutes);
 
 
 app.use((req, res) => {

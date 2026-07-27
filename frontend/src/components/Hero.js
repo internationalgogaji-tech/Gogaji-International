@@ -264,21 +264,21 @@ export default function Hero() {
             </span>
           </h1>
 
-          <div className="mt-3 text-[16px] font-bold sm:text-[18px] md:text-[20px]">
+          {/* <div className="mt-3 text-[16px] font-bold sm:text-[18px] md:text-[20px]">
             <span className="text-[#0f172a]">We supply </span>
             <span className="inline-block text-[#25D366]">
               {typedItem}
             </span>
-          </div>
+          </div> */}
 
-          <div className="mt-2 text-[13px] font-semibold text-[#B38B2D] sm:text-[14px]">
+          {/* <div className="mt-2 text-[13px] font-semibold text-[#B38B2D] sm:text-[14px]">
             Luxury Home Decor • Stylish Living • Premium Collection
-          </div>
+          </div> */}
 
-          <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[#2F3A3A] sm:text-[15px] md:text-[16px]">
+          {/* <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[#2F3A3A] sm:text-[15px] md:text-[16px]">
             {activeSlide?.description ||
               "Discover premium home decor products, elegant planters, decorative accents, candle holders and luxury styling pieces with reliable bulk supply support."}
-          </p>
+          </p> */}
 
           <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
             {/* Primary Button */}

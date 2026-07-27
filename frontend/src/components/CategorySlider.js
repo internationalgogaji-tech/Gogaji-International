@@ -121,8 +121,8 @@ export default function CategorySlider() {
         >
           {visibleCategories.map((cat) => (
             <Link
-              key={cat._id}
-              href={`/category/${cat.slug}`}
+              key={cat._id || cat.slug}
+              href={`/products?category=${encodeURIComponent(cat.slug)}`}
               style={{ "--desktop-card-width": desktopCardWidth }}
               className="group relative h-[290px] w-[82vw] shrink-0 snap-start overflow-hidden rounded-2xl border border-[#B38B2D]/15 shadow-sm transition-shadow hover:shadow-xl sm:w-[310px] md:h-[400px] lg:h-[480px] lg:w-[var(--desktop-card-width)]"
             >

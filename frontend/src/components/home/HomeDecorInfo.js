@@ -261,10 +261,7 @@ export default function HomeDecorInfo() {
                                             ) : null}
                                         </div>
 
-                                        <div className="mt-5 space-y-1.5 text-sm font-semibold">
-                                            <p className="text-[#23814e]">✓ Ready Stock</p>
-                                            <p className="text-[#60756a]">✓ Carefully packed & delivered</p>
-                                        </div>
+                                        
 
                                         <div className="mt-auto pt-6">
                                             <div className="relative overflow-hidden rounded-2xl bg-[#bd9228] px-4 py-3.5 text-center text-[15px] font-extrabold text-white shadow-[0_8px_18px_rgba(189,146,40,0.24)] transition group-hover:bg-[#a97e1f]">
