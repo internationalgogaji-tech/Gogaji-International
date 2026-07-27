@@ -1,67 +1,130 @@
 const mongoose = require("mongoose");
 
+/* =========================================================
+   CONTACT CARD
+   ========================================================= */
+
 const contactCardSchema = new mongoose.Schema(
   {
-    title: { type: String, trim: true },
-    value: { type: String, trim: true },
-    subText: { type: String, trim: true },
-    icon: { type: String, default: "phone" },
-    link: { type: String, trim: true },
-    isActive: { type: Boolean, default: true },
-    order: { type: Number, default: 0 },
+    title: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    value: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    subText: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    /*
+      Supported examples:
+      phone
+      mail
+      whatsapp
+      map-pin
+      clock
+    */
+    icon: {
+      type: String,
+      trim: true,
+      default: "phone",
+    },
+
+    link: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+
+    order: {
+      type: Number,
+      default: 0,
+    },
   },
-  { _id: true }
+  {
+    _id: true,
+  }
 );
+
+/* =========================================================
+   CONTACT PAGE
+   ========================================================= */
 
 const ContactPageSchema = new mongoose.Schema(
   {
+    /* =========================
+       HERO SECTION
+       ========================= */
+
     heroTitle: {
       type: String,
-      default: "Contact Royal Component",
+      default: "We’d Love to Hear From You",
       trim: true,
     },
 
     heroSubtitle: {
       type: String,
       default:
-        "Need help with industrial components, bulk quotation, GST invoice, datasheet, payment proof or order tracking? Our support team is ready to assist you.",
+        "Whether you need help choosing the perfect home decor piece, have a question about your order, or want to discuss bulk gifting, the Gogaji International team is here to help.",
       trim: true,
     },
 
+    /* =========================
+       SUPPORT SECTION
+       ========================= */
+
     supportTitle: {
       type: String,
-      default: "Industrial Procurement Support",
+      default: "Let’s Make Your Space Beautiful",
       trim: true,
     },
 
     supportDescription: {
       type: String,
       default:
-        "Share your part number, SKU, MPN, quantity, delivery location or payment details and our team will help you with the right solution.",
+        "Looking for elegant decor for your home, festive styling, pooja essentials, gifting solutions or bulk orders? Share your requirements with us and our team will help you find the right collection.",
       trim: true,
     },
 
+    /* =========================
+       PRIMARY CONTACT DETAILS
+       ========================= */
+
     email: {
       type: String,
-      default: "support@royalsmd.com",
+      default: "gogaji.internationalmbd@gmail.com",
       trim: true,
+      lowercase: true,
     },
 
     phone: {
       type: String,
-      default: "+91 00000 00000",
+      default: "+91 73517 67928",
       trim: true,
     },
 
     whatsapp: {
       type: String,
-      default: "+91 00000 00000",
+      default: "+91 73517 67928",
       trim: true,
     },
 
     address: {
       type: String,
-      default: "Royal Component, India",
+      default: "Gogaji International, Moradabad, Uttar Pradesh, India",
       trim: true,
     },
 
@@ -77,64 +140,125 @@ const ContactPageSchema = new mongoose.Schema(
       trim: true,
     },
 
+    /* =========================
+       CONTACT CARDS
+       ========================= */
+
     cards: {
       type: [contactCardSchema],
+
       default: [
         {
-          title: "Call Support",
-          value: "+91 00000 00000",
-          subText: "For order, dispatch and product support",
+          title: "Call Us",
+          value: "+91 73517 67928",
+          subText:
+            "Talk to our team for product, order and collection assistance.",
           icon: "phone",
-          link: "tel:+910000000000",
+          link: "tel:+917351767928",
+          isActive: true,
           order: 1,
         },
+
         {
-          title: "Email Support",
-          value: "support@royalsmd.com",
-          subText: "Send SKU, MPN, quantity or payment proof",
+          title: "Email Us",
+          value: "gogaji.internationalmbd@gmail.com",
+          subText:
+            "Send us your product enquiry, order query or bulk requirement.",
           icon: "mail",
-          link: "mailto:support@royalsmd.com",
+          link: "mailto:gogaji.internationalmbd@gmail.com",
+          isActive: true,
           order: 2,
         },
+
         {
-          title: "WhatsApp",
-          value: "+91 00000 00000",
-          subText: "Quick help for quotation and tracking",
+          title: "Chat on WhatsApp",
+          value: "+91 73517 67928",
+          subText:
+            "Get quick assistance for products, gifting and order support.",
           icon: "whatsapp",
-          link: "https://wa.me/910000000000",
+          link: "https://wa.me/917351767928",
+          isActive: true,
           order: 3,
+        },
+
+        {
+          title: "Visit Us",
+          value: "Moradabad, Uttar Pradesh, India",
+          subText:
+            "Connect with Gogaji International for premium home decor and gifting.",
+          icon: "map-pin",
+          link: "",
+          isActive: true,
+          order: 4,
+        },
+
+        {
+          title: "Business Hours",
+          value: "10:00 AM - 7:00 PM",
+          subText: "Monday to Saturday",
+          icon: "clock",
+          link: "",
+          isActive: true,
+          order: 5,
         },
       ],
     },
 
+    /* =========================
+       SEO
+       ========================= */
+
     seo: {
       metaTitle: {
         type: String,
-        default: "Contact Royal Component | Industrial Components Support",
+        trim: true,
+        default:
+          "Contact Gogaji International | Home Decor & Gifting Support",
       },
+
       metaDescription: {
         type: String,
+        trim: true,
         default:
-          "Contact Royal Component for bulk electronic components, industrial hardware, GST invoice, datasheet, payment proof and order support.",
+          "Contact Gogaji International for premium home decor, pooja essentials, decorative accessories, gifting solutions, bulk orders and customer support.",
       },
+
       metaKeywords: {
         type: [String],
+
         default: [
-          "Royal Component contact",
-          "industrial components support",
-          "bulk electronic components",
-          "GST invoice support",
+          "Gogaji International contact",
+          "Gogaji International home decor",
+          "home decor customer support",
+          "home decor Moradabad",
+          "premium home decor India",
+          "home decor gifting",
+          "corporate gifting India",
+          "bulk gifting supplier",
+          "pooja decor India",
+          "decorative accessories India",
         ],
       },
     },
+
+    /* =========================
+       PAGE STATUS
+       ========================= */
 
     isActive: {
       type: Boolean,
       default: true,
     },
   },
-  { timestamps: true }
+
+  {
+    timestamps: true,
+  }
 );
+
+/* =========================================================
+   MODEL
+   ========================================================= */
 
 module.exports =
   mongoose.models.ContactPage ||

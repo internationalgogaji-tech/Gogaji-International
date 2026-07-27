@@ -209,7 +209,7 @@ export default function AdminContactPage() {
               icon={Phone}
               value={form.phone}
               onChange={(v) => updateField("phone", v)}
-              placeholder="+91 98765 43210"
+              placeholder="+91 73517 67928"
             />
 
             <Input
@@ -217,7 +217,7 @@ export default function AdminContactPage() {
               icon={Mail}
               value={form.email}
               onChange={(v) => updateField("email", v)}
-              placeholder="support@royalsmd.com"
+              placeholder="gogaji.internationalmbd@gmail.com"
             />
 
             <Input
@@ -225,7 +225,7 @@ export default function AdminContactPage() {
               icon={MessageCircle}
               value={form.whatsapp}
               onChange={(v) => updateField("whatsapp", v)}
-              placeholder="+91 98765 43210"
+              placeholder="+91 73517 67928"
             />
 
             <Input

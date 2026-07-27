@@ -7,16 +7,18 @@ import {
   MapPin,
   Clock,
   MessageCircle,
-  FileText,
   PackageSearch,
   ShieldCheck,
   Truck,
   Headphones,
-  Cpu,
-  CreditCard,
+  Gift,
   Building2,
   CheckCircle2,
   ArrowRight,
+  Sparkles,
+  Heart,
+  Home,
+  Palette,
 } from "lucide-react";
 
 async function getContactPage() {
@@ -25,9 +27,15 @@ async function getContactPage() {
       cache: "no-store",
     });
 
+    if (!res.ok) {
+      return null;
+    }
+
     const data = await res.json();
+
     return data?.page || null;
-  } catch {
+  } catch (error) {
+    console.error("Contact page fetch error:", error);
     return null;
   }
 }
@@ -36,20 +44,31 @@ function getIcon(icon) {
   switch (icon) {
     case "mail":
       return Mail;
+
     case "whatsapp":
       return MessageCircle;
+
     case "map":
       return MapPin;
+
     case "clock":
       return Clock;
+
     case "truck":
       return Truck;
-    case "file":
-      return FileText;
-    case "cpu":
-      return Cpu;
-    case "payment":
-      return CreditCard;
+
+    case "gift":
+      return Gift;
+
+    case "home":
+      return Home;
+
+    case "building":
+      return Building2;
+
+    case "package":
+      return PackageSearch;
+
     default:
       return Phone;
   }
@@ -61,38 +80,37 @@ export async function generateMetadata() {
   return {
     title:
       page?.seo?.metaTitle ||
-      "Contact Royal Component | Industrial Electronic Components, Bulk Orders & GST Support",
+      "Contact Gogaji International | Premium Home Decor & Gifting",
+
     description:
       page?.seo?.metaDescription ||
-      "Contact Royal Component for industrial electronic components, semiconductors, bulk quotation, MOQ, datasheet, GST invoice, payment proof, order tracking and procurement support.",
+      "Contact Gogaji International for premium home decor, planters, vases, pooja decor, gifting, bulk orders, hotel decor, corporate gifting and interior styling enquiries.",
+
     keywords:
       page?.seo?.metaKeywords || [
-        "Royal Component contact",
-        "Royal Trading contact",
-        "industrial components supplier India",
-        "electronic components bulk order",
-        "semiconductor supplier India",
-        "GST invoice support",
-        "datasheet support",
-        "industrial procurement support",
+        "Gogaji International",
+        "Gogaji International contact",
+        "premium home decor India",
+        "luxury home decor",
+        "home decor supplier India",
+        "bulk home decor",
+        "corporate gifting India",
+        "hotel decor supplier",
+        "planters and vases",
+        "pooja decor",
+        "decorative accessories",
       ],
   };
 }
 
-
 function generateLocalBusinessSchema(page) {
   return {
     "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
 
-    "@type": "LocalBusiness",
+    name: "Gogaji International",
 
-    name: "Royal Trading Component",
-
-    image: "https://www.royalsmd.com/logo.png",
-
-    "@id": "https://www.royalsmd.com",
-
-    url: "https://www.royalsmd.com",
+    url: "https://www.gogajiinternational.com/",
 
     telephone: page?.phone || "",
 
@@ -100,24 +118,8 @@ function generateLocalBusinessSchema(page) {
 
     address: {
       "@type": "PostalAddress",
-
       streetAddress: page?.address || "",
-
-      addressLocality: "Delhi",
-
-      addressRegion: "Delhi",
-
-      postalCode: "110059",
-
       addressCountry: "IN",
-    },
-
-    geo: {
-      "@type": "GeoCoordinates",
-
-      latitude: "28.6219",
-
-      longitude: "77.0555",
     },
 
     openingHoursSpecification: [
@@ -134,42 +136,31 @@ function generateLocalBusinessSchema(page) {
         ],
 
         opens: "10:00",
-
         closes: "19:00",
       },
     ],
 
-    sameAs: [
-      "https://www.facebook.com/",
-      "https://www.instagram.com/",
-      "https://www.linkedin.com/",
-    ],
-
     priceRange: "₹₹",
 
-    areaServed: [
-      "Delhi",
-      "Noida",
-      "Gurugram",
-      "India",
-    ],
+    areaServed: "India",
 
     description:
-      "Royal Trading Component is a trusted electronic components supplier in Delhi India offering semiconductors, ICs, industrial electronics and wholesale procurement support.",
+      "Gogaji International offers premium home decor, decorative accessories, planters, vases, pooja decor, gifting collections and bulk decor solutions.",
   };
 }
+
 export default async function ContactPage() {
   const page = await getContactPage();
 
-  const localBusinessSchema =
-    generateLocalBusinessSchema(page);
+  const localBusinessSchema = generateLocalBusinessSchema(page);
 
   const cards =
-    page?.cards?.filter((c) => c.isActive)?.sort((a, b) => a.order - b.order) ||
-    [];
+    page?.cards
+      ?.filter((card) => card?.isActive)
+      ?.sort((a, b) => (a.order || 0) - (b.order || 0)) || [];
 
   return (
-    <div className="min-h-screen bg-[#f3f8fd]">
+    <div className="min-h-screen bg-[#FFFCF6]">
       <Navbar />
 
       <script
@@ -180,113 +171,183 @@ export default async function ContactPage() {
       />
 
       <main>
-        <section className="relative overflow-hidden border-b border-sky-100 bg-gradient-to-br from-sky-50 via-white to-blue-50">
-          <div className="absolute right-0 top-0 h-[420px] w-[420px] rounded-full bg-sky-200/30 blur-[90px]" />
-          <div className="absolute bottom-0 left-0 h-[320px] w-[320px] rounded-full bg-blue-100/60 blur-[80px]" />
+        {/* =========================================================
+            HERO
+        ========================================================= */}
 
-          <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-20">
+        <section className="relative overflow-hidden border-b border-[#E9DFC8] bg-[#FBF7EE]">
+          {/* Decorative background */}
+          <div className="pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full border-[70px] border-[#B38B2D]/5" />
+
+          <div className="pointer-events-none absolute -bottom-40 -left-40 h-[440px] w-[440px] rounded-full bg-[#1F5C4A]/5" />
+
+          <div className="relative mx-auto grid max-w-[1500px] gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:px-8 lg:py-24">
+            {/* LEFT */}
             <div>
-              <p className="mb-4 text-xs font-black uppercase tracking-[0.28em] text-sky-600">
-                Contact Support
-              </p>
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#B38B2D]/25 bg-[#FFF9EB] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-[#A77A12]">
+                <Sparkles size={15} />
 
-              <h1 className="text-[36px] font-black leading-tight text-slate-950 sm:text-[52px] lg:text-[66px]">
-                {page?.heroTitle || "Contact Royal Component"}
-              </h1>
-
-              <p className="mt-6 max-w-3xl text-[17px] leading-8 text-slate-600 sm:text-[19px]">
-                {page?.heroSubtitle ||
-                  "Need help with industrial components, electronic parts, semiconductors, bulk quotation, GST invoice, datasheet, payment proof or order tracking? Royal Component support team helps businesses source the right parts with confidence."}
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={`tel:${page?.phone || ""}`}
-                  className="inline-flex items-center gap-2 rounded-2xl bg-sky-600 px-6 py-4 text-sm font-black text-white shadow-lg shadow-sky-200 transition hover:bg-sky-700"
-                >
-                  <Phone size={18} />
-                  Call Support
-                </a>
-
-                <a
-                  href={`mailto:${page?.email || "support@royalsmd.com"}`}
-                  className="inline-flex items-center gap-2 rounded-2xl border border-sky-200 bg-white px-6 py-4 text-sm font-black text-sky-700 transition hover:bg-sky-50"
-                >
-                  <Mail size={18} />
-                  Email Us
-                </a>
+                Contact Gogaji International
               </div>
 
-              <div className="mt-9 grid gap-4 sm:grid-cols-3">
-                <FeatureCard
-                  icon={PackageSearch}
-                  title="Bulk Quote"
-                  text="Share SKU, MPN, quantity and delivery location for quick quotation support."
+              <h1 className="mt-6 max-w-[850px] text-[42px] font-black leading-[1.05] tracking-[-0.035em] text-[#173F34] sm:text-[54px] lg:text-[68px]">
+                Let&apos;s Make Your
+                <span className="block text-[#B38B2D]">
+                  Space Beautiful
+                </span>
+              </h1>
+
+              <p className="mt-6 max-w-2xl text-[16px] leading-8 text-[#59655F] sm:text-[18px]">
+                {page?.heroSubtitle ||
+                  "Have a question about our home decor collection, gifting, bulk orders or interior styling? Our team is here to help you find beautiful pieces for homes, offices, hotels and special occasions."}
+              </p>
+
+              {/* BUTTONS */}
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                {page?.phone && (
+                  <a
+                    href={`tel:${page.phone}`}
+                    className="inline-flex h-[54px] items-center justify-center gap-2 rounded-full bg-[#1F5C4A] px-7 text-sm font-extrabold text-white shadow-[0_10px_25px_rgba(31,92,74,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#17483A]"
+                  >
+                    <Phone size={18} />
+
+                    Call Us
+                  </a>
+                )}
+
+                {page?.whatsapp && (
+                  <a
+                    href={
+                      page.whatsapp.startsWith("http")
+                        ? page.whatsapp
+                        : `https://wa.me/${String(page.whatsapp).replace(
+                            /\D/g,
+                            ""
+                          )}`
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-[54px] items-center justify-center gap-2 rounded-full border border-[#D9C99F] bg-white px-7 text-sm font-extrabold text-[#1F5C4A] transition duration-300 hover:-translate-y-0.5 hover:border-[#B38B2D] hover:bg-[#FFF9EA]"
+                  >
+                    <MessageCircle size={18} />
+
+                    WhatsApp Us
+                  </a>
+                )}
+              </div>
+
+              {/* TRUST FEATURES */}
+
+              <div className="mt-10 grid gap-3 sm:grid-cols-3">
+                <MiniFeature
+                  icon={Gift}
+                  title="Bulk Gifting"
+                  text="Beautiful gifting solutions for every occasion."
                 />
-                <FeatureCard
-                  icon={FileText}
-                  title="GST Invoice"
-                  text="Business billing, company details and tax invoice support for buyers."
+
+                <MiniFeature
+                  icon={Home}
+                  title="Home Styling"
+                  text="Decor pieces curated for elegant interiors."
                 />
-                <FeatureCard
-                  icon={ShieldCheck}
-                  title="Safe Support"
-                  text="We never ask for OTP, CVV, password or banking PIN."
+
+                <MiniFeature
+                  icon={Truck}
+                  title="Order Support"
+                  text="Help with products, orders and delivery."
                 />
               </div>
             </div>
 
-            <div className="rounded-[36px] border border-sky-100 bg-white/90 p-6 shadow-2xl shadow-sky-100 backdrop-blur sm:p-8">
-              <div className="mb-6 flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-50 text-sky-600">
-                  <Headphones size={32} />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-black text-slate-950">
-                    {page?.supportTitle || "Industrial Procurement Support"}
-                  </h2>
-                  <p className="mt-1 text-sm font-semibold text-slate-500">
-                    Fast help for business buyers
+            {/* RIGHT CONTACT CARD */}
+
+            <div className="relative">
+              <div className="absolute -left-5 -top-5 h-24 w-24 rounded-full bg-[#B38B2D]/10 blur-xl" />
+
+              <div className="relative overflow-hidden rounded-[34px] border border-[#E7DCC3] bg-white shadow-[0_25px_70px_rgba(56,73,65,0.12)]">
+                <div className="border-b border-[#EEE5D4] bg-[#1F5C4A] p-7 text-white sm:p-8">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10">
+                      <Headphones size={27} />
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#E7D8AC]">
+                        We&apos;re here to help
+                      </p>
+
+                      <h2 className="mt-1 text-2xl font-black">
+                        {page?.supportTitle || "Talk to Our Decor Team"}
+                      </h2>
+                    </div>
+                  </div>
+
+                  <p className="mt-5 max-w-xl text-sm leading-7 text-white/80">
+                    {page?.supportDescription ||
+                      "From product selection and gifting to bulk decor requirements, our team will help you choose the right products for your space."}
                   </p>
                 </div>
-              </div>
 
-              <p className="text-[15px] leading-7 text-slate-600">
-                {page?.supportDescription ||
-                  "Share your part number, SKU, MPN, quantity, delivery location, GST details, payment screenshot or technical requirement and our team will help you with the right procurement support."}
-              </p>
+                <div className="space-y-3 p-6 sm:p-8">
+                  <InfoRow
+                    icon={Phone}
+                    label="Call Us"
+                    value={page?.phone}
+                    href={
+                      page?.phone
+                        ? `tel:${page.phone}`
+                        : undefined
+                    }
+                  />
 
-              <div className="mt-6 space-y-4">
-                <InfoRow icon={Phone} label="Phone" value={page?.phone} />
-                <InfoRow icon={Mail} label="Email" value={page?.email} />
-                <InfoRow
-                  icon={MessageCircle}
-                  label="WhatsApp"
-                  value={page?.whatsapp}
-                />
-                <InfoRow
-                  icon={Clock}
-                  label="Business Hours"
-                  value={page?.businessHours}
-                />
-                <InfoRow icon={MapPin} label="Address" value={page?.address} />
+                  <InfoRow
+                    icon={Mail}
+                    label="Email"
+                    value={page?.email}
+                    href={
+                      page?.email
+                        ? `mailto:${page.email}`
+                        : undefined
+                    }
+                  />
+
+                  <InfoRow
+                    icon={MessageCircle}
+                    label="WhatsApp"
+                    value={page?.whatsapp}
+                  />
+
+                  <InfoRow
+                    icon={Clock}
+                    label="Business Hours"
+                    value={page?.businessHours}
+                  />
+
+                  <InfoRow
+                    icon={MapPin}
+                    label="Visit Us"
+                    value={page?.address}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {cards.length > 0 && (
-          <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <div className="mb-8">
-              <p className="text-xs font-black uppercase tracking-[0.24em] text-sky-600">
-                Contact Options
-              </p>
-              <h2 className="mt-3 text-3xl font-black text-slate-950 sm:text-4xl">
-                Choose the right support channel
-              </h2>
-            </div>
+        {/* =========================================================
+            CONTACT CARDS FROM DATABASE
+        ========================================================= */}
 
-            <div className="grid gap-5 md:grid-cols-3">
+        {cards.length > 0 && (
+          <section className="mx-auto max-w-[1500px] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+            <SectionHeading
+              eyebrow="Get In Touch"
+              title="How Can We Help You?"
+              description="Choose the easiest way to connect with our team for product enquiries, orders, gifting and decor assistance."
+            />
+
+            <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {cards.map((card) => {
                 const Icon = getIcon(card.icon);
 
@@ -294,27 +355,40 @@ export default async function ContactPage() {
                   <a
                     key={card._id || card.title}
                     href={card.link || "#"}
-                    className="group rounded-[30px] border border-sky-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-sky-100"
+                    className="group relative overflow-hidden rounded-[28px] border border-[#E9DFC9] bg-white p-7 transition duration-300 hover:-translate-y-1.5 hover:border-[#D5BE82] hover:shadow-[0_20px_45px_rgba(54,70,62,0.10)]"
                   >
-                    <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-50 text-sky-600 transition group-hover:bg-sky-600 group-hover:text-white">
-                      <Icon size={26} />
+                    <div className="absolute right-0 top-0 h-28 w-28 rounded-bl-full bg-[#FAF4E6]" />
+
+                    <div className="relative">
+                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F3F7F3] text-[#1F5C4A] transition duration-300 group-hover:bg-[#1F5C4A] group-hover:text-white">
+                        <Icon size={25} />
+                      </div>
+
+                      <h3 className="text-xl font-black text-[#213B33]">
+                        {card.title}
+                      </h3>
+
+                      {card.value && (
+                        <p className="mt-2 font-bold text-[#B38B2D]">
+                          {card.value}
+                        </p>
+                      )}
+
+                      {card.subText && (
+                        <p className="mt-3 text-sm leading-7 text-[#66706C]">
+                          {card.subText}
+                        </p>
+                      )}
+
+                      <span className="mt-6 inline-flex items-center gap-2 text-sm font-extrabold text-[#1F5C4A]">
+                        Connect Now
+
+                        <ArrowRight
+                          size={16}
+                          className="transition group-hover:translate-x-1"
+                        />
+                      </span>
                     </div>
-
-                    <h3 className="text-xl font-black text-slate-950">
-                      {card.title}
-                    </h3>
-
-                    <p className="mt-2 text-[15px] font-bold text-sky-700">
-                      {card.value}
-                    </p>
-
-                    <p className="mt-3 text-sm leading-6 text-slate-600">
-                      {card.subText}
-                    </p>
-
-                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-sky-700">
-                      Continue <ArrowRight size={15} />
-                    </span>
                   </a>
                 );
               })}
@@ -322,108 +396,155 @@ export default async function ContactPage() {
           </section>
         )}
 
-        <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="rounded-[34px] border border-sky-100 bg-white p-7 shadow-sm sm:p-9">
-              <p className="text-xs font-black uppercase tracking-[0.24em] text-sky-600">
-                What We Support
-              </p>
-              <h2 className="mt-3 text-3xl font-black leading-tight text-slate-950 sm:text-4xl">
-                Contact Royal Component for electronic, electrical and
-                industrial hardware procurement
-              </h2>
+        {/* =========================================================
+            ENQUIRY TYPES
+        ========================================================= */}
 
-              <div className="mt-6 space-y-5 text-[15.5px] leading-8 text-slate-650">
-                <p>
-                  Royal Component is built for business buyers, engineers,
-                  maintenance teams, manufacturers, workshops, traders and
-                  industrial procurement teams who need reliable component
-                  sourcing support. Whether you are searching for semiconductors,
-                  ICs, sensors, connectors, automation parts, electrical
-                  accessories, tools, control components or mechanical hardware,
-                  our contact support page helps you reach the right team quickly.
-                </p>
+        <section className="border-y border-[#EEE5D3] bg-white">
+          <div className="mx-auto max-w-[1500px] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+            <SectionHeading
+              eyebrow="Decor Assistance"
+              title="Everything You Need, One Conversation Away"
+              description="Whether you are decorating your home or sourcing products for a large project, Gogaji International is ready to assist."
+            />
 
-                <p>
-                  Industrial buying is different from normal retail shopping.
-                  Many components require exact part number matching, datasheet
-                  verification, MOQ confirmation, lead time checking and GST
-                  billing accuracy. That is why our support process is designed
-                  around technical details such as SKU, MPN, brand name, package
-                  type, voltage rating, current rating, tolerance, pin count,
-                  stock availability and delivery location.
-                </p>
-
-                <p>
-                  For bulk orders, you can share the required quantity, target
-                  price, delivery timeline, company name and GST details. Our
-                  team can help verify availability, supplier confirmation,
-                  dispatch planning and quotation support. This makes Royal
-                  Component useful for both small repair requirements and large
-                  industrial procurement needs.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              <SeoPoint
-                icon={Cpu}
-                title="Datasheet & Technical Details"
-                text="Send part number, product image, marking or MPN to request technical support and datasheet help."
+            <div className="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              <SupportCard
+                icon={Home}
+                title="Home Decor"
+                text="Need help choosing planters, vases, trays, candle holders or decorative accents? Share your requirement with us."
               />
-              <SeoPoint
-                icon={PackageSearch}
-                title="Bulk Quantity Support"
-                text="Request 10, 100, 1000 or higher quantity with MOQ, lead time and pricing confirmation."
+
+              <SupportCard
+                icon={Gift}
+                title="Gifting Solutions"
+                text="Explore premium gifting for weddings, festivals, housewarmings, corporate occasions and special celebrations."
               />
-              <SeoPoint
-                icon={CreditCard}
-                title="Payment Proof Verification"
-                text="Upload or share UPI, bank transfer or payment screenshot for admin verification."
-              />
-              <SeoPoint
+
+              <SupportCard
                 icon={Building2}
-                title="Business Billing"
-                text="Share GST number, company name, billing address and shipping address for invoice support."
+                title="Bulk & Projects"
+                text="Connect with us for hotels, offices, restaurants, interior projects, retailers and bulk decor requirements."
+              />
+
+              <SupportCard
+                icon={Palette}
+                title="Product Guidance"
+                text="Need help matching decor with your space? Our team can guide you toward suitable collections and styles."
               />
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-          <div className="rounded-[36px] border border-sky-100 bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 p-7 text-white shadow-xl sm:p-10">
-            <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+        {/* =========================================================
+            BULK / BUSINESS SECTION
+        ========================================================= */}
+
+        <section className="mx-auto max-w-[1500px] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <div className="overflow-hidden rounded-[36px] bg-[#1F5C4A] text-white shadow-[0_25px_70px_rgba(31,92,74,0.15)]">
+            <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="relative p-8 sm:p-10 lg:p-14">
+                <div className="absolute -left-16 -top-16 h-48 w-48 rounded-full border-[40px] border-white/5" />
+
+                <div className="relative">
+                  <p className="text-xs font-black uppercase tracking-[0.22em] text-[#E4CB8B]">
+                    Business & Bulk Orders
+                  </p>
+
+                  <h2 className="mt-4 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">
+                    Decorating More
+                    <span className="block text-[#E7CB83]">
+                      Than One Space?
+                    </span>
+                  </h2>
+
+                  <p className="mt-6 max-w-xl text-[15px] leading-8 text-white/75">
+                    We work with interior designers, hotels, offices,
+                    restaurants, retailers, gifting partners and businesses
+                    looking for beautiful decor in larger quantities.
+                  </p>
+
+                  {page?.email && (
+                    <a
+                      href={`mailto:${page.email}`}
+                      className="mt-8 inline-flex h-[52px] items-center gap-2 rounded-full bg-[#E1C476] px-7 text-sm font-black text-[#173F34] transition hover:bg-[#ECD38E]"
+                    >
+                      Discuss Your Requirement
+                      <ArrowRight size={17} />
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid gap-px bg-white/10 sm:grid-cols-2">
+                <ChecklistItem
+                  title="Hotels & Resorts"
+                  text="Decor solutions for guest rooms, receptions, dining areas and common spaces."
+                />
+
+                <ChecklistItem
+                  title="Corporate Gifting"
+                  text="Premium gifting options for employees, clients and festive occasions."
+                />
+
+                <ChecklistItem
+                  title="Interior Projects"
+                  text="Curated pieces for residential and commercial interior styling requirements."
+                />
+
+                <ChecklistItem
+                  title="Retail & Bulk Buying"
+                  text="Connect with our team for quantity requirements and product availability."
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================
+            BEFORE CONTACTING
+        ========================================================= */}
+
+        <section className="bg-[#F7F1E4]">
+          <div className="mx-auto max-w-[1500px] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+            <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.24em] text-sky-300">
-                  Faster Support Checklist
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-[#B38B2D]">
+                  Quick Assistance
                 </p>
-                <h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">
-                  Share these details before contacting us
+
+                <h2 className="mt-4 text-3xl font-black leading-tight text-[#1F5C4A] sm:text-4xl lg:text-5xl">
+                  Help Us Understand
+                  <span className="block text-[#B38B2D]">
+                    What You&apos;re Looking For
+                  </span>
                 </h2>
-                <p className="mt-5 text-[15px] leading-7 text-slate-300">
-                  Agar aap ye details pehle se ready rakhte hain to quotation,
-                  payment verification, dispatch update aur product support fast
-                  ho jata hai.
+
+                <p className="mt-5 max-w-lg text-[15px] leading-8 text-[#626D68]">
+                  Sharing a few details helps our team understand your
+                  requirement and provide faster product, gifting or bulk order
+                  assistance.
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 {[
-                  "Product name, SKU, MPN or exact part number",
-                  "Required quantity and expected delivery location",
-                  "Brand preference or acceptable alternate brand",
-                  "Datasheet, product image or component marking",
-                  "GST number, company name and billing address",
-                  "Payment screenshot, UPI ID or transaction reference",
-                  "Order ID for tracking, cancellation or invoice help",
-                  "Technical rating such as voltage, current or package type",
+                  "Product or collection you are interested in",
+                  "Required quantity for bulk or gifting orders",
+                  "Delivery city or PIN code",
+                  "Home, office, hotel or commercial requirement",
+                  "Reference image or preferred decor style",
+                  "Expected delivery timeline",
                 ].map((item) => (
                   <div
                     key={item}
-                    className="flex gap-3 rounded-2xl border border-white/10 bg-white/5 p-4"
+                    className="flex items-start gap-3 rounded-[20px] border border-[#E4D7B9] bg-white p-5"
                   >
-                    <CheckCircle2 className="mt-1 shrink-0 text-sky-300" size={18} />
-                    <p className="text-sm font-semibold leading-6 text-slate-100">
+                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EDF5F0] text-[#1F5C4A]">
+                      <CheckCircle2 size={17} />
+                    </div>
+
+                    <p className="text-sm font-semibold leading-6 text-[#43524C]">
                       {item}
                     </p>
                   </div>
@@ -433,90 +554,136 @@ export default async function ContactPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-          <div className="rounded-[34px] border border-sky-100 bg-white p-7 shadow-sm sm:p-10">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-sky-600">
-              SEO Information
-            </p>
+        {/* =========================================================
+            BRAND MESSAGE
+        ========================================================= */}
 
-            <h2 className="mt-3 text-3xl font-black leading-tight text-slate-950 sm:text-4xl">
-              Industrial component sourcing support for businesses across India
-            </h2>
-
-            <div className="mt-6 grid gap-6 text-[15.5px] leading-8 text-slate-650 lg:grid-cols-2">
-              <div className="space-y-5">
-                <p>
-                  Royal Component focuses on industrial solution buyers who need
-                  electronic components, electrical hardware, automation spares,
-                  semiconductor parts and procurement assistance in a structured
-                  way. Customers can contact our support team for product
-                  identification, quotation, availability confirmation, dispatch
-                  updates, payment proof checking and GST invoice assistance.
-                </p>
-
-                <p>
-                  If you are not sure about the exact part, you can share a
-                  product photo, label, old component marking, datasheet or
-                  machine requirement. Our support team can review the available
-                  details and guide you about possible product matching or
-                  alternate part options. For electronic components, final
-                  compatibility should always be verified with the datasheet and
-                  application requirements.
-                </p>
-
-                <p>
-                  Business customers often need clear documentation such as GST
-                  invoice, purchase order reference, delivery address, shipping
-                  details and payment confirmation. Royal Component contact
-                  support helps keep these details organized so that your order
-                  can move from enquiry to procurement, packing and dispatch with
-                  fewer delays.
-                </p>
+        <section className="mx-auto max-w-[1500px] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <div className="grid gap-10 rounded-[36px] border border-[#E8DDC5] bg-white p-7 sm:p-10 lg:grid-cols-[1fr_0.9fr] lg:p-14">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-[#B38B2D]">
+                <Heart size={15} />
+                Gogaji International
               </div>
 
-              <div className="space-y-5">
-                <p>
-                  For semiconductors, ICs, modules, connectors and sensors,
-                  availability can change quickly depending on market stock and
-                  supplier confirmation. Large quantity orders may require lead
-                  time confirmation before final dispatch. This is why customers
-                  should mention required quantity, brand preference and delivery
-                  timeline while contacting support.
-                </p>
+              <h2 className="mt-4 max-w-2xl text-3xl font-black leading-tight text-[#1F5C4A] sm:text-4xl">
+                Beautiful Details Make a House Feel Like Home
+              </h2>
 
-                <p>
-                  Payment-related support is also important for manual UPI or
-                  bank transfer orders. Customers can share transaction reference,
-                  amount paid, payment screenshot and order ID so admin can verify
-                  the payment from the backend panel. This helps reduce confusion
-                  and improves order processing accuracy.
-                </p>
+              <p className="mt-5 max-w-3xl text-[15px] leading-8 text-[#616C67]">
+                At Gogaji International, we believe decor is more than filling
+                an empty space. The right planter, vase, tray, candle holder,
+                pooja accent or decorative piece adds warmth, personality and
+                character to your surroundings.
+              </p>
 
-                <p>
-                  Our aim is to provide a professional B2B buying experience for
-                  industrial components. From product enquiry to technical
-                  support, quotation, GST billing, payment verification, tracking
-                  and after-order communication, Royal Component is designed for
-                  serious buyers who need clarity, reliability and responsive
-                  support.
-                </p>
-              </div>
+              <p className="mt-4 max-w-3xl text-[15px] leading-8 text-[#616C67]">
+                Our collections are created for modern homes, thoughtful
+                gifting and elegant spaces. Whether you&apos;re refreshing one
+                corner or styling an entire project, our team is ready to help
+                you discover products that complement your vision.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <BrandPoint
+                number="01"
+                title="Curated Decor"
+                text="Collections designed around elegant modern living."
+              />
+
+              <BrandPoint
+                number="02"
+                title="Thoughtful Gifting"
+                text="Beautiful pieces made for memorable occasions."
+              />
+
+              <BrandPoint
+                number="03"
+                title="Bulk Support"
+                text="Solutions for businesses and larger requirements."
+              />
+
+              <BrandPoint
+                number="04"
+                title="Customer Care"
+                text="Friendly assistance from enquiry to delivery."
+              />
             </div>
           </div>
         </section>
 
+        {/* =========================================================
+            MAP
+        ========================================================= */}
+
         {page?.mapEmbedUrl ? (
-          <section className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:px-8">
-            <div className="overflow-hidden rounded-[34px] border border-sky-100 bg-white shadow-sm">
+          <section className="mx-auto max-w-[1500px] px-4 pb-16 sm:px-6 lg:px-8 lg:pb-20">
+            <div className="mb-8">
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#B38B2D]">
+                Find Us
+              </p>
+
+              <h2 className="mt-3 text-3xl font-black text-[#1F5C4A] sm:text-4xl">
+                Visit Gogaji International
+              </h2>
+            </div>
+
+            <div className="overflow-hidden rounded-[32px] border border-[#E8DDC5] bg-white p-2 shadow-[0_15px_45px_rgba(60,75,68,0.08)]">
               <iframe
                 src={page.mapEmbedUrl}
-                className="h-[420px] w-full"
+                title="Gogaji International location"
+                className="h-[440px] w-full rounded-[25px]"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
           </section>
         ) : null}
+
+        {/* =========================================================
+            FINAL CTA
+        ========================================================= */}
+
+        <section className="border-t border-[#EEE4D1] bg-[#FFF9EE]">
+          <div className="mx-auto max-w-[1500px] px-4 py-14 text-center sm:px-6 lg:px-8 lg:py-16">
+            <Sparkles
+              size={28}
+              className="mx-auto text-[#B38B2D]"
+            />
+
+            <h2 className="mt-4 text-3xl font-black text-[#1F5C4A] sm:text-4xl">
+              Have Something Beautiful in Mind?
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-7 text-[#626D68]">
+              Tell us what you&apos;re looking for and our team will help you
+              explore the right Gogaji International collection.
+            </p>
+
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              {page?.phone && (
+                <a
+                  href={`tel:${page.phone}`}
+                  className="inline-flex h-[52px] items-center gap-2 rounded-full bg-[#1F5C4A] px-7 text-sm font-black text-white transition hover:bg-[#17483A]"
+                >
+                  <Phone size={17} />
+                  Contact Us
+                </a>
+              )}
+
+              {page?.email && (
+                <a
+                  href={`mailto:${page.email}`}
+                  className="inline-flex h-[52px] items-center gap-2 rounded-full border border-[#D9C99F] bg-white px-7 text-sm font-black text-[#1F5C4A] transition hover:bg-[#FFF6E3]"
+                >
+                  <Mail size={17} />
+                  Send Email
+                </a>
+              )}
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
@@ -524,45 +691,164 @@ export default async function ContactPage() {
   );
 }
 
-function FeatureCard({ icon: Icon, title, text }) {
+/* =========================================================
+   SMALL COMPONENTS
+========================================================= */
+
+function SectionHeading({
+  eyebrow,
+  title,
+  description,
+}) {
   return (
-    <div className="rounded-[24px] border border-sky-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-sky-100">
-      <Icon className="mb-3 text-sky-600" size={28} />
-      <h3 className="font-black text-slate-950">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+    <div className="mx-auto max-w-3xl text-center">
+      <p className="text-xs font-black uppercase tracking-[0.22em] text-[#B38B2D]">
+        {eyebrow}
+      </p>
+
+      <h2 className="mt-3 text-3xl font-black leading-tight text-[#1F5C4A] sm:text-4xl lg:text-5xl">
+        {title}
+      </h2>
+
+      {description && (
+        <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-7 text-[#66706C]">
+          {description}
+        </p>
+      )}
     </div>
   );
 }
 
-function SeoPoint({ icon: Icon, title, text }) {
+function MiniFeature({
+  icon: Icon,
+  title,
+  text,
+}) {
   return (
-    <div className="rounded-[28px] border border-sky-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-sky-100">
-      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-50 text-sky-600">
-        <Icon size={26} />
+    <div className="rounded-[22px] border border-[#E9DEC5] bg-white p-4 shadow-sm">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F2F7F3] text-[#1F5C4A]">
+        <Icon size={20} />
       </div>
-      <h3 className="text-xl font-black text-slate-950">{title}</h3>
-      <p className="mt-3 text-sm leading-7 text-slate-600">{text}</p>
+
+      <h3 className="mt-3 text-sm font-black text-[#27483D]">
+        {title}
+      </h3>
+
+      <p className="mt-1 text-xs leading-5 text-[#737D78]">
+        {text}
+      </p>
     </div>
   );
 }
 
-function InfoRow({ icon: Icon, label, value }) {
-  if (!value) return null;
-
+function SupportCard({
+  icon: Icon,
+  title,
+  text,
+}) {
   return (
-    <div className="flex gap-4 rounded-2xl bg-slate-50 p-4">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-sky-600">
-        <Icon size={21} />
+    <div className="group rounded-[28px] border border-[#E9DFC9] bg-[#FFFCF7] p-7 transition duration-300 hover:-translate-y-1 hover:border-[#D6C087] hover:bg-white hover:shadow-[0_18px_40px_rgba(57,74,66,0.08)]">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EEF5F1] text-[#1F5C4A] transition group-hover:bg-[#1F5C4A] group-hover:text-white">
+        <Icon size={25} />
       </div>
 
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+      <h3 className="mt-6 text-xl font-black text-[#263F37]">
+        {title}
+      </h3>
+
+      <p className="mt-3 text-sm leading-7 text-[#68726E]">
+        {text}
+      </p>
+    </div>
+  );
+}
+
+function ChecklistItem({
+  title,
+  text,
+}) {
+  return (
+    <div className="bg-white/[0.045] p-7 sm:p-8">
+      <CheckCircle2
+        size={23}
+        className="text-[#E4C87E]"
+      />
+
+      <h3 className="mt-5 text-lg font-black">
+        {title}
+      </h3>
+
+      <p className="mt-2 text-sm leading-7 text-white/70">
+        {text}
+      </p>
+    </div>
+  );
+}
+
+function BrandPoint({
+  number,
+  title,
+  text,
+}) {
+  return (
+    <div className="rounded-[22px] bg-[#F9F5EC] p-5">
+      <span className="text-xs font-black tracking-[0.15em] text-[#B38B2D]">
+        {number}
+      </span>
+
+      <h3 className="mt-3 font-black text-[#24443A]">
+        {title}
+      </h3>
+
+      <p className="mt-2 text-sm leading-6 text-[#6B7570]">
+        {text}
+      </p>
+    </div>
+  );
+}
+
+function InfoRow({
+  icon: Icon,
+  label,
+  value,
+  href,
+}) {
+  if (!value) {
+    return null;
+  }
+
+  const content = (
+    <>
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F1F6F3] text-[#1F5C4A]">
+        <Icon size={20} />
+      </div>
+
+      <div className="min-w-0">
+        <p className="text-[10px] font-black uppercase tracking-[0.17em] text-[#A1874B]">
           {label}
         </p>
-        <p className="mt-1 text-[15px] font-bold leading-6 text-slate-800">
+
+        <p className="mt-1 break-words text-[14px] font-bold leading-6 text-[#314B42]">
           {value}
         </p>
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        className="flex gap-4 rounded-2xl border border-transparent bg-[#FBF8F1] p-4 transition hover:border-[#E3D4AF] hover:bg-[#FFF9EC]"
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <div className="flex gap-4 rounded-2xl bg-[#FBF8F1] p-4">
+      {content}
     </div>
   );
 }

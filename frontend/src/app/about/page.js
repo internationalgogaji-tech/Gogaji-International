@@ -2,25 +2,33 @@ import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
-  Building2,
   CheckCircle2,
-  Cpu,
-  Factory,
-  PackageSearch,
+  Gift,
+  Heart,
+  Home,
+  Leaf,
+  PackageCheck,
+  Palette,
   ShieldCheck,
+  ShoppingBag,
   Sparkles,
+  Star,
   Truck,
-  Wrench,
-  Layers,
-  SearchCheck,
-  ClipboardCheck,
-  Headphones,
+  Gem,
+  HandHeart,
   HelpCircle,
+  Headphones,
+  Crown,
+  Flower2,
 } from "lucide-react";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { API_BASE } from "@/lib/api";
+
+/* =========================================================
+   API
+========================================================= */
 
 async function getAboutPage() {
   try {
@@ -28,599 +36,839 @@ async function getAboutPage() {
       cache: "no-store",
     });
 
+    if (!res.ok) return null;
+
     const data = await res.json();
     return data?.page || null;
-  } catch {
+  } catch (error) {
+    console.error("About page fetch error:", error);
     return null;
   }
 }
 
-function getImageUrl(url) {
-  if (!url) return "/banner/royal-hero-banner.jpg";
-  if (url.startsWith("http")) return url;
-  return `${API_BASE}${url}`;
+/* =========================================================
+   IMAGE HELPER
+========================================================= */
+
+function getImageUrl(url, fallback = "/banner/new-products/banner-1.png") {
+  if (!url) return fallback;
+
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("data:")
+  ) {
+    return url;
+  }
+
+  if (url.startsWith("/uploads")) {
+    return `${API_BASE}${url}`;
+  }
+
+  if (url.startsWith("/")) {
+    return url;
+  }
+
+  return `${API_BASE}/${url}`;
 }
+
+/* =========================================================
+   DEFAULT CONTENT
+   DB content available ho to usko priority milegi.
+========================================================= */
+
+const defaults = {
+  hero: {
+    badge: "Welcome to Gogaji International",
+    title: "Thoughtful Decor for Beautiful Living",
+    highlight: "Style Every Corner. Celebrate Every Moment.",
+    description:
+      "Discover a thoughtfully curated world of premium home decor, elegant accents, pooja essentials, planters, vases and gifting collections designed to bring warmth, character and beauty into everyday spaces.",
+    image: "/banner/new-products/banner-1.png",
+    primaryButtonText: "Explore Collection",
+    primaryButtonLink: "/products",
+    secondaryButtonText: "Contact Us",
+    secondaryButtonLink: "/contact",
+  },
+
+  stats: [
+    { value: "Premium", label: "Curated Home Decor" },
+    { value: "Elegant", label: "Design Collections" },
+    { value: "Trusted", label: "Shopping Experience" },
+    { value: "Pan India", label: "Delivery Support" },
+  ],
+
+  overview: {
+    title: "Decor That Makes a Space Feel Like Home",
+    description:
+      "At Gogaji International, we believe beautiful spaces are created through thoughtful details. Our collections bring together elegant decor, functional accents, meaningful pooja essentials and gifting pieces that help transform ordinary corners into warm and memorable spaces.",
+    image: "/banner/new-products/banner-1.png",
+  },
+
+  productGroups: [
+    {
+      title: "Pooja & Mandir Decor",
+      description:
+        "Elegant pooja essentials and devotional decor designed to bring warmth, grace and serenity to your sacred space.",
+    },
+    {
+      title: "Planters & Vases",
+      description:
+        "Statement planters, decorative vases and botanical accents for fresh, stylish and beautifully layered interiors.",
+    },
+    {
+      title: "Decor Accents",
+      description:
+        "Thoughtfully selected accents that add personality, texture and a refined finishing touch to every corner.",
+    },
+    {
+      title: "Table Decor",
+      description:
+        "Beautiful tabletop pieces created for coffee tables, consoles, dining spaces and everyday styling.",
+    },
+    {
+      title: "Wall Decor",
+      description:
+        "Decorative wall pieces that create character, visual interest and an elevated look throughout your home.",
+    },
+    {
+      title: "Gifting Collection",
+      description:
+        "Elegant and meaningful decor gifts for celebrations, festivals, housewarmings and memorable occasions.",
+    },
+  ],
+
+  capabilities: [
+    {
+      title: "Thoughtfully Curated",
+      description:
+        "Every collection is selected with a focus on aesthetics, usability and its ability to complement beautiful modern homes.",
+    },
+    {
+      title: "Premium Styling",
+      description:
+        "Our decor is chosen to help create sophisticated spaces while remaining warm, inviting and easy to style.",
+    },
+    {
+      title: "Meaningful Gifting",
+      description:
+        "Discover decorative gifts suitable for festivals, celebrations, housewarmings and thoughtful everyday gestures.",
+    },
+    {
+      title: "Bulk Order Support",
+      description:
+        "We support bulk requirements for gifting, businesses, events and larger decor requirements.",
+    },
+    {
+      title: "Careful Packaging",
+      description:
+        "Products are prepared and packed carefully to help them reach customers safely and beautifully.",
+    },
+    {
+      title: "Customer Support",
+      description:
+        "Our team is available to assist with product selection, orders, bulk enquiries and shopping support.",
+    },
+  ],
+
+  qualityProcess: [
+    {
+      title: "Discover",
+      description:
+        "Explore curated collections designed for beautiful homes, gifting and meaningful spaces.",
+    },
+    {
+      title: "Choose",
+      description:
+        "Select pieces that complement your personal style, room and occasion.",
+    },
+    {
+      title: "Careful Packing",
+      description:
+        "Your selected decor is prepared with attention and carefully packed for dispatch.",
+    },
+    {
+      title: "Style Your Space",
+      description:
+        "Unbox, style and give your home a fresh expression with Gogaji International.",
+    },
+  ],
+
+  industries: [
+    "Modern Homes",
+    "Festive Styling",
+    "Corporate Gifting",
+    "Housewarming Gifts",
+    "Interior Styling",
+    "Wedding Gifting",
+    "Office Decor",
+    "Bulk Orders",
+  ],
+
+  whyChooseUs: [
+    "Curated premium home decor collections",
+    "Elegant designs for modern Indian homes",
+    "Pooja, gifting and decorative collections",
+    "Careful packaging and delivery support",
+    "Bulk order and gifting assistance",
+    "Customer-focused shopping experience",
+  ],
+
+  faq: [
+    {
+      question: "What products does Gogaji International offer?",
+      answer:
+        "Gogaji International offers curated home decor including planters, vases, pooja essentials, decorative accents, table decor, wall decor and gifting collections.",
+    },
+    {
+      question: "Can I place a bulk order?",
+      answer:
+        "Yes. Bulk requirements can be discussed with our team for gifting, events, businesses and larger quantity requirements.",
+    },
+    {
+      question: "Do you offer products suitable for gifting?",
+      answer:
+        "Yes. Our collections include elegant pieces suitable for housewarmings, festivals, celebrations, corporate gifting and other special occasions.",
+    },
+    {
+      question: "How can I get help choosing a product?",
+      answer:
+        "You can contact our support team for product information, order assistance, bulk requirements and general shopping help.",
+    },
+  ],
+
+  cta: {
+    title: "Find Something Beautiful for Your Space",
+    description:
+      "Explore decor designed to add warmth, character and a thoughtful finishing touch to your home.",
+    buttonText: "Shop the Collection",
+    buttonLink: "/products",
+  },
+};
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function validArray(value, fallback) {
+  return Array.isArray(value) && value.length ? value : fallback;
+}
+
+function isOldRoyalText(value) {
+  if (!value || typeof value !== "string") return false;
+
+  const text = value.toLowerCase();
+
+  return (
+    text.includes("royal component") ||
+    text.includes("royal trading") ||
+    text.includes("semiconductor") ||
+    text.includes("industrial component") ||
+    text.includes("electronics department")
+  );
+}
+
+function safeText(value, fallback) {
+  if (!value || isOldRoyalText(value)) return fallback;
+  return value;
+}
+
+function safeLink(value, fallback) {
+  if (!value) return fallback;
+
+  if (
+    value.includes("request-component") ||
+    value.includes("industrial") ||
+    value.includes("component-request")
+  ) {
+    return fallback;
+  }
+
+  return value;
+}
+
+/* =========================================================
+   METADATA
+========================================================= */
 
 export async function generateMetadata() {
   const page = await getAboutPage();
 
   return {
     title:
-      page?.seo?.metaTitle ||
-      "About Royal Component | Industrial Components Supplier",
+      !isOldRoyalText(page?.seo?.metaTitle) && page?.seo?.metaTitle
+        ? page.seo.metaTitle
+        : "About Gogaji International | Premium Home Decor",
+
     description:
-      page?.seo?.metaDescription ||
-      "Royal Component is a trusted industrial electronics, electrical, mechanical and automation component supplier.",
-    keywords: page?.seo?.metaKeywords || [],
+      !isOldRoyalText(page?.seo?.metaDescription) &&
+      page?.seo?.metaDescription
+        ? page.seo.metaDescription
+        : "Discover Gogaji International, a curated home decor destination for elegant accents, planters, vases, pooja essentials and thoughtful gifting collections.",
+
+    keywords:
+      Array.isArray(page?.seo?.metaKeywords) &&
+      page.seo.metaKeywords.length &&
+      !page.seo.metaKeywords.some((item) => isOldRoyalText(item))
+        ? page.seo.metaKeywords
+        : [
+            "Gogaji International",
+            "home decor",
+            "premium home decor",
+            "pooja decor",
+            "planters and vases",
+            "home accessories",
+            "decor gifts",
+          ],
   };
 }
 
-const defaultItems = {
-  productGroups: [],
-  capabilities: [],
-  qualityProcess: [],
-  industries: [],
-  whyChooseUs: [],
-  faq: [],
-};
+/* =========================================================
+   PAGE
+========================================================= */
 
 export default async function AboutPage() {
   const page = await getAboutPage();
 
-  if (!page) {
-    return (
-      <div className="min-h-screen bg-[#f5fbff]">
-        <Navbar />
-        <main className="mx-auto max-w-5xl px-4 py-20 text-center">
-          <h1 className="text-3xl font-black text-[#0f172a]">
-            About page content not available
-          </h1>
-        </main>
+  const hero = {
+    badge: safeText(page?.hero?.badge, defaults.hero.badge),
+    title: safeText(page?.hero?.title, defaults.hero.title),
+    highlight: safeText(page?.hero?.highlight, defaults.hero.highlight),
+    description: safeText(
+      page?.hero?.description,
+      defaults.hero.description
+    ),
+    image: page?.hero?.image || defaults.hero.image,
 
-        <section className="bg-white border-t border-sky-100 py-16">
-  <div className="mx-auto max-w-7xl px-4 md:px-6">
+    primaryButtonText: safeText(
+      page?.hero?.primaryButtonText,
+      defaults.hero.primaryButtonText
+    ),
 
-    <div className="prose prose-lg max-w-none text-slate-700">
+    primaryButtonLink: safeLink(
+      page?.hero?.primaryButtonLink,
+      defaults.hero.primaryButtonLink
+    ),
 
-      <h2 className="text-[38px] font-black text-[#082f49] leading-tight">
-        Leading Electronic Components Supplier in India
-      </h2>
+    secondaryButtonText: safeText(
+      page?.hero?.secondaryButtonText,
+      defaults.hero.secondaryButtonText
+    ),
 
-      <p>
-        Royal Trading Component is one of the leading industrial
-        electronic components suppliers in India offering
-        semiconductors, integrated circuits, embedded electronics,
-        industrial automation products, displays, sensors,
-        communication modules, PCB components and industrial
-        hardware solutions for engineers, OEM manufacturers,
-        industrial buyers and B2B procurement companies.
-      </p>
+    secondaryButtonLink: safeLink(
+      page?.hero?.secondaryButtonLink,
+      defaults.hero.secondaryButtonLink
+    ),
+  };
 
-      <p>
-        Our platform is designed to simplify industrial procurement
-        by providing access to high quality electronic components,
-        industrial spare parts, automation hardware and semiconductor
-        solutions suitable for manufacturing, repair industries,
-        embedded systems, robotics, consumer electronics and
-        industrial automation applications.
-      </p>
+  const stats = validArray(page?.stats, defaults.stats).filter(
+    (item) =>
+      !isOldRoyalText(item?.value) &&
+      !isOldRoyalText(item?.label)
+  );
 
-      <h2 className="mt-14 text-[34px] font-black text-[#082f49] leading-tight">
-        Trusted Semiconductor & IC Supplier in Delhi India
-      </h2>
+  const finalStats = stats.length ? stats : defaults.stats;
 
-      <p>
-        Royal Trading Component supplies industrial electronic
-        components across Delhi, Uttam Nagar, Janakpuri,
-        Lajpat Rai Market, Nehru Place, Noida, Gurugram and
-        major industrial cities across India. Businesses trust
-        us for semiconductor sourcing, IC procurement,
-        embedded electronics support and industrial automation
-        component supply.
-      </p>
+  const overview = {
+    title: safeText(page?.overview?.title, defaults.overview.title),
+    description: safeText(
+      page?.overview?.description,
+      defaults.overview.description
+    ),
+    image: page?.overview?.image || defaults.overview.image,
+  };
 
-      <p>
-        Our procurement support system helps industries source
-        electronic components using part number verification,
-        datasheet validation, MOQ support, GST billing and
-        technical procurement assistance.
-      </p>
+  const productGroupsRaw = validArray(
+    page?.productGroups,
+    defaults.productGroups
+  );
 
-      <h3 className="mt-10 text-[28px] font-bold text-[#082f49]">
-        Electronics Department & Semiconductor Expertise
-      </h3>
+  const productGroups = productGroupsRaw.some(
+    (item) =>
+      isOldRoyalText(item?.title) ||
+      isOldRoyalText(item?.description)
+  )
+    ? defaults.productGroups
+    : productGroupsRaw;
 
-      <p>
-        The electronics department at Royal Trading Component
-        focuses on semiconductor products, logic ICs,
-        power management ICs, communication modules,
-        embedded processors, wireless electronics,
-        sensor modules and industrial electronic systems.
-      </p>
+  const capabilitiesRaw = validArray(
+    page?.capabilities,
+    defaults.capabilities
+  );
 
-      <p>
-        We support engineers, repair professionals,
-        industrial maintenance teams, PCB developers,
-        OEM manufacturers and embedded hardware
-        designers looking for reliable semiconductor
-        sourcing solutions in India.
-      </p>
+  const capabilities = capabilitiesRaw.some(
+    (item) =>
+      isOldRoyalText(item?.title) ||
+      isOldRoyalText(item?.description)
+  )
+    ? defaults.capabilities
+    : capabilitiesRaw;
 
-      <h3 className="mt-10 text-[28px] font-bold text-[#082f49]">
-        Popular Electronic Components Categories
-      </h3>
+  const processRaw = validArray(
+    page?.qualityProcess,
+    defaults.qualityProcess
+  );
 
-      <ul>
-        <li>Semiconductor Components</li>
-        <li>Integrated Circuits (ICs)</li>
-        <li>Logic ICs</li>
-        <li>Power Management ICs</li>
-        <li>Microcontrollers & Processors</li>
-        <li>Communication Modules</li>
-        <li>Wireless Electronics</li>
-        <li>Sensor Modules</li>
-        <li>Displays & LCD Modules</li>
-        <li>Embedded Electronics</li>
-        <li>PCB Components</li>
-        <li>Industrial Automation Products</li>
-        <li>Electrical Control Components</li>
-        <li>Relays & Connectors</li>
-        <li>Voltage Regulators</li>
-      </ul>
+  const qualityProcess = processRaw.some(
+    (item) =>
+      isOldRoyalText(item?.title) ||
+      isOldRoyalText(item?.description)
+  )
+    ? defaults.qualityProcess
+    : processRaw;
 
-      <h2 className="mt-14 text-[34px] font-black text-[#082f49] leading-tight">
-        Industrial Procurement Support for Businesses
-      </h2>
+  const industriesRaw = validArray(
+    page?.industries,
+    defaults.industries
+  );
 
-      <p>
-        Royal Trading Component supports OEM manufacturers,
-        industrial procurement teams, engineering companies,
-        repair workshops and industrial buyers with bulk
-        electronic component sourcing and wholesale
-        procurement support.
-      </p>
+  const industries = industriesRaw.some(isOldRoyalText)
+    ? defaults.industries
+    : industriesRaw;
 
-      <p>
-        We help businesses source industrial components
-        with quantity verification, supplier coordination,
-        GST invoice support, dispatch management and
-        technical product identification assistance.
-      </p>
+  const whyRaw = validArray(
+    page?.whyChooseUs,
+    defaults.whyChooseUs
+  );
 
-      <h3 className="mt-10 text-[28px] font-bold text-[#082f49]">
-        Industrial Applications & Engineering Solutions
-      </h3>
+  const whyChooseUs = whyRaw.some((item) =>
+    isOldRoyalText(
+      typeof item === "string"
+        ? item
+        : `${item?.title || ""} ${item?.description || ""}`
+    )
+  )
+    ? defaults.whyChooseUs
+    : whyRaw;
 
-      <p>
-        Our electronic components are used in industrial
-        automation systems, robotics, embedded hardware,
-        communication systems, consumer electronics,
-        IoT devices, industrial machinery, PCB
-        manufacturing, repair industries and educational
-        engineering projects.
-      </p>
+  const faqRaw = validArray(page?.faq, defaults.faq);
 
-      <p>
-        Semiconductor components and industrial electronics
-        are essential for modern manufacturing and smart
-        automation systems. Royal Trading Component focuses
-        on providing reliable sourcing support for these
-        high-demand industries.
-      </p>
+  const faq = faqRaw.some(
+    (item) =>
+      isOldRoyalText(item?.question) ||
+      isOldRoyalText(item?.answer)
+  )
+    ? defaults.faq
+    : faqRaw;
 
-      <h2 className="mt-14 text-[34px] font-black text-[#082f49] leading-tight">
-        Why Businesses Choose Royal Trading Component
-      </h2>
-
-      <ul>
-        <li>Trusted electronic components supplier in India</li>
-        <li>Semiconductor sourcing expertise</li>
-        <li>Industrial automation component support</li>
-        <li>Bulk procurement assistance</li>
-        <li>GST billing support</li>
-        <li>OEM procurement solutions</li>
-        <li>Technical sourcing assistance</li>
-        <li>Embedded electronics expertise</li>
-        <li>Wholesale electronic components supply</li>
-        <li>Fast dispatch and nationwide delivery</li>
-      </ul>
-
-      <h2 className="mt-14 text-[34px] font-black text-[#082f49] leading-tight">
-        Buy Electronic Components Online in India
-      </h2>
-
-      <p>
-        Buy semiconductors, ICs, industrial electronics,
-        embedded hardware, displays, communication modules,
-        power management components and automation products
-        online from Royal Trading Component with secure
-        ordering, fast shipping and professional procurement
-        support.
-      </p>
-
-      <p>
-        Explore our wide range of industrial electronic
-        components and semiconductor products suitable
-        for engineering, manufacturing, automation,
-        repair and commercial applications across India.
-      </p>
-
-    </div>
-
-  </div>
-</section>
-        <Footer />
-      </div>
-    );
-  }
-
-  const productGroups = page.productGroups || defaultItems.productGroups;
-  const capabilities = page.capabilities || defaultItems.capabilities;
-  const qualityProcess = page.qualityProcess || defaultItems.qualityProcess;
-  const industries = page.industries || defaultItems.industries;
-  const whyChooseUs = page.whyChooseUs || defaultItems.whyChooseUs;
-  const faq = page.faq || defaultItems.faq;
+  const cta = {
+    title: safeText(page?.cta?.title, defaults.cta.title),
+    description: safeText(
+      page?.cta?.description,
+      defaults.cta.description
+    ),
+    buttonText: safeText(
+      page?.cta?.buttonText,
+      defaults.cta.buttonText
+    ),
+    buttonLink: safeLink(
+      page?.cta?.buttonLink,
+      defaults.cta.buttonLink
+    ),
+  };
 
   return (
-    <div className="min-h-screen bg-[#f5fbff] text-[#0f172a]">
+    <div className="min-h-screen bg-[#FFFDF8] text-[#273C35]">
       <Navbar />
 
       <main>
-        <section className="relative overflow-hidden border-b border-[#dbeafe] bg-gradient-to-br from-white via-[#eff9ff] to-[#dff3ff]">
-          <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl" />
-          <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-blue-300/30 blur-3xl" />
+        {/* =====================================================
+            HERO
+        ===================================================== */}
 
-          <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 md:px-6 lg:grid-cols-2 lg:py-20">
+        <section className="relative overflow-hidden bg-[#F8F3E8]">
+          <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-[#DDE9DF]/70 blur-3xl" />
+
+          <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-[#EADDB8]/50 blur-3xl" />
+
+          <div className="relative mx-auto grid max-w-[1500px] items-center gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[0.95fr_1.05fr] lg:px-8 lg:py-24">
             <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white px-4 py-2 text-sm font-extrabold text-[#075985] shadow-sm">
-                <Sparkles size={16} />
-                {page.hero?.badge}
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#B38B2D]/30 bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#1F5C4A] shadow-sm">
+                <Sparkles size={15} className="text-[#B38B2D]" />
+                {hero.badge}
               </div>
 
-              <h1 className="max-w-3xl text-4xl font-black leading-tight tracking-tight text-[#082f49] md:text-6xl">
-                {page.hero?.title}
+              <h1 className="mt-6 max-w-3xl text-4xl font-black leading-[1.08] tracking-tight text-[#173F34] sm:text-5xl md:text-6xl lg:text-[68px]">
+                {hero.title}
               </h1>
 
-              <h2 className="mt-4 text-2xl font-black leading-snug text-[#0284c7] md:text-4xl">
-                {page.hero?.highlight}
+              <h2 className="mt-5 max-w-2xl text-xl font-bold leading-snug text-[#B38B2D] md:text-3xl">
+                {hero.highlight}
               </h2>
 
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-700">
-                {page.hero?.description}
+              <p className="mt-6 max-w-2xl text-base leading-8 text-[#5F6864] md:text-lg">
+                {hero.description}
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-4">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link
-                  href={page.hero?.primaryButtonLink || "/products"}
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#1d4ed8] to-[#0ea5e9] px-7 py-4 text-sm font-black text-white shadow-lg shadow-sky-200 transition hover:-translate-y-0.5"
+                  href={hero.primaryButtonLink}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#1F5C4A] px-7 py-4 text-sm font-bold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:bg-[#17493B]"
                 >
-                  {page.hero?.primaryButtonText || "Explore Products"}
+                  {hero.primaryButtonText}
                   <ArrowRight size={18} />
                 </Link>
 
                 <Link
-                  href={page.hero?.secondaryButtonLink || "/request-component"}
-                  className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white px-7 py-4 text-sm font-black text-[#075985] shadow-sm transition hover:-translate-y-0.5"
+                  href={hero.secondaryButtonLink}
+                  className="inline-flex items-center gap-2 rounded-full border border-[#D9C28A] bg-white px-7 py-4 text-sm font-bold text-[#273C35] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-[#B38B2D]"
                 >
-                  <PackageSearch size={18} />
-                  {page.hero?.secondaryButtonText || "Request Component"}
+                  <Heart size={18} className="text-[#B38B2D]" />
+                  {hero.secondaryButtonText}
                 </Link>
               </div>
             </div>
 
-            <div className="relative">
-              <div className="absolute -inset-4 rounded-[36px] bg-gradient-to-r from-sky-300/40 to-blue-500/20 blur-2xl" />
-              <div className="relative overflow-hidden rounded-[34px] border border-white bg-white shadow-2xl">
+            <div className="relative lg:pl-8">
+              <div className="absolute -left-2 -top-4 hidden rounded-2xl border border-[#E8DDBF] bg-white px-5 py-4 shadow-xl md:block">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#EFF5EF] text-[#1F5C4A]">
+                    <Home size={20} />
+                  </span>
+
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#B38B2D]">
+                      Beautiful Living
+                    </p>
+                    <p className="mt-1 text-sm font-bold text-[#273C35]">
+                      Curated with care
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="overflow-hidden rounded-[34px] border-[6px] border-white bg-[#EEE8DB] shadow-[0_25px_70px_rgba(31,92,74,0.15)]">
                 <img
-                  src={getImageUrl(page.hero?.image)}
-                  alt={page.hero?.title || "About Royal Component"}
-                  className="h-[360px] w-full object-cover md:h-[520px]"
+                  src={getImageUrl(
+                    hero.image,
+                    "/banner/new-products/banner-1.png"
+                  )}
+                  alt={hero.title}
+                  className="h-[400px] w-full object-cover sm:h-[480px] lg:h-[570px]"
+                />
+              </div>
+
+              <div className="absolute -bottom-5 right-2 hidden max-w-[240px] rounded-2xl bg-[#1F5C4A] p-5 text-white shadow-xl md:block">
+                <Sparkles
+                  size={20}
+                  className="mb-3 text-[#E2BF61]"
+                />
+
+                <p className="text-sm font-bold leading-6">
+                  Thoughtful details that make every corner feel
+                  special.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================================
+            STATS
+        ===================================================== */}
+
+        <section className="relative z-10 mx-auto -mt-4 max-w-[1400px] px-4 sm:px-6 lg:px-8">
+          <div className="grid overflow-hidden rounded-[26px] border border-[#E8DFCC] bg-white shadow-[0_18px_50px_rgba(31,92,74,0.08)] sm:grid-cols-2 lg:grid-cols-4">
+            {finalStats.map((item, index) => (
+              <div
+                key={index}
+                className="relative px-6 py-7 text-center lg:py-8"
+              >
+                {index !== 0 && (
+                  <div className="absolute left-0 top-1/2 hidden h-12 w-px -translate-y-1/2 bg-[#E8DFCC] lg:block" />
+                )}
+
+                <p className="text-2xl font-black text-[#1F5C4A] md:text-3xl">
+                  {item.value}
+                </p>
+
+                <p className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-[#8B7441]">
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* =====================================================
+            OUR STORY
+        ===================================================== */}
+
+        <section className="mx-auto grid max-w-[1400px] gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-8 lg:py-24">
+          <div className="relative">
+            <div className="absolute -bottom-5 -left-5 h-full w-full rounded-[32px] bg-[#E8D8A8]/35" />
+
+            <div className="relative overflow-hidden rounded-[32px] bg-[#F1ECE2] shadow-lg">
+              <img
+                src={getImageUrl(
+                  overview.image,
+                  "/banner/new-products/banner-1.png"
+                )}
+                alt={overview.title}
+                className="h-[440px] w-full object-cover md:h-[580px]"
+              />
+            </div>
+          </div>
+
+          <div className="lg:pl-8">
+            <SectionBadge icon={Heart}>
+              Our Story
+            </SectionBadge>
+
+            <h2 className="mt-5 text-3xl font-black leading-tight text-[#173F34] md:text-5xl">
+              {overview.title}
+            </h2>
+
+            <p className="mt-6 text-base leading-8 text-[#626A66] md:text-lg md:leading-9">
+              {overview.description}
+            </p>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <StoryFeature
+                icon={Palette}
+                title="Curated Style"
+                text="Decor selected to make styling beautiful spaces simpler."
+              />
+
+              <StoryFeature
+                icon={Gem}
+                title="Premium Feel"
+                text="Elegant details and refined designs for memorable interiors."
+              />
+
+              <StoryFeature
+                icon={Heart}
+                title="Made for Homes"
+                text="Collections designed around warmth, personality and everyday living."
+              />
+
+              <StoryFeature
+                icon={Gift}
+                title="Meaningful Gifting"
+                text="Thoughtful pieces for celebrations and special moments."
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================================
+            PHILOSOPHY
+        ===================================================== */}
+
+        <section className="bg-[#1F5C4A] py-20 text-white lg:py-24">
+          <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#F1D88E]">
+                  <Crown size={15} />
+                  Our Philosophy
+                </div>
+
+                <h2 className="mt-6 text-3xl font-black leading-tight md:text-5xl">
+                  Beautiful spaces begin with thoughtful details.
+                </h2>
+
+                <p className="mt-6 max-w-xl text-base leading-8 text-[#DCE9E3] md:text-lg">
+                  We bring together decor that feels elegant,
+                  welcoming and easy to make your own—from everyday
+                  styling to festive celebrations and gifting.
+                </p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <PhilosophyCard
+                  icon={Flower2}
+                  title="Beautifully Curated"
+                  text="Collections selected to complement contemporary and timeless interiors."
+                />
+
+                <PhilosophyCard
+                  icon={Leaf}
+                  title="Warm & Timeless"
+                  text="Pieces that add warmth and character without overwhelming your space."
+                />
+
+                <PhilosophyCard
+                  icon={HandHeart}
+                  title="Thoughtful Choices"
+                  text="Decor and gifts selected with real homes and meaningful occasions in mind."
+                />
+
+                <PhilosophyCard
+                  icon={Star}
+                  title="Everyday Elegance"
+                  text="Beautiful accents created to elevate everyday corners and special settings."
                 />
               </div>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto -mt-8 max-w-7xl px-4 md:px-6">
-          <div className="relative z-10 grid gap-4 rounded-[28px] border border-sky-100 bg-white p-4 shadow-xl md:grid-cols-4">
-            {(page.stats || []).map((item, index) => (
-              <div
-                key={index}
-                className="rounded-2xl border border-[#dbeafe] bg-[#f8fcff] p-6 text-center"
-              >
-                <div className="text-3xl font-black text-[#0284c7]">
-                  {item.value}
-                </div>
-                <div className="mt-2 text-sm font-bold text-slate-600">
-                  {item.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* =====================================================
+            COLLECTIONS
+        ===================================================== */}
 
-        <section className="mx-auto grid max-w-7xl gap-10 px-4 py-16 md:px-6 lg:grid-cols-2">
-          <div className="overflow-hidden rounded-[30px] border border-sky-100 bg-white shadow-lg">
-            <img
-              src={getImageUrl(page.overview?.image)}
-              alt={page.overview?.title || "Royal Component Overview"}
-              className="h-full min-h-[430px] w-full object-cover"
-            />
-          </div>
+        <CollectionGrid items={productGroups} />
 
-          <div className="flex flex-col justify-center">
-            <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-sky-100 px-4 py-2 text-sm font-black text-[#075985]">
-              <Building2 size={16} />
-              Company Overview
-            </div>
+        {/* =====================================================
+            WHY GOGAJI
+        ===================================================== */}
 
-            <h2 className="text-3xl font-black text-[#082f49] md:text-5xl">
-              {page.overview?.title}
-            </h2>
+        <WhyGogaji items={capabilities} />
 
-            <p className="mt-6 text-lg leading-9 text-slate-700">
-              {page.overview?.description}
-            </p>
+        {/* =====================================================
+            EXPERIENCE / PROCESS
+        ===================================================== */}
 
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              {[
-                { icon: ShieldCheck, text: "Trusted sourcing support" },
-                { icon: Truck, text: "Bulk B2B procurement" },
-                { icon: Cpu, text: "Electronics expertise" },
-                { icon: Wrench, text: "Industrial application focus" },
-              ].map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 rounded-2xl border border-sky-100 bg-white p-4 shadow-sm"
-                  >
-                    <span className="rounded-xl bg-sky-100 p-3 text-[#0284c7]">
-                      <Icon size={20} />
-                    </span>
-                    <span className="font-extrabold text-slate-700">
-                      {item.text}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        <ExperienceSection items={qualityProcess} />
 
-        <section className="bg-white py-16">
-          <div className="mx-auto max-w-7xl px-4 md:px-6">
-            <div className="rounded-[34px] border border-[#dbeafe] bg-gradient-to-br from-[#eff9ff] to-white p-6 shadow-xl md:p-10">
-              <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-                <div>
-                  <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#075985] shadow-sm">
-                    <Cpu size={17} />
-                    Electronics Department
-                  </div>
+        {/* =====================================================
+            SPACES & OCCASIONS
+        ===================================================== */}
 
-                  <h2 className="text-3xl font-black text-[#082f49] md:text-5xl">
-                    {page.electronicsDepartment?.title}
-                  </h2>
+        <section className="bg-[#F7F1E5] py-20 lg:py-24">
+          <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <SectionBadge icon={Home}>
+                Made for Every Space
+              </SectionBadge>
 
-                  <p className="mt-5 text-lg leading-9 text-slate-700">
-                    {page.electronicsDepartment?.description}
-                  </p>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  {(page.electronicsDepartment?.points || []).map(
-                    (point, index) => (
-                      <div
-                        key={index}
-                        className="flex gap-3 rounded-2xl border border-sky-100 bg-white p-5 shadow-sm"
-                      >
-                        <CheckCircle2
-                          size={22}
-                          className="mt-1 shrink-0 text-[#0284c7]"
-                        />
-                        <p className="font-bold leading-7 text-slate-700">
-                          {point}
-                        </p>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-white py-16">
-  <div className="mx-auto max-w-7xl px-4 md:px-6">
-
-    <div className="text-center">
-      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-sky-100 px-4 py-2 text-sm font-black text-[#075985]">
-        <Cpu size={17} />
-        Electronics Expertise
-      </div>
-
-      <h2 className="text-3xl font-black text-[#082f49] md:text-5xl">
-        Advanced Electronics Department Solutions
-      </h2>
-
-      <p className="mx-auto mt-5 max-w-4xl text-lg leading-8 text-slate-600">
-        Royal Trading Component supports semiconductor sourcing,
-        embedded electronics, industrial automation systems,
-        PCB development, communication modules and industrial
-        procurement requirements for engineers and manufacturers.
-      </p>
-    </div>
-
-    <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-
-      <div className="rounded-[30px] border border-sky-100 bg-gradient-to-br from-white to-sky-50 p-7 shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
-        <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100 text-[#0284c7]">
-          <Cpu size={32} />
-        </div>
-
-        <h3 className="text-2xl font-black text-[#082f49]">
-          Semiconductor Components
-        </h3>
-
-        <p className="mt-4 text-[15px] leading-8 text-slate-600">
-          Logic ICs, power management ICs, voltage regulators,
-          embedded processors and semiconductor products for
-          industrial electronics applications.
-        </p>
-      </div>
-
-      <div className="rounded-[30px] border border-sky-100 bg-gradient-to-br from-white to-sky-50 p-7 shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
-        <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100 text-[#0284c7]">
-          <Factory size={32} />
-        </div>
-
-        <h3 className="text-2xl font-black text-[#082f49]">
-          Industrial Automation
-        </h3>
-
-        <p className="mt-4 text-[15px] leading-8 text-slate-600">
-          Automation components, industrial control systems,
-          relays, sensors and embedded hardware for smart
-          manufacturing solutions.
-        </p>
-      </div>
-
-      <div className="rounded-[30px] border border-sky-100 bg-gradient-to-br from-white to-sky-50 p-7 shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
-        <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100 text-[#0284c7]">
-          <Layers size={32} />
-        </div>
-
-        <h3 className="text-2xl font-black text-[#082f49]">
-          PCB & Embedded Systems
-        </h3>
-
-        <p className="mt-4 text-[15px] leading-8 text-slate-600">
-          PCB components, embedded electronics,
-          communication modules and hardware solutions
-          for engineering projects and OEM industries.
-        </p>
-      </div>
-
-      <div className="rounded-[30px] border border-sky-100 bg-gradient-to-br from-white to-sky-50 p-7 shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
-        <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100 text-[#0284c7]">
-          <Truck size={32} />
-        </div>
-
-        <h3 className="text-2xl font-black text-[#082f49]">
-          Bulk Procurement
-        </h3>
-
-        <p className="mt-4 text-[15px] leading-8 text-slate-600">
-          Wholesale electronic component sourcing,
-          GST billing, industrial procurement support
-          and nationwide delivery across India.
-        </p>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-        <LandingGrid
-          badge="Product Range"
-          title="Complete Industrial Component Categories"
-          description="Royal Component supports multiple departments required by electronics manufacturing, electrical maintenance, machine automation, repair service and procurement teams."
-          items={productGroups}
-          icon={Layers}
-        />
-
-        <LandingGrid
-          badge="Capabilities"
-          title="Procurement Capabilities Built for B2B Buyers"
-          description="From part-number based sourcing to bulk order handling, our process is designed for serious business buyers who need accuracy, speed and reliability."
-          items={capabilities}
-          icon={SearchCheck}
-          light
-        />
-
-        <ProcessSection items={qualityProcess} />
-
-        <section className="bg-[#eef8ff] py-16">
-          <div className="mx-auto max-w-7xl px-4 md:px-6">
-            <div className="text-center">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#075985] shadow-sm">
-                <Factory size={17} />
-                Industries We Support
-              </div>
-              <h2 className="text-3xl font-black text-[#082f49] md:text-5xl">
-                Built for Industrial Buyers
+              <h2 className="mt-5 text-3xl font-black text-[#173F34] md:text-5xl">
+                Decor for Homes, Moments & Celebrations
               </h2>
+
+              <p className="mt-5 text-base leading-8 text-[#626A66] md:text-lg">
+                From everyday corners to meaningful celebrations,
+                discover pieces that make each setting feel a little
+                more special.
+              </p>
             </div>
 
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {industries.map((item, index) => (
                 <div
                   key={index}
-                  className="rounded-2xl border border-sky-100 bg-white p-5 font-extrabold text-slate-700 shadow-sm"
+                  className="group rounded-[24px] border border-[#E4D7BA] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-[#B38B2D] hover:shadow-xl"
                 >
-                  <BadgeCheck className="mb-3 text-[#0284c7]" size={24} />
-                  {item}
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5ECD7] text-[#B38B2D] transition group-hover:bg-[#1F5C4A] group-hover:text-white">
+                    <BadgeCheck size={22} />
+                  </span>
+
+                  <p className="mt-5 text-lg font-black text-[#273C35]">
+                    {typeof item === "string"
+                      ? item
+                      : item?.title || item?.name}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-16 md:px-6">
-          <div className="rounded-[34px] bg-[#082f49] p-8 text-white shadow-2xl md:p-12">
-            <div className="grid gap-10 lg:grid-cols-2">
-              <div>
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-black text-sky-100">
-                  <ShieldCheck size={17} />
-                  Why Choose Us
+        {/* =====================================================
+            WHY CHOOSE US
+        ===================================================== */}
+
+        <section className="bg-[#FFFDF8] py-20 lg:py-24">
+          <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+            <div className="overflow-hidden rounded-[36px] bg-[#173F34] shadow-[0_25px_70px_rgba(23,63,52,0.18)]">
+              <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
+                <div className="relative overflow-hidden bg-[#204D40] p-8 md:p-12 lg:p-14">
+                  <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-white/5" />
+
+                  <div className="relative">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#F2D986]">
+                      <ShieldCheck size={15} />
+                      Why Gogaji
+                    </div>
+
+                    <h2 className="mt-6 text-3xl font-black leading-tight text-white md:text-5xl">
+                      Decor Chosen with Style, Care & Purpose
+                    </h2>
+
+                    <p className="mt-6 text-base leading-8 text-[#DDE9E4] md:text-lg">
+                      Our goal is simple: make it easier to discover
+                      decor that feels special, looks beautiful and
+                      belongs naturally in your home.
+                    </p>
+
+                    <Link
+                      href="/products"
+                      className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#D1A83A] px-7 py-4 text-sm font-black text-[#173F34] transition hover:bg-[#E0BC58]"
+                    >
+                      Explore Products
+                      <ArrowRight size={18} />
+                    </Link>
+                  </div>
                 </div>
 
-                <h2 className="text-3xl font-black md:text-5xl">
-                  Why Choose Royal Component?
-                </h2>
-                <p className="mt-5 text-lg leading-8 text-sky-100">
-                  We are focused on professional industrial procurement, where
-                  product accuracy, technical clarity, sourcing reliability and
-                  bulk order support matter the most.
-                </p>
-              </div>
+                <div className="bg-[#F8F3E8] p-8 md:p-12 lg:p-14">
+                  <div className="grid gap-4">
+                    {whyChooseUs.map((item, index) => {
+                      const text =
+                        typeof item === "string"
+                          ? item
+                          : item?.title ||
+                            item?.description ||
+                            "";
 
-              <div className="grid gap-4">
-                {whyChooseUs.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-3 rounded-2xl border border-white/10 bg-white/10 p-4"
-                  >
-                    <CheckCircle2 className="shrink-0 text-sky-300" />
-                    <span className="font-bold text-sky-50">{item}</span>
+                      return (
+                        <div
+                          key={index}
+                          className="flex items-start gap-4 rounded-[20px] border border-[#E5D8BB] bg-white p-5"
+                        >
+                          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E8F0EA] text-[#1F5C4A]">
+                            <CheckCircle2 size={19} />
+                          </span>
+
+                          <span className="pt-1 text-sm font-bold leading-6 text-[#45514C] md:text-base">
+                            {text}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
-                ))}
+                </div>
               </div>
             </div>
           </div>
         </section>
 
+        {/* =====================================================
+            FAQ
+        ===================================================== */}
+
         <FaqSection faq={faq} />
 
-        <section className="mx-auto max-w-7xl px-4 pb-16 md:px-6">
-          <div className="overflow-hidden rounded-[36px] border border-sky-100 bg-gradient-to-br from-white via-[#eff9ff] to-[#dff3ff] p-8 text-[#082f49] shadow-2xl md:p-12">
-            <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-              <div>
-                <h2 className="text-3xl font-black md:text-5xl">
-                  {page.cta?.title || "Need Industrial Components for Your Business?"}
+        {/* =====================================================
+            CTA
+        ===================================================== */}
+
+        <section className="bg-[#FFFDF8] px-4 pb-20 sm:px-6 lg:px-8 lg:pb-24">
+          <div className="mx-auto max-w-[1400px] overflow-hidden rounded-[36px] bg-[#D1A83A]">
+            <div className="relative grid gap-8 px-7 py-12 md:px-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:px-16 lg:py-14">
+              <div className="absolute -right-20 -top-32 h-80 w-80 rounded-full border-[55px] border-white/10" />
+
+              <div className="relative">
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#173F34]/70">
+                  Bring Beauty Home
+                </p>
+
+                <h2 className="mt-3 max-w-3xl text-3xl font-black leading-tight text-[#173F34] md:text-5xl">
+                  {cta.title}
                 </h2>
-                <p className="mt-5 max-w-3xl text-lg font-semibold leading-8 text-blue-50">
-                  {page.cta?.description}
+
+                <p className="mt-5 max-w-3xl text-base font-semibold leading-8 text-[#173F34]/80 md:text-lg">
+                  {cta.description}
                 </p>
               </div>
 
-              <div className="flex lg:justify-end">
+              <div className="relative flex lg:justify-end">
                 <Link
-                  href={page.cta?.buttonLink || "/request-component"}
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-black text-[#075985] shadow-xl"
+                  href={cta.buttonLink}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#173F34] px-8 py-4 text-sm font-black text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-[#0F342B]"
                 >
-                  {page.cta?.buttonText || "Request Component"}
+                  {cta.buttonText}
                   <ArrowRight size={18} />
                 </Link>
               </div>
@@ -634,114 +882,343 @@ export default async function AboutPage() {
   );
 }
 
-function LandingGrid({ badge, title, description, items, icon: Icon, light }) {
+/* =========================================================
+   SMALL COMPONENTS
+========================================================= */
+
+function SectionBadge({ icon: Icon, children }) {
   return (
-    <section className={light ? "bg-[#eef8ff] py-16" : "bg-white py-16"}>
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
-        <div className="mx-auto max-w-4xl text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-[#075985] shadow-sm">
-            <Icon size={17} />
-            {badge}
-          </div>
-          <h2 className="text-3xl font-black text-[#082f49] md:text-5xl">
-            {title}
+    <div className="inline-flex items-center gap-2 rounded-full border border-[#DCCB9D] bg-[#FFF8E8] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#1F5C4A]">
+      <Icon size={15} className="text-[#B38B2D]" />
+      {children}
+    </div>
+  );
+}
+
+function StoryFeature({ icon: Icon, title, text }) {
+  return (
+    <div className="rounded-[22px] border border-[#E8DFCC] bg-white p-5 shadow-sm">
+      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#EDF4EF] text-[#1F5C4A]">
+        <Icon size={20} />
+      </div>
+
+      <h3 className="mt-4 text-base font-black text-[#273C35]">
+        {title}
+      </h3>
+
+      <p className="mt-2 text-sm leading-6 text-[#6B736F]">
+        {text}
+      </p>
+    </div>
+  );
+}
+
+function PhilosophyCard({ icon: Icon, title, text }) {
+  return (
+    <div className="rounded-[24px] border border-white/10 bg-white/10 p-6 backdrop-blur-sm">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#D1A83A] text-[#173F34]">
+        <Icon size={22} />
+      </div>
+
+      <h3 className="mt-5 text-xl font-black text-white">
+        {title}
+      </h3>
+
+      <p className="mt-3 text-sm leading-7 text-[#DCE8E3]">
+        {text}
+      </p>
+    </div>
+  );
+}
+
+/* =========================================================
+   COLLECTION GRID
+========================================================= */
+
+function CollectionGrid({ items }) {
+  const icons = [
+    Flower2,
+    Leaf,
+    Sparkles,
+    Home,
+    Palette,
+    Gift,
+  ];
+
+  return (
+    <section className="bg-[#FFFDF8] py-20 lg:py-24">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <SectionBadge icon={Sparkles}>
+            Signature Collections
+          </SectionBadge>
+
+          <h2 className="mt-5 text-3xl font-black leading-tight text-[#173F34] md:text-5xl">
+            Beautiful Details for Every Corner
           </h2>
-          <p className="mt-5 text-lg leading-8 text-slate-600">
-            {description}
+
+          <p className="mt-5 text-base leading-8 text-[#626A66] md:text-lg">
+            Explore collections curated to bring warmth, elegance
+            and personality to the spaces you love.
           </p>
         </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {(items || []).map((item, index) => {
+            const Icon = icons[index % icons.length];
+
+            return (
+              <div
+                key={index}
+                className="group rounded-[28px] border border-[#E8DFCC] bg-white p-7 transition duration-300 hover:-translate-y-1.5 hover:border-[#D3BA76] hover:shadow-[0_20px_50px_rgba(31,92,74,0.10)]"
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-[18px] bg-[#F4EDDD] text-[#B38B2D] transition duration-300 group-hover:bg-[#1F5C4A] group-hover:text-white">
+                  <Icon size={25} />
+                </div>
+
+                <h3 className="mt-6 text-xl font-black text-[#273C35] md:text-2xl">
+                  {item.title}
+                </h3>
+
+                <p className="mt-3 text-sm leading-7 text-[#68706C]">
+                  {item.description}
+                </p>
+
+                <Link
+                  href="/products"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-black text-[#1F5C4A]"
+                >
+                  Explore Collection
+                  <ArrowRight
+                    size={16}
+                    className="transition group-hover:translate-x-1"
+                  />
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   WHY GOGAJI
+========================================================= */
+
+function WhyGogaji({ items }) {
+  const icons = [
+    Sparkles,
+    Gem,
+    Gift,
+    ShoppingBag,
+    PackageCheck,
+    Headphones,
+  ];
+
+  return (
+    <section className="bg-[#F7F1E5] py-20 lg:py-24">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="lg:sticky lg:top-32 lg:self-start">
+            <SectionBadge icon={Crown}>
+              The Gogaji Experience
+            </SectionBadge>
+
+            <h2 className="mt-5 text-3xl font-black leading-tight text-[#173F34] md:text-5xl">
+              More Than Decor. A Beautiful Way to Live.
+            </h2>
+
+            <p className="mt-6 max-w-lg text-base leading-8 text-[#626A66] md:text-lg">
+              From discovering the right accent to receiving it at
+              your doorstep, we want every part of your Gogaji
+              experience to feel thoughtful and effortless.
+            </p>
+
+            <div className="mt-8 flex items-center gap-4 rounded-[22px] border border-[#E1D2B1] bg-white p-5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#1F5C4A] text-white">
+                <Heart size={21} />
+              </div>
+
+              <div>
+                <p className="font-black text-[#273C35]">
+                  Curated with care
+                </p>
+
+                <p className="mt-1 text-sm text-[#737B77]">
+                  For spaces that feel beautifully yours.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {(items || []).map((item, index) => {
+              const Icon = icons[index % icons.length];
+
+              return (
+                <div
+                  key={index}
+                  className="rounded-[26px] border border-[#E5D8BB] bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <div className="flex h-13 w-13 h-[52px] items-center justify-center rounded-full bg-[#EFF5EF] text-[#1F5C4A]">
+                    <Icon size={23} />
+                  </div>
+
+                  <h3 className="mt-5 text-xl font-black text-[#273C35]">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-3 text-sm leading-7 text-[#68706C]">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   EXPERIENCE PROCESS
+========================================================= */
+
+function ExperienceSection({ items }) {
+  return (
+    <section className="bg-white py-20 lg:py-24">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <SectionBadge icon={PackageCheck}>
+            From Us to Your Home
+          </SectionBadge>
+
+          <h2 className="mt-5 text-3xl font-black text-[#173F34] md:text-5xl">
+            A Thoughtful Shopping Experience
+          </h2>
+
+          <p className="mt-5 text-base leading-8 text-[#626A66] md:text-lg">
+            From discovery to styling, every step is designed to
+            make bringing beautiful decor home simple.
+          </p>
+        </div>
+
+        <div className="relative mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="absolute left-[12%] right-[12%] top-9 hidden h-px bg-[#DCC99B] lg:block" />
+
           {(items || []).map((item, index) => (
             <div
               key={index}
-              className="rounded-[28px] border border-sky-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+              className="relative text-center"
             >
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-[#0284c7]">
-                <Icon size={24} />
+              <div className="relative z-10 mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full border-[7px] border-white bg-[#1F5C4A] text-xl font-black text-white shadow-lg">
+                {index + 1}
               </div>
-              <h3 className="text-xl font-black text-[#082f49]">
-                {item.title}
-              </h3>
-              <p className="mt-3 text-sm font-semibold leading-7 text-slate-600">
-                {item.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
-function ProcessSection({ items }) {
-  return (
-    <section className="bg-white py-16">
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
-        <div className="rounded-[36px] border border-sky-100 bg-gradient-to-br from-[#f8fcff] to-white p-6 shadow-xl md:p-10">
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-sky-100 px-4 py-2 text-sm font-black text-[#075985]">
-              <ClipboardCheck size={17} />
-              Quality Process
-            </div>
-            <h2 className="text-3xl font-black text-[#082f49] md:text-5xl">
-              From Requirement to Dispatch
-            </h2>
-            <p className="mt-5 text-lg leading-8 text-slate-600">
-              Every industrial component request needs accuracy. Our process is
-              designed to reduce sourcing confusion and improve procurement
-              confidence.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {(items || []).map((item, index) => (
-              <div key={index} className="rounded-3xl bg-white p-6 shadow-sm">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#0284c7] text-xl font-black text-white">
-                  {index + 1}
-                </div>
-                <h3 className="text-lg font-black text-[#082f49]">
+              <div className="mt-6 rounded-[24px] border border-[#E8DFCC] bg-[#FFFDF8] p-6">
+                <h3 className="text-lg font-black text-[#273C35]">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm font-semibold leading-7 text-slate-600">
+
+                <p className="mt-3 text-sm leading-7 text-[#6C746F]">
                   {item.description}
                 </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 grid gap-4 sm:grid-cols-3">
+          <MiniBenefit
+            icon={ShieldCheck}
+            title="Thoughtful Selection"
+            text="Collections chosen with style and usability in mind."
+          />
+
+          <MiniBenefit
+            icon={PackageCheck}
+            title="Careful Packaging"
+            text="Prepared carefully before dispatch."
+          />
+
+          <MiniBenefit
+            icon={Truck}
+            title="Delivery Support"
+            text="Shopping support from order to delivery."
+          />
         </div>
       </div>
     </section>
   );
 }
 
+function MiniBenefit({ icon: Icon, title, text }) {
+  return (
+    <div className="flex items-center gap-4 rounded-[20px] bg-[#F6F1E7] p-5">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[#1F5C4A] shadow-sm">
+        <Icon size={20} />
+      </span>
+
+      <div>
+        <p className="font-black text-[#273C35]">
+          {title}
+        </p>
+
+        <p className="mt-1 text-xs leading-5 text-[#727A76]">
+          {text}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   FAQ
+========================================================= */
+
 function FaqSection({ faq }) {
   return (
-    <section className="bg-white py-16">
-      <div className="mx-auto max-w-5xl px-4 md:px-6">
+    <section className="bg-white py-20 lg:py-24">
+      <div className="mx-auto max-w-[1000px] px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-sky-100 px-4 py-2 text-sm font-black text-[#075985]">
-            <HelpCircle size={17} />
+          <SectionBadge icon={HelpCircle}>
             Frequently Asked Questions
-          </div>
-          <h2 className="text-3xl font-black text-[#082f49] md:text-5xl">
-            Buyer Questions Answered
+          </SectionBadge>
+
+          <h2 className="mt-5 text-3xl font-black text-[#173F34] md:text-5xl">
+            Everything You May Want to Know
           </h2>
+
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-[#626A66]">
+            Helpful answers about our collections, gifting and
+            shopping with Gogaji International.
+          </p>
         </div>
 
-        <div className="mt-10 grid gap-4">
+        <div className="mt-12 space-y-4">
           {(faq || []).map((item, index) => (
             <div
               key={index}
-              className="rounded-3xl border border-sky-100 bg-[#f8fcff] p-6 shadow-sm"
+              className="rounded-[24px] border border-[#E8DFCC] bg-[#FFFDF8] p-6 transition hover:border-[#D3BA76]"
             >
-              <h3 className="flex gap-3 text-lg font-black text-[#082f49]">
-                <Headphones className="mt-1 shrink-0 text-[#0284c7]" />
-                {item.question}
-              </h3>
-              <p className="mt-3 pl-9 text-sm font-semibold leading-7 text-slate-600">
-                {item.answer}
-              </p>
+              <div className="flex gap-4">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#EDF4EF] text-[#1F5C4A]">
+                  <Headphones size={19} />
+                </span>
+
+                <div>
+                  <h3 className="text-base font-black leading-7 text-[#273C35] md:text-lg">
+                    {item.question}
+                  </h3>
+
+                  <p className="mt-2 text-sm leading-7 text-[#68706C] md:text-base">
+                    {item.answer}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
