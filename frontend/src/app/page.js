@@ -9,14 +9,14 @@ import ServiceLinks from "@/components/ServiceLinks";
 import Footer from "@/components/Footer";
 import HomepageBuilderRenderer from "@/components/HomepageBuilderRenderer";
 import TrustBadges from "@/components/home/TrustBadges";
-
-import BulkOrderCTA from "@/components/home/BulkOrderCTA";
+// 
+// import BulkOrderCTA from "@/components/home/BulkOrderCTA";
 
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import StatsSection from "@/components/home/StatsSection";
 import Testimonials from "@/components/home/Testimonials";
-import LatestBlogs from "@/components/home/LatestBlogs";
-import NewsletterCTA from "@/components/home/NewsletterCTA";
+// import LatestBlogs from "@/components/home/LatestBlogs";
+// import NewsletterCTA from "@/components/home/NewsletterCTA";
 import HomeSeoFaq from "@/components/HomeSeoFaq";
 
 import PromoBannerSection from "@/components/PromoBannerSection";
@@ -246,16 +246,16 @@ export default async function HomePage() {
 
 
       
-      <BulkOrderCTA />
+      {/* <BulkOrderCTA /> */}
       <WhyChooseUs />
      
       <ServiceLinks />
       {/* <BrandStrip /> */}
       <StatsSection />
       <Testimonials />
-      <LatestBlogs />
+      {/* <LatestBlogs /> */}
       
-      <NewsletterCTA />
+      {/* <NewsletterCTA /> */}
 
      {/* <section className="bg-white border-t border-[#B38B2D]/15 py-16">
   <div className="container-royal">

@@ -432,9 +432,9 @@ export default function Footer() {
                   <FooterColumn title="Shop" links={data.shopLinks} />
                   <FooterColumn title="Support" links={data.supportLinks} />
                   <FooterColumn title="Company" links={data.companyLinks} />
-                  <FooterColumn title="Policies" links={data.policyLinks} />
+                  
                 </div>
-              </div>
+              </div>  
 
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 <Link
@@ -459,7 +459,7 @@ hover:bg-[#9D7824]
                 </Link>
 
                 <Link
-                  href="/new-at-behoma"
+                  href="/products?featured=true"
 
                   className="
 rounded-2xl
@@ -505,12 +505,12 @@ hover:bg-[#9D7824]
             <p>{data.bottomText}</p>
 
             <div className="flex flex-wrap gap-4">
-              <Link href="/privacy-policy" className="hover:text-white">
+              {/* <Link href="/privacy-policy" className="hover:text-white">
                 Privacy
-              </Link>
-              <Link href="/terms-and-conditions" className="hover:text-white">
+              </Link> */}
+              {/* <Link href="/terms-and-conditions" className="hover:text-white">
                 Terms
-              </Link>
+              </Link> */}
               <Link href="/contact" className="hover:text-white">
                 Contact
               </Link>

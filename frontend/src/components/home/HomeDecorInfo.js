@@ -177,100 +177,99 @@ export default function HomeDecorInfo() {
 
                         return (
                             <SwiperSlide key={item.productId || item.sku || index} className="h-auto">
-                                <article
-                                    onClick={() => handleProductClick(productUrl)}
-                                    className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-[26px] border border-[#eee3d0] bg-white shadow-[0_10px_30px_rgba(67,74,58,0.07)] transition duration-300 hover:-translate-y-2 hover:border-[#d4b15a] hover:shadow-[0_22px_45px_rgba(58,78,59,0.16)]"
-                                >
-                                    <div className="relative h-[270px] overflow-hidden bg-[#f7f2e8] md:h-[300px]">
-                                        <div
-                                            className="absolute inset-0 bg-cover bg-center opacity-20"
-                                            style={{
-                                                backgroundImage:
-                                                    "radial-gradient(circle at 20% 15%, #d8bc72 0, transparent 28%), radial-gradient(circle at 80% 90%, #1f6552 0, transparent 30%)",
-                                            }}
-                                        />
+                              <article
+    onClick={() => handleProductClick(productUrl)}
+    className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#e5ddd0] bg-white transition duration-300 hover:shadow-lg"
+>
+    <div className="relative h-[270px] overflow-hidden bg-[#f7f2e8] md:h-[300px]">
+        {item.badge ? (
+            <span className="absolute left-4 top-4 z-20 rounded-md bg-[#a94438] px-3 py-1.5 text-xs font-semibold text-white">
+                {item.badge}
+            </span>
+        ) : null}
 
-                                        <div
-                                            className="absolute right-4 top-4 z-20"
-                                            onClick={(event) => event.stopPropagation()}
-                                        >
-                                            <WishlistToggleButton
-                                                product={{
-                                                    ...item,
-                                                    _id: item.productId || item._id,
-                                                    slug: item.slug,
-                                                    name: item.title,
-                                                }}
-                                            />
-                                        </div>
+        {item.rating ? (
+            <span className="absolute right-4 top-4 z-20 flex items-center gap-1 rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-[#2f3d38] shadow">
+                <span className="text-[#a94438]">★</span>
+                {item.rating}
+            </span>
+        ) : null}
 
-                                        <span className="absolute left-4 top-4 z-20 rounded-full bg-[#1f6552] px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white shadow-md">
-                                            {item.badge || "New"}
-                                        </span>
+        <div
+            className="absolute right-4 top-4 z-20"
+            onClick={(event) => event.stopPropagation()}
+        >
+            <WishlistToggleButton
+                product={{
+                    ...item,
+                    _id: item.productId || item._id,
+                    slug: item.slug,
+                    name: item.title,
+                }}
+            />
+        </div>
 
-                                        {imageUrl ? (
-                                            <img
-                                                src={imageUrl}
-                                                alt={item.title || "Gogaji home decor product"}
-                                                className={`absolute inset-0 h-full w-full object-cover transition duration-500 ${hoverImageUrl
-                                                        ? "group-hover:scale-105 group-hover:opacity-0"
-                                                        : "group-hover:scale-105"
-                                                    }`}
-                                                onError={(event) => {
-                                                    event.currentTarget.style.display = "none";
-                                                }}
-                                            />
-                                        ) : null}
+        {imageUrl ? (
+            <img
+                src={imageUrl}
+                alt={item.title || "Gogaji home decor product"}
+                className={`absolute inset-0 h-full w-full object-cover transition duration-500 ${hoverImageUrl
+                        ? "group-hover:scale-105 group-hover:opacity-0"
+                        : "group-hover:scale-105"
+                    }`}
+                onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                }}
+            />
+        ) : null}
 
-                                        {hoverImageUrl ? (
-                                            <img
-                                                src={hoverImageUrl}
-                                                alt={item.title || "Gogaji home decor product"}
-                                                className="absolute inset-0 h-full w-full scale-105 object-cover opacity-0 transition duration-500 group-hover:scale-100 group-hover:opacity-100"
-                                                onError={(event) => {
-                                                    event.currentTarget.style.display = "none";
-                                                }}
-                                            />
-                                        ) : null}
-                                    </div>
+        {hoverImageUrl ? (
+            <img
+                src={hoverImageUrl}
+                alt={item.title || "Gogaji home decor product"}
+                className="absolute inset-0 h-full w-full scale-105 object-cover opacity-0 transition duration-500 group-hover:scale-100 group-hover:opacity-100"
+                onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                }}
+            />
+        ) : null}
+    </div>
 
-                                    <div className="flex flex-1 flex-col p-5">
-                                        <p className="text-xs font-bold uppercase tracking-[0.08em] text-[#a47d27]">
-                                            {item.sku ? `SKU: ${item.sku}` : "Premium home decor"}
-                                        </p>
+    <div className="flex flex-1 flex-col items-center px-5 py-6 text-center">
+        <h3 className="text-lg italic text-[#2f3d38] line-clamp-2">
+            {item.title}
+        </h3>
 
-                                        <h3 className="mt-3 min-h-[56px] text-[21px] font-extrabold leading-7 text-[#2f3d38] line-clamp-2">
-                                            {item.title}
-                                        </h3>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm">
+            <span className="font-semibold text-[#2f3d38]">
+                {formatCurrency(item.price)}
+            </span>
 
-                                        <div className="mt-5 flex flex-wrap items-center gap-2">
-                                            <span className="text-2xl font-extrabold text-[#1f6552]">
-                                                {formatCurrency(item.price)}
-                                            </span>
+            {item.mrp ? (
+                <span className="text-[#9ba39e] line-through">
+                    {formatCurrency(item.mrp)}
+                </span>
+            ) : null}
 
-                                            {item.mrp ? (
-                                                <span className="text-sm font-semibold text-[#9ba39e] line-through">
-                                                    {formatCurrency(item.mrp)}
-                                                </span>
-                                            ) : null}
+            {item.discount ? (
+                <span className="font-semibold text-[#a94438]">
+                    {item.discount} Off
+                </span>
+            ) : null}
+        </div>
 
-                                            {item.discount ? (
-                                                <span className="rounded-full bg-[#fff1eb] px-2.5 py-1 text-xs font-extrabold text-[#bd6b4d]">
-                                                    {item.discount} OFF
-                                                </span>
-                                            ) : null}
-                                        </div>
-
-                                        
-
-                                        <div className="mt-auto pt-6">
-                                            <div className="relative overflow-hidden rounded-2xl bg-[#bd9228] px-4 py-3.5 text-center text-[15px] font-extrabold text-white shadow-[0_8px_18px_rgba(189,146,40,0.24)] transition group-hover:bg-[#a97e1f]">
-                                                Add To Cart
-                                                <span className="ml-2">→</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
+        <button
+            type="button"
+            onClick={(event) => {
+                event.stopPropagation();
+                handleProductClick(productUrl);
+            }}
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-md border border-[#2f3d38] px-4 py-2.5 text-sm font-medium text-[#2f3d38] transition hover:bg-[#2f3d38] hover:text-white"
+        >
+            🛍️ Add to cart
+        </button>
+    </div>
+</article>
                             </SwiperSlide>
                         );
                     })}

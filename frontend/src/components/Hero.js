@@ -99,20 +99,20 @@ const fallbackSlides = [
   },
 ];
 
-const trustItems = [
-  {
-    icon: ShieldCheck,
-    text: "Premium Quality Decor",
-  },
-  {
-    icon: Truck,
-    text: "Pan India Delivery",
-  },
-  {
-    icon: Wrench,
-    text: "Elegant Home Styling",
-  },
-];
+// const trustItems = [
+//   {
+//     icon: ShieldCheck,
+//     text: "Premium Quality Decor",
+//   },
+//   {
+//     icon: Truck,
+//     text: "Pan India Delivery",
+//   },
+//   {
+//     icon: Wrench,
+//     text: "Elegant Home Styling",
+//   },
+// ];
 
 function getImageUrl(url) {
   if (!url) return "";
@@ -311,7 +311,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-3 sm:mt-7 sm:grid-cols-2 lg:grid-cols-3">
+          {/* <div className="mt-6 grid gap-3 sm:mt-7 sm:grid-cols-2 lg:grid-cols-3">
             {trustItems.map((item) => {
               const Icon = item.icon;
 
@@ -326,7 +326,7 @@ export default function Hero() {
                 </div>
               );
             })}
-          </div>
+          </div> */}
         </div>
       </div>
 

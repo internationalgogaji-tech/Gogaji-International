@@ -639,15 +639,12 @@ export default function Navbar() {
                 </div>
               )}
 
-              <div className="hidden h-[46px] items-center gap-2 rounded-full border border-[#1F5C4A] bg-[#1F5C4A] px-5 text-sm font-bold text-white shadow-sm md:flex hover:bg-[#18493B] transition-all duration-300">
-                <PackageSearch size={18} />
-                Request Products
-              </div>
-
-              <div className="hidden h-[46px] items-center gap-2 rounded-full border border-[#BBF7D0] bg-[#F0FDF4] px-5 text-sm font-bold text-[#166534] shadow-sm md:flex hover:bg-[#DCFCE7] transition-all">
-                <PackageSearch size={18} />
-                Track Request
-              </div>
+              <Link
+  href="/request-products"
+className="hidden h-[46px] items-center gap-2 rounded-full border border-[#B38B2D] bg-[#B38B2D] px-5 text-sm font-bold text-white shadow-sm md:flex hover:bg-[#9D7824] transition-all duration-300">
+  <PackageSearch size={18} />
+  Request Products
+</Link>
 
               <Link
                 href="/wishlist"
@@ -820,8 +817,8 @@ export default function Navbar() {
                       <Link
                         href={getCategoryHref(item)}
                         className={`relative inline-flex h-[54px] items-center gap-3 rounded-2xl border px-3.5 pr-4 text-[15px] font-extrabold transition-all duration-200 ${isActive
-                            ? "border-[#B38B2D] bg-[#FFF8E8] text-[#1F5C4A] shadow-sm"
-                            : "border-[#E5E7EB] bg-[#FCFFFC] text-[#24364B] hover:border-[#B38B2D]/70 hover:bg-[#FFFDF5] hover:text-[#1F5C4A]"
+                          ? "border-[#B38B2D] bg-[#FFF8E8] text-[#1F5C4A] shadow-sm"
+                          : "border-[#E5E7EB] bg-[#FCFFFC] text-[#24364B] hover:border-[#B38B2D]/70 hover:bg-[#FFFDF5] hover:text-[#1F5C4A]"
                           }`}
                       >
                         {item.image ? (
@@ -841,8 +838,8 @@ export default function Navbar() {
                         {hasChildren ? (
                           <span
                             className={`ml-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border transition ${isActive
-                                ? "border-[#B38B2D] bg-white text-[#B38B2D]"
-                                : "border-[#D8E1EC] bg-white text-[#64748B] group-hover:border-[#B38B2D] group-hover:text-[#B38B2D]"
+                              ? "border-[#B38B2D] bg-white text-[#B38B2D]"
+                              : "border-[#D8E1EC] bg-white text-[#64748B] group-hover:border-[#B38B2D] group-hover:text-[#B38B2D]"
                               }`}
                             title="Sub categories"
                           >
